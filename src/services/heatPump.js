@@ -1,0 +1,15 @@
+import axios from 'axios';
+import moment from 'moment';
+
+const baseUrl = '/api/heat-pump';
+
+const getLastWeek = async () => {
+  const date = moment();
+  date.subtract(1, 'week');
+  const dateParts = date.format('YYYY-MM-DD').split('-');
+  const response = await axios
+    .get(`${baseUrl}/?year=${dateParts[0]}&month=${dateParts[1]}&day=${dateParts[2]}`);
+  return response.data;
+};
+
+export default { getLastWeek }

@@ -6,9 +6,17 @@
     "@testing-library/jest-dom": "^4.2.4",
     "@testing-library/react": "^9.5.0",
     "@testing-library/user-event": "^7.2.1",
+    "axios": "^0.19.2",
+    "dotenv": "^8.2.0",
+    "moment": "^2.27.0",
+    "momentjs": "^2.0.0",
+    "pondjs": "^0.9.0",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
-    "react-scripts": "3.4.3"
+    "react-scripts": "3.4.3",
+    "react-timeseries-charts": "^0.16.1",
+    "socket.io-client": "^2.3.0",
+    "use-socketio": "^2.0.3"
   },
   "scripts": {
     "start": "react-scripts start",
@@ -19,6 +27,7 @@
   "eslintConfig": {
     "extends": "react-app"
   },
+  "proxy": "http://localhost:3003",
   "browserslist": {
     "production": [
       ">0.2%",
