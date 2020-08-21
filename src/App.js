@@ -5,6 +5,7 @@ import heatPumpService from './services/heatPump.js'
 
 const App = () => {
   const [data, setData] = useState(null);
+  const dataCoverTimePeriodHours = 24 * 7; // One week
 
   // Fetching pre-existing data
   useEffect(() => {
@@ -15,27 +16,30 @@ const App = () => {
       });
   }, []);
 
-  // Subscribing to real time data using socket.io client
-  useSocket('DataFromAPI', dataFromAPI => {
+  // Subscribe to real-time data using a hook socket.io and
+  useSocket('heatPumpData', heatPumpData => {
     // Wait until pre-existing data is loaded before adding new data
     if (data) {
       if (data.length === 0) {
+        // The database is empty
         const newData = [];
-        newData.push(dataFromAPI);
+        newData.push(heatPumpData);
         setData(newData);
       } else {
-        // Calculate data time period
+        // Calculate the time period that data covers
+        // If the data covers more than a fixed time (48 hours) period,
+        // remove the oldest entry to accommodate a new entry as in a ring buffer.
         const startTime = moment(data[0].time);
         const endTime = moment(data[data.length - 1]);
         const duration = moment.duration(endTime.diff(startTime));
         const hours = duration.asHours();
-        if (hours < 48) {
+        if (hours < dataCoverTimePeriodHours) {
           const newData = [...data];
-          newData.push(dataFromAPI);
+          newData.push(heatPumpData);
           setData(newData)
-        } else if (hours >= 48) {
+        } else if (hours >= dataCoverTimePeriodHours) {
           const newData = [...data].slice(1);
-          newData.push(dataFromAPI);
+          newData.push(heatPumpData);
           setData(newData);
         }
       }
