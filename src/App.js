@@ -1,7 +1,15 @@
 import React, { useEffect, useState } from 'react';
+import Switch from 'react-router-dom/Switch.js';
+import Route from 'react-router-dom/Route.js';
+import Container from 'react-bootstrap/Container';
+import Row from 'react-bootstrap/Container';
 import moment from 'moment';
 import { useSocket } from 'use-socketio/lib/io';
-import heatPumpService from './services/heatPump.js'
+import heatPumpService from './services/heatPump.js';
+import Menu from './components/Menu.js';
+import Chart from './components/Chart.js';
+import Control from './components/Control.js';
+import Statistics from './components/Statistics.js';
 
 const App = () => {
   const [data, setData] = useState(null);
@@ -16,7 +24,7 @@ const App = () => {
       });
   }, []);
 
-  // Subscribe to real-time data using a hook socket.io and
+  // Subscribe to real-time data using socket.io
   useSocket('heatPumpData', heatPumpData => {
     // Wait until pre-existing data is loaded before adding new data
     if (data) {
@@ -46,12 +54,36 @@ const App = () => {
     }
   });
 
+  const heatDistCircuitVariables = [
+    { label: 'Heat Distribution Circuit 1', id: 'heatDistCircuitTemp1' },
+    { label: 'Heat Distribution Circuit 2', id: 'heatDistCircuitTemp2' },
+    { label: 'Heat Distribution Circuit 3', id: 'heatDistCircuitTemp3' },
+  ];
+
   return (
-    <div className="App">
-      <header className="App-header">
-        Application
-      </header>
-    </div>
+    <Container>
+      <Row>
+        <Menu />
+      </Row>
+      <Row>
+        <Switch>
+          <Route path="/charts">
+            <Chart
+              data={data}
+              columns={heatDistCircuitVariables}
+              id={'heatDistCircuitTemp'}
+              title={'Heat Distribution Circuits'}
+            />
+          </Route>
+          <Route path="/control">
+            <Control />
+          </Route>
+          <Route path="/">
+            <Statistics />
+          </Route>
+        </Switch>
+      </Row>
+    </Container>
   );
 };
 

@@ -54,8 +54,6 @@ const Chart = ({ data, columns, id, title }) => {
     }
   }, [data]);
 
-  console.log('DATA');
-
   useEffect(() => {
     /**
      * Rescales the graph based on current time range and maximum and minimum values of the active columns.
