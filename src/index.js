@@ -1,14 +1,15 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import { BrowserRouter as Router } from 'react-router-dom';
 import config from './utils/config.js';
 import App from './App';
-import { SocketIOProvider } from 'use-socketio/lib/io';
+import { SocketIOProvider } from 'use-socketio';
 
 ReactDOM.render(
-  <React.StrictMode>
+  <Router>
     <SocketIOProvider url={config.SOCKET_IO_URL}>
       <App />
     </SocketIOProvider>
-  </React.StrictMode>,
+  </Router>,
   document.getElementById('root')
 );
