@@ -118,7 +118,7 @@ const Chart = ({ data, columns, id, title }) => {
   };
 
   /**
-   * Styling
+   * Styling of the line
    */
   const lineStyle = styler(columnIds, 'Dark2');
 
@@ -130,9 +130,9 @@ const Chart = ({ data, columns, id, title }) => {
   };
 
   /**
-   * Legend related stuff
+   * Legend-component related functionality and styling.
+   * Produces labels for the data and allows user to filter which data lines to show in the chart.
    */
-
   const legend = [
     ...columns.map((column) => {
       return (
@@ -159,7 +159,8 @@ const Chart = ({ data, columns, id, title }) => {
 
 
   /**
-   * Render active columns to the graph
+   * Produces line charts for the data.
+   * Takes the active columns and renders a line representing each column.
    */
   let charts = [];
   activeColumns.forEach((columnId) => {
@@ -176,12 +177,11 @@ const Chart = ({ data, columns, id, title }) => {
 
   /**
    * Responsible for formatting X-axis timestamps.
-   * @param time
+   * @param time - a string representing a timestamp in the format YYYY-MM-DD hh:mm
    */
   const formatTime = (time) => {
     const timeString = moment(time).format('YYYY-MM-DD kk:mm');
     if (time.getHours() === 0) {
-      // Extract abbreviated weekday e.g. Sat
       const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
       const month = months[time.getMonth()];
       const day = time.getDate();
