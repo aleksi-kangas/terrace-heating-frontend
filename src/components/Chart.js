@@ -4,7 +4,7 @@ import Col from 'react-bootstrap/Col';
 import Grid from 'react-bootstrap/Container';
 import Button from 'react-bootstrap/Button';
 import ButtonGroup from 'react-bootstrap/cjs/ButtonGroup.js';
-import { Charts, ChartContainer, ChartRow, YAxis, LineChart, Resizable, Legend, styler} from "react-timeseries-charts";
+import { Charts, ChartContainer, ChartRow, YAxis, LineChart, Resizable, Legend, styler } from "react-timeseries-charts";
 import { TimeSeries, TimeRange } from 'pondjs';
 import moment from 'moment';
 
@@ -38,18 +38,30 @@ const Chart = ({ data, columns, id, title }) => {
       };
       setDataTimeSeries(new TimeSeries(dataSeries));
 
-      const dataBeginTime = data[0].time;
-      const dataEndTime = data[data.length - 1].time;
+      /**
+       * Calculates a new time range for the chart.
+       *
+       * If the chart is zoomed in a way that includes the last data point,
+       * a new time range is calculated and the chart is updated to show the new entry.
+       *
+       * If the chart is zoomed elsewhere, where the last data point is not included in the current time range,
+       * the time range is not updated and therefore the chart will not be re-rendered.
+       */
 
-      // TODO VERIFY THAT THIS WORKS
-      if (!currentTimeRange ) {
-        // Set time range of the data
-        setCurrentTimeRange(new TimeRange(moment(dataBeginTime), moment(dataEndTime)));
-      } else if (currentTimeRange.end() === data[data.length - 2].time) {
-        // Case where chart is zoomed but the end time is in the current time range.
-        // Modifying the currently shown time range does not interfere with the user experience.
-        // Update the time range to include the new data entry.
-        setCurrentTimeRange(new TimeRange(moment(currentTimeRange.begin()), moment(dataEndTime)))
+      const dataStartTime = moment.utc(data[0].time);
+      const dataEndTime = moment.utc(data[data.length - 1].time);
+      const threshold = dataEndTime.clone().subtract(2, 'minutes');
+
+      if (!currentTimeRange || !currentTimeRange.begin() || !currentTimeRange.end()) {
+        // Set the initial time range of the data
+        setCurrentTimeRange(new TimeRange(dataStartTime, dataEndTime));
+      } else {
+        const currentTimeRangeEnd = moment(currentTimeRange.end());
+
+        if (currentTimeRangeEnd.isSameOrAfter(threshold)) {
+          // Update the time range only if the last data point is included in the current time range
+          setCurrentTimeRange(new TimeRange(moment(currentTimeRange.begin()), moment(dataEndTime)))
+        }
       }
     }
   }, [data]);
