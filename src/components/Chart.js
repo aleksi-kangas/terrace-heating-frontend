@@ -1,9 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import Row from 'react-bootstrap/Row';
-import Col from 'react-bootstrap/Col';
-import Grid from 'react-bootstrap/Container';
-import Button from 'react-bootstrap/Button';
-import ButtonGroup from 'react-bootstrap/cjs/ButtonGroup.js';
+import { Grid, Button, ButtonGroup } from '@material-ui/core';
 import { Charts, ChartContainer, ChartRow, YAxis, LineChart, Resizable, Legend, styler } from "react-timeseries-charts";
 import { TimeSeries, TimeRange } from 'pondjs';
 import moment from 'moment';
@@ -120,7 +116,7 @@ const Chart = ({ data, columns, id, title }) => {
     };
 
     return (
-      <ButtonGroup vertical>
+      <ButtonGroup orientation='vertical'>
         {dayButton(1)}
         {dayButton(3)}
         {dayButton(7)}
@@ -204,15 +200,18 @@ const Chart = ({ data, columns, id, title }) => {
   };
 
   return (
-    <Grid>
-      <Row>
-        <Col xs="10" md="10" lg="11" >
+    <Grid container>
+      <Grid
+        container
+        direction='row'
+      >
+        <Grid item xs={12} xl={11} >
           <Resizable>
             <ChartContainer
               title={title}
               style={{
                 background: "#201d1e",
-                borderRadius: 8,
+                borderRadius: 10,
                 borderStyle: "solid",
                 borderWidth: 1,
                 borderColor: "#232122"
@@ -243,26 +242,33 @@ const Chart = ({ data, columns, id, title }) => {
               </ChartRow>
             </ChartContainer>
           </Resizable>
-        </Col>
-        <Col>
-          <Row>
-            <TimeControlButtonGroup />
-          </Row>
-          <Row>
-            Testing
-          </Row>
-        </Col>
-      </Row>
-      <Row className="justify-content-md-center">
-        <Col xs="11" md="11" lg="11">
+        </Grid>
+        <Grid
+          item
+          spacing={0}
+          direction='row'
+          alignItems='center'
+          justify='center'
+          xl={1}
+          xs={1}
+        >
+          <TimeControlButtonGroup />
+        </Grid>
+      </Grid>
+      <Grid
+        container
+        direction='row'
+        justify='center'
+      >
+        <Grid item xs={8} xl={12}>
           <Legend
             type="swatch"
             style={legendStyle}
             categories={legend}
             onSelectionChange={handleSelectionChange}
           />
-        </Col>
-      </Row>
+        </Grid>
+      </Grid>
     </Grid>
   )
 };

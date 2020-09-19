@@ -1,12 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import Switch from 'react-router-dom/Switch.js';
 import Route from 'react-router-dom/Route.js';
-import Container from 'react-bootstrap/Container';
-import Row from 'react-bootstrap/Container';
 import moment from 'moment';
 import { useSocket } from 'use-socketio/lib/io';
 import heatPumpService from './services/heatPump.js';
-import Menu from './components/Menu.js';
+import { Container } from '@material-ui/core';
+import NavBar from './components/NavBar.js';
 import Chart from './components/Chart.js';
 import Control from './components/Control.js';
 import Statistics from './components/Statistics.js';
@@ -62,27 +61,23 @@ const App = () => {
 
   return (
     <Container>
-      <Row>
-        <Menu />
-      </Row>
-      <Row>
-        <Switch>
-          <Route path="/charts">
-            <Chart
-              data={data}
-              columns={heatDistCircuitVariables}
-              id={'heatDistCircuitTemp'}
-              title={'Heat Distribution Circuits'}
-            />
-          </Route>
-          <Route path="/control">
-            <Control />
-          </Route>
-          <Route path="/">
-            <Statistics />
-          </Route>
-        </Switch>
-      </Row>
+      <NavBar />
+      <Switch>
+        <Route path="/charts">
+          <Chart
+            data={data}
+            columns={heatDistCircuitVariables}
+            id={'heatDistCircuitTemp'}
+            title={'Heat Distribution Circuits'}
+          />
+        </Route>
+        <Route path="/control">
+          <Control />
+        </Route>
+        <Route path="/">
+          <Statistics />
+        </Route>
+      </Switch>
     </Container>
   );
 };
