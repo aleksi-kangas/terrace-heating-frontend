@@ -4,19 +4,20 @@ import Route from 'react-router-dom/Route.js';
 import moment from 'moment';
 import { useSocket } from 'use-socketio/lib/io';
 import heatPumpService from './services/heatPump.js';
-import loginService from './services/login.js';
 import { Container } from '@material-ui/core';
 import Navigation from './components/navigation/Navigation.js';
 import Graphs from './components/Graphs.js';
 import Control from './components/Control.js';
 import Overview from './components/Overview.js';
 import LoginForm from './components/LoginForm.js';
-import { Redirect } from 'react-router-dom';
+import { Redirect, useHistory } from 'react-router-dom';
 
 const App = () => {
   const [data, setData] = useState(null);
   const [user, setUser] = useState(null);
   const dataCoverTimePeriodHours = 24 * 7; // One week
+
+  const history = useHistory();
 
   // Fetching pre-existing data
   useEffect(() => {
@@ -57,26 +58,18 @@ const App = () => {
     }
   });
 
-  const handleLogin = async (event) => {
-    event.preventDefault();
-    try {
-      // Validate login on backend
-      const user = await loginService.login({
-        username: event.target.username.value,
-        password: event.target.password.value
-      });
-      // Set user information to browser's local storage
-      window.localStorage.setItem('user', JSON.stringify(user));
-      // Update state
+  useEffect(() => {
+    // Get logged in user from local storage
+    const loggedUser = window.localStorage.getItem('user');
+    if (loggedUser) {
+      const user = JSON.parse(loggedUser);
       setUser(user);
-    } catch (error) {
-      console.error(error.message);
     }
-  };
+  }, []);
 
   return (
     <div>
-      <Navigation user={user}/>
+      <Navigation user={user} setUser={setUser}/>
       <Container>
         <Switch>
           <Route path="/graphs" render={() =>
@@ -87,9 +80,10 @@ const App = () => {
             user ? <Control /> : <Redirect to='/login' />
           }
           />
-          <Route path="/login">
-            <LoginForm handleLogin={handleLogin} user={user} />
-          </Route>
+          <Route path="/login" render={() =>
+            user ? <Redirect to='/' /> : <LoginForm history={history} setUser={setUser}/>
+          }
+          />
           <Route path="/" render={() =>
             user ? <Overview /> : <Redirect to='/login' />
           }

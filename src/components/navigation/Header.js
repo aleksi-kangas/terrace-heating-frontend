@@ -10,7 +10,7 @@ const useStyles = makeStyles(() => ({
   }
 }));
 
-const Header = ({ setSideMenuOpen, user }) => {
+const Header = ({ setSideMenuOpen, user, setUser }) => {
 
   const classes = useStyles();
 
@@ -24,11 +24,14 @@ const Header = ({ setSideMenuOpen, user }) => {
     )
   }
 
+  const handleLogout = () => {
+    window.localStorage.removeItem('user');
+    setUser(null)
+  };
+
   return (
     <Toolbar>
       <Button
-        aria-controls="simple-menu"
-        aria-haspopup="true"
         onClick={() => setSideMenuOpen(true)}
       >
         <MenuIcon />
@@ -36,7 +39,7 @@ const Header = ({ setSideMenuOpen, user }) => {
       <Typography variant='h6'>
         Terrace Heating Control
       </Typography>
-      <Button onClick={() => window.localStorage.removeItem('user')} className={classes.logout}>
+      <Button onClick={handleLogout} className={classes.logout}>
         Logout
       </Button>
     </Toolbar>

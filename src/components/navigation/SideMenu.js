@@ -18,7 +18,7 @@ const SideMenu = ({ sideMenuOpen, setSideMenuOpen }) => {
   const classes = useStyles();
 
   return (
-    <Drawer anchor="left" open={sideMenuOpen} className={classes.sideMenu}>
+    <Drawer anchor="left" open={sideMenuOpen} className={classes.sideMenu} variant='temporary'>
       <List>
         <ListItem>
           <Button onClick={() => setSideMenuOpen(false)}>

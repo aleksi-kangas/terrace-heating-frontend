@@ -10,14 +10,14 @@ const useStyles = makeStyles(() => ({
   }
 }));
 
-const Navigation = ({ user }) => {
+const Navigation = ({ user, setUser }) => {
   const [sideMenuOpen, setSideMenuOpen] = useState(false);
 
   const classes = useStyles();
 
   return (
     <AppBar position="static" className={classes.appBar}>
-      <Header setSideMenuOpen={setSideMenuOpen} user={user}/>
+      <Header setSideMenuOpen={setSideMenuOpen} user={user} setUser={setUser}/>
       <SideMenu sideMenuOpen={sideMenuOpen} setSideMenuOpen={setSideMenuOpen}/>
     </AppBar>
   )
