@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import { Grid, Button, ButtonGroup } from '@material-ui/core';
+import { Grid, Button, ButtonGroup, LinearProgress } from '@material-ui/core';
 import { Charts, ChartContainer, ChartRow, YAxis, LineChart, Resizable, Legend, styler } from "react-timeseries-charts";
 import { TimeSeries, TimeRange } from 'pondjs';
 import moment from 'moment';
 
 
-const Chart = ({ data, columns, id, title }) => {
+const LineGraph = ({ data, columns, graphId, graphTitle }) => {
   // Contains all data
   const [dataTimeSeries, setDataTimeSeries] = useState(null);
   // Dynamic time range that changes when zooming the chart
@@ -78,14 +78,14 @@ const Chart = ({ data, columns, id, title }) => {
           max = croppedDataTimeSeries.max(columnId);
         }
       });
-      setYAxisLimits({ min: min , max: max })
+      setYAxisLimits({ min: min - 1.0 , max: max + 1.0 })
     }
   }, [currentTimeRange, activeColumns]);
 
   // Data not loaded yet
   if (!data || !dataTimeSeries ||!yAxisLimits) {
     return (
-      <p>Loading...</p>
+      <LinearProgress />
     )
   }
 
@@ -99,7 +99,7 @@ const Chart = ({ data, columns, id, title }) => {
       const timeRange = new TimeRange(dateFrom, dateTo);
       return (
         <Button onClick={() => setCurrentTimeRange(timeRange)}>
-          {days} days
+          {days === 1 ? `1 day` : `${days} days`}
         </Button>
       )
     };
@@ -175,7 +175,7 @@ const Chart = ({ data, columns, id, title }) => {
     charts.push(
       <LineChart
         key={columnId}
-        axis={id}
+        axis={graphId}
         series={dataTimeSeries}
         columns={[columnId]}
         style={lineStyle}
@@ -208,7 +208,7 @@ const Chart = ({ data, columns, id, title }) => {
         <Grid item xs={12} xl={11} >
           <Resizable>
             <ChartContainer
-              title={title}
+              title={graphTitle}
               style={{
                 background: "#201d1e",
                 borderRadius: 10,
@@ -229,7 +229,7 @@ const Chart = ({ data, columns, id, title }) => {
                   {charts}
                 </Charts>
                 <YAxis
-                  id={id}
+                  id={graphId}
                   label="Celsius"
                   min={yAxisLimits.min}
                   max={yAxisLimits.max}
@@ -273,4 +273,4 @@ const Chart = ({ data, columns, id, title }) => {
   )
 };
 
-export default Chart;
+export default LineGraph;
