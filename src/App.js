@@ -4,14 +4,18 @@ import Route from 'react-router-dom/Route.js';
 import moment from 'moment';
 import { useSocket } from 'use-socketio/lib/io';
 import heatPumpService from './services/heatPump.js';
+import loginService from './services/login.js';
 import { Container } from '@material-ui/core';
-import NavBar from './components/NavBar.js';
-import Chart from './components/Chart.js';
+import Navigation from './components/navigation/Navigation.js';
+import Graphs from './components/Graphs.js';
 import Control from './components/Control.js';
-import Statistics from './components/Statistics.js';
+import Overview from './components/Overview.js';
+import LoginForm from './components/LoginForm.js';
+import { Redirect } from 'react-router-dom';
 
 const App = () => {
   const [data, setData] = useState(null);
+  const [user, setUser] = useState(null);
   const dataCoverTimePeriodHours = 24 * 7; // One week
 
   // Fetching pre-existing data
@@ -53,32 +57,46 @@ const App = () => {
     }
   });
 
-  const heatDistCircuitVariables = [
-    { label: 'Heat Distribution Circuit 1', id: 'heatDistCircuitTemp1' },
-    { label: 'Heat Distribution Circuit 2', id: 'heatDistCircuitTemp2' },
-    { label: 'Heat Distribution Circuit 3', id: 'heatDistCircuitTemp3' },
-  ];
+  const handleLogin = async (event) => {
+    event.preventDefault();
+    try {
+      // Validate login on backend
+      const user = await loginService.login({
+        username: event.target.username.value,
+        password: event.target.password.value
+      });
+      // Set user information to browser's local storage
+      window.localStorage.setItem('user', JSON.stringify(user));
+      // Update state
+      setUser(user);
+    } catch (error) {
+      console.error(error.message);
+    }
+  };
 
   return (
-    <Container>
-      <NavBar />
-      <Switch>
-        <Route path="/charts">
-          <Chart
-            data={data}
-            columns={heatDistCircuitVariables}
-            id={'heatDistCircuitTemp'}
-            title={'Heat Distribution Circuits'}
+    <div>
+      <Navigation user={user}/>
+      <Container>
+        <Switch>
+          <Route path="/graphs" render={() =>
+            user ? <Graphs data={data}/> : <Redirect to="/login" />
+          }
           />
-        </Route>
-        <Route path="/control">
-          <Control />
-        </Route>
-        <Route path="/">
-          <Statistics />
-        </Route>
-      </Switch>
-    </Container>
+          <Route path="/control" render={() =>
+            user ? <Control /> : <Redirect to='/login' />
+          }
+          />
+          <Route path="/login">
+            <LoginForm handleLogin={handleLogin} user={user} />
+          </Route>
+          <Route path="/" render={() =>
+            user ? <Overview /> : <Redirect to='/login' />
+          }
+          />
+        </Switch>
+      </Container>
+    </div>
   );
 };
 
