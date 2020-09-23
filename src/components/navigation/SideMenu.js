@@ -7,20 +7,9 @@ import TuneIcon from '@material-ui/icons/Tune.js';
 import { makeStyles } from '@material-ui/core/styles';
 import Hidden from '@material-ui/core/Hidden';
 
-const drawerWidth = 240;
-
 const useStyles = makeStyles((theme) => ({
-  drawer: {
-    [theme.breakpoints.up('sm')]: {
-      width: drawerWidth,
-      flexShrink: 0,
-    },
-  },
   // Necessary for content to be below app bar
-  toolbar: theme.mixins.toolbar,
-  drawerPaper: {
-    width: drawerWidth,
-  }
+  toolbar: theme.mixins.toolbar
 }));
 
 const SideMenu = ({ sideMenuOpen, setSideMenuOpen }) => {
@@ -66,16 +55,13 @@ const SideMenu = ({ sideMenuOpen, setSideMenuOpen }) => {
   );
 
   return (
-    <nav className={classes.drawer}>
+    <nav>
       <Hidden smUp implementation="css">
         <Drawer
           variant="temporary"
           anchor='left'
           open={sideMenuOpen}
           onClose={() => setSideMenuOpen(false)}
-          classes={{
-            paper: classes.drawerPaper,
-          }}
           ModalProps={{
             keepMounted: true, // Better open performance on mobile.
           }}
@@ -88,9 +74,6 @@ const SideMenu = ({ sideMenuOpen, setSideMenuOpen }) => {
           variant="temporary"
           open={sideMenuOpen}
           onClose={() => setSideMenuOpen(false)}
-          classes={{
-            paper: classes.drawerPaper,
-          }}
         >
           {drawer}
         </Drawer>
