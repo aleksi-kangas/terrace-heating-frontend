@@ -243,15 +243,7 @@ const LineGraph = ({ data, columns, graphId, graphTitle }) => {
             </ChartContainer>
           </Resizable>
         </Grid>
-        <Grid
-          item
-          spacing={0}
-          direction='row'
-          alignItems='center'
-          justify='center'
-          xl={1}
-          xs={1}
-        >
+        <Grid item xl={1} xs={1}>
           <TimeControlButtonGroup />
         </Grid>
       </Grid>
