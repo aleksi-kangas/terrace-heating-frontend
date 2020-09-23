@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import Switch from 'react-router-dom/Switch.js';
-import Route from 'react-router-dom/Route.js';
+import { Route, Switch } from 'react-router-dom';
 import moment from 'moment';
 import { useSocket } from 'use-socketio/lib/io';
 import heatPumpService from './services/heatPump.js';
