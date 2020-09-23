@@ -2,6 +2,7 @@ import React from 'react';
 import { Button, Toolbar, Typography } from '@material-ui/core';
 import MenuIcon from '@material-ui/icons/Menu.js';
 import { makeStyles } from '@material-ui/core/styles';
+import IconButton from '@material-ui/core/IconButton';
 
 
 const useStyles = makeStyles(() => ({
@@ -31,12 +32,15 @@ const Header = ({ setSideMenuOpen, user, setUser }) => {
 
   return (
     <Toolbar>
-      <Button
+      <IconButton
+        color="inherit"
+        aria-label="open drawer"
+        edge="start"
         onClick={() => setSideMenuOpen(true)}
       >
         <MenuIcon />
-      </Button>
-      <Typography variant='h6'>
+      </IconButton>
+      <Typography variant='h6' noWrap>
         Terrace Heating Control
       </Typography>
       <Button onClick={handleLogout} className={classes.logout}>

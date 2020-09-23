@@ -3,6 +3,7 @@ import { AppBar } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import Header from './Header.js';
 import SideMenu from './SideMenu.js';
+import CssBaseline from '@material-ui/core/CssBaseline';
 
 const useStyles = makeStyles(() => ({
   appBar: {
@@ -16,10 +17,13 @@ const Navigation = ({ user, setUser }) => {
   const classes = useStyles();
 
   return (
-    <AppBar position="static" className={classes.appBar}>
-      <Header setSideMenuOpen={setSideMenuOpen} user={user} setUser={setUser}/>
+    <div>
+      <CssBaseline/>
+      <AppBar position="static" className={classes.appBar}>
+        <Header setSideMenuOpen={setSideMenuOpen} user={user} setUser={setUser}/>
+      </AppBar>
       <SideMenu sideMenuOpen={sideMenuOpen} setSideMenuOpen={setSideMenuOpen}/>
-    </AppBar>
+    </div>
   )
 };
 

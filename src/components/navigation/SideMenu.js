@@ -2,14 +2,24 @@ import React from 'react';
 import { Button, Drawer, List, ListItem, ListItemText } from '@material-ui/core';
 import { Link } from 'react-router-dom';
 import AssessmentIcon from '@material-ui/icons/Assessment.js';
-import CloseIcon from '@material-ui/icons/Close.js';
 import ShowChartIcon from '@material-ui/icons/ShowChart.js';
 import TuneIcon from '@material-ui/icons/Tune.js';
 import { makeStyles } from '@material-ui/core/styles';
+import Hidden from '@material-ui/core/Hidden';
 
-const useStyles = makeStyles(() => ({
-  sideMenu: {
-    background: 'lightgray'
+const drawerWidth = 240;
+
+const useStyles = makeStyles((theme) => ({
+  drawer: {
+    [theme.breakpoints.up('sm')]: {
+      width: drawerWidth,
+      flexShrink: 0,
+    },
+  },
+  // Necessary for content to be below app bar
+  toolbar: theme.mixins.toolbar,
+  drawerPaper: {
+    width: drawerWidth,
   }
 }));
 
@@ -17,14 +27,10 @@ const SideMenu = ({ sideMenuOpen, setSideMenuOpen }) => {
 
   const classes = useStyles();
 
-  return (
-    <Drawer anchor="left" open={sideMenuOpen} className={classes.sideMenu} variant='temporary'>
+  const drawer = (
+    <div>
+      <div className={classes.toolbar}/>
       <List>
-        <ListItem>
-          <Button onClick={() => setSideMenuOpen(false)}>
-            <CloseIcon />
-          </Button>
-        </ListItem>
         <ListItem>
           <AssessmentIcon />
           <Link to='/'>
@@ -56,8 +62,41 @@ const SideMenu = ({ sideMenuOpen, setSideMenuOpen }) => {
           </Link>
         </ListItem>
       </List>
-    </Drawer>
-  )
+    </div>
+  );
+
+  return (
+    <nav className={classes.drawer}>
+      <Hidden smUp implementation="css">
+        <Drawer
+          variant="temporary"
+          anchor='left'
+          open={sideMenuOpen}
+          onClose={() => setSideMenuOpen(false)}
+          classes={{
+            paper: classes.drawerPaper,
+          }}
+          ModalProps={{
+            keepMounted: true, // Better open performance on mobile.
+          }}
+        >
+          {drawer}
+        </Drawer>
+      </Hidden>
+      <Hidden xsDown implementation="css">
+        <Drawer
+          variant="temporary"
+          open={sideMenuOpen}
+          onClose={() => setSideMenuOpen(false)}
+          classes={{
+            paper: classes.drawerPaper,
+          }}
+        >
+          {drawer}
+        </Drawer>
+      </Hidden>
+    </nav>
+  );
 };
 
 export default SideMenu;
