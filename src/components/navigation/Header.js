@@ -34,7 +34,6 @@ const Header = ({ setSideMenuOpen, user, setUser }) => {
     <Toolbar>
       <IconButton
         color="inherit"
-        aria-label="open drawer"
         edge="start"
         onClick={() => setSideMenuOpen(true)}
       >
