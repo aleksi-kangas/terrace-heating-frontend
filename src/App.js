@@ -5,9 +5,9 @@ import { useSocket } from 'use-socketio/lib/io';
 import heatPumpService from './services/heatPump.js';
 import { Container } from '@material-ui/core';
 import Navigation from './components/navigation/Navigation.js';
-import Graphs from './components/Graphs.js';
+import Graphs from './components/graphs/Graphs.js';
 import Control from './components/Control.js';
-import Overview from './components/Overview.js';
+import Overview from './components/overview/Overview.js';
 import LoginForm from './components/LoginForm.js';
 import { Redirect, useHistory } from 'react-router-dom';
 
