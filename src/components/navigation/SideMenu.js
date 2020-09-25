@@ -5,10 +5,9 @@ import AssessmentIcon from '@material-ui/icons/Assessment.js';
 import ShowChartIcon from '@material-ui/icons/ShowChart.js';
 import TuneIcon from '@material-ui/icons/Tune.js';
 import { makeStyles } from '@material-ui/core/styles';
-import Hidden from '@material-ui/core/Hidden';
 
 const useStyles = makeStyles((theme) => ({
-  // Necessary for content to be below app bar
+  // Necessary for content to be below appbar
   toolbar: theme.mixins.toolbar
 }));
 
@@ -55,30 +54,17 @@ const SideMenu = ({ sideMenuOpen, setSideMenuOpen }) => {
   );
 
   return (
-    <nav>
-      <Hidden smUp implementation="css">
-        <Drawer
-          variant="temporary"
-          anchor='left'
-          open={sideMenuOpen}
-          onClose={() => setSideMenuOpen(false)}
-          ModalProps={{
-            keepMounted: true, // Better open performance on mobile.
-          }}
-        >
-          {drawer}
-        </Drawer>
-      </Hidden>
-      <Hidden xsDown implementation="css">
-        <Drawer
-          variant="temporary"
-          open={sideMenuOpen}
-          onClose={() => setSideMenuOpen(false)}
-        >
-          {drawer}
-        </Drawer>
-      </Hidden>
-    </nav>
+    <Drawer
+      variant="temporary"
+      anchor='left'
+      open={sideMenuOpen}
+      onClose={() => setSideMenuOpen(false)}
+      ModalProps={{
+        keepMounted: true, // Better open performance on mobile.
+      }}
+    >
+      {drawer}
+    </Drawer>
   );
 };
 
