@@ -12,8 +12,8 @@ const Graphs = ({ data }) => {
   ];
 
   const generalTempVariables = [
-    { label: 'Outside', id: 'outsideTemp' },
-    { label: 'Inside', id: 'insideTemp' },
+    { label: 'Outside °C', id: 'outsideTemp' },
+    { label: 'Inside °C', id: 'insideTemp' },
   ];
 
   const handleChange = (event, newValue) => {
