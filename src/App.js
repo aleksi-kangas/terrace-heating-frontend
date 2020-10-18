@@ -76,7 +76,7 @@ const App = () => {
           }
           />
           <Route path="/control" render={() =>
-            user ? <Control /> : <Redirect to='/login' />
+            user ? <Control user={user} /> : <Redirect to='/login' />
           }
           />
           <Route path="/login" render={() =>
@@ -84,7 +84,7 @@ const App = () => {
           }
           />
           <Route path="/" render={() =>
-            user ? <Overview /> : <Redirect to='/login' />
+            user ? <Overview data={data}/> : <Redirect to='/login' />
           }
           />
         </Switch>
