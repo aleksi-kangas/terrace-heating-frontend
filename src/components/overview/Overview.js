@@ -2,7 +2,6 @@ import React from 'react';
 import { Grid, Paper } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import InfoPanel from './InfoPanel.js';
-import Alerts from './Alerts.js';
 
 const useStyles = makeStyles({
   container: {
@@ -11,7 +10,6 @@ const useStyles = makeStyles({
   panel: {
     margin: 50,
   }
-
 });
 
 const Overview = ({ data }) => {
@@ -22,11 +20,6 @@ const Overview = ({ data }) => {
       <Grid container className={classes.panel}>
         <Grid item component={Paper}>
           <InfoPanel data={data}/>
-        </Grid>
-      </Grid>
-      <Grid container className={classes.panel}>
-        <Grid item component={Paper}>
-
         </Grid>
       </Grid>
     </Grid>

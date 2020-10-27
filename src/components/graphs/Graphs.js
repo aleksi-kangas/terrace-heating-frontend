@@ -1,54 +1,36 @@
 import React, { useState } from 'react';
-import LineGraph from './LineGraph.js';
-import { AppBar, Tabs, Tab } from '@material-ui/core';
+import { Grid, Paper } from '@material-ui/core';
+import TimeControlGroup from './TimeControlGroup.js';
+import { makeStyles } from '@material-ui/core/styles';
+import GraphSelector from './GraphSelector.js';
+
+const useStyles = makeStyles({
+  container: {
+    margin: 50,
+    padding: 30,
+  },
+});
+
 
 const Graphs = ({ data }) => {
-  const [activeTab, setActiveTab] = useState(0);
+  // Dynamic time range that changes when zooming the chart
+  const [currentTimeRange, setTimeRange] = useState(null);
 
-  const heatDistCircuitVariables = [
-    { label: 'Heat Distribution Circuit 1', id: 'heatDistCircuitTemp1' },
-    { label: 'Heat Distribution Circuit 2', id: 'heatDistCircuitTemp2' },
-    { label: 'Heat Distribution Circuit 3', id: 'heatDistCircuitTemp3' },
-  ];
-
-  const generalTempVariables = [
-    { label: 'Outside °C', id: 'outsideTemp' },
-    { label: 'Inside °C', id: 'insideTemp' },
-  ];
-
-  const handleChange = (event, newValue) => {
-    setActiveTab(newValue);
-  };
+  const classes = useStyles();
 
   return (
-    <div>
-      <AppBar position="static">
-        <Tabs value={activeTab} onChange={handleChange} centered>
-          <Tab label="Heat Distribution Circuits" />
-          <Tab label="General Temperatures" />
-        </Tabs>
-      </AppBar>
-      { activeTab === 0 ?
-        <LineGraph
-          data={data}
-          graphId='heatDistCircuitTemp'
-          graphTitle='Heat Distribution Circuits'
-          columns={heatDistCircuitVariables}
-        />
-        :
-        null
+    <Grid container direction='column' component={Paper} className={classes.container}>
+      <Grid item>
+        <GraphSelector data={data} currentTimeRange={currentTimeRange} setTimeRange={setTimeRange}/>
+      </Grid>
+      {
+        /*
+        <Grid item>
+        <TimeControlGroup data={data} currentTimeRange={currentTimeRange} setTimeRange={setTimeRange}/>
+        </Grid>
+         */
       }
-      { activeTab === 1 ?
-        <LineGraph
-          data={data}
-          graphId='generalTemps'
-          graphTitle='General Temperatures'
-          columns={generalTempVariables}
-        />
-        :
-        null
-      }
-    </div>
+    </Grid>
   )
 
 };

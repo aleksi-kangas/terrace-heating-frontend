@@ -1,15 +1,13 @@
 import React, { useEffect, useState } from 'react';
-import { Grid, Button, ButtonGroup, LinearProgress } from '@material-ui/core';
+import { LinearProgress } from '@material-ui/core';
 import { Charts, ChartContainer, ChartRow, YAxis, LineChart, Resizable, Legend, styler } from "react-timeseries-charts";
 import { TimeSeries, TimeRange } from 'pondjs';
 import moment from 'moment';
 
 
-const LineGraph = ({ data, columns, graphId, graphTitle }) => {
+const LineGraph = ({ hidden, data, columns, graphId, graphTitle, currentTimeRange, setCurrentTimeRange }) => {
   // Contains all data
   const [dataTimeSeries, setDataTimeSeries] = useState(null);
-  // Dynamic time range that changes when zooming the chart
-  const [currentTimeRange, setCurrentTimeRange] = useState(null);
   // Dynamic Y axis limits are calculated by the actively shown data and time range
   const [yAxisLimits, setYAxisLimits] = useState(null);
   const columnIds = columns.map((column) => column.id);
@@ -82,48 +80,16 @@ const LineGraph = ({ data, columns, graphId, graphTitle }) => {
     }
   }, [currentTimeRange, activeColumns]);
 
+  if (hidden) {
+    return null;
+  }
+
   // Data not loaded yet
   if (!data || !dataTimeSeries ||!yAxisLimits) {
     return (
       <LinearProgress />
     )
   }
-
-  /**
-   * Timeframe buttons
-   */
-  const TimeControlButtonGroup = () => {
-    const dayButton = (days) => {
-      const dateTo = moment();
-      const dateFrom = moment().subtract(days, 'd');
-      const timeRange = new TimeRange(dateFrom, dateTo);
-      return (
-        <Button onClick={() => setCurrentTimeRange(timeRange)}>
-          {days === 1 ? `1 day` : `${days} days`}
-        </Button>
-      )
-    };
-
-    const resetButton = () => {
-      // Calculate time range of the data
-      const startTime = moment(data[0].time);
-      const endTime = moment(data[data.length - 1].time);
-      return (
-        <Button onClick={() => setCurrentTimeRange(new TimeRange(startTime, endTime))}>
-          Reset
-        </Button>
-      )
-    };
-
-    return (
-      <ButtonGroup orientation='vertical'>
-        {dayButton(1)}
-        {dayButton(3)}
-        {dayButton(7)}
-        {resetButton()}
-      </ButtonGroup>
-    )
-  };
 
   /**
    * Styling of the line
@@ -200,68 +166,50 @@ const LineGraph = ({ data, columns, graphId, graphTitle }) => {
   };
 
   return (
-    <Grid container>
-      <Grid
-        container
-        direction='row'
-      >
-        <Grid item xs={12} xl={11} >
-          <Resizable>
-            <ChartContainer
-              title={graphTitle}
-              style={{
-                background: "#201d1e",
-                borderRadius: 10,
-                borderStyle: "solid",
-                borderWidth: 1,
-                borderColor: "#232122"
-              }}
-              padding={20}
-              enableDragZoom
-              format={(time) => formatTime(time)}
-              minTime={dataTimeSeries.begin()}
-              maxTime={new Date()}
-              timeRange={currentTimeRange}
-              onTimeRangeChanged={handleTimeRangeChange}
-            >
-              <ChartRow height="400">
-                <Charts>
-                  {charts}
-                </Charts>
-                <YAxis
-                  id={graphId}
-                  label="Celsius"
-                  min={yAxisLimits.min}
-                  max={yAxisLimits.max}
-                  width="80"
-                  type="linear"
-                  format=".2"
-                  showGrid={true}
-                  hideAxisLine={true}
-                />
-              </ChartRow>
-            </ChartContainer>
-          </Resizable>
-        </Grid>
-        <Grid item xl={1} xs={1}>
-          <TimeControlButtonGroup />
-        </Grid>
-      </Grid>
-      <Grid
-        container
-        direction='row'
-        justify='center'
-      >
-        <Grid item xs={8} xl={12}>
-          <Legend
-            type="swatch"
-            style={legendStyle}
-            categories={legend}
-            onSelectionChange={handleSelectionChange}
-          />
-        </Grid>
-      </Grid>
-    </Grid>
+    <div>
+      <Resizable>
+        <ChartContainer
+          title={graphTitle}
+          style={{
+            background: "#201d1e",
+            borderRadius: 10,
+            borderStyle: "solid",
+            borderWidth: 1,
+            borderColor: "#232122"
+          }}
+          padding={20}
+          enableDragZoom
+          format={(time) => formatTime(time)}
+          minTime={dataTimeSeries.begin()}
+          maxTime={new Date()}
+          timeRange={currentTimeRange}
+          onTimeRangeChanged={handleTimeRangeChange}
+        >
+          <ChartRow height="400">
+            <Charts>
+              {charts}
+            </Charts>
+            <YAxis
+              id={graphId}
+              label="Celsius"
+              min={yAxisLimits.min}
+              max={yAxisLimits.max}
+              width="80"
+              type="linear"
+              format=".2"
+              showGrid={true}
+              hideAxisLine={true}
+            />
+          </ChartRow>
+        </ChartContainer>
+      </Resizable>
+      <Legend
+        type="swatch"
+        style={legendStyle}
+        categories={legend}
+        onSelectionChange={handleSelectionChange}
+      />
+    </div>
   )
 };
 

@@ -84,7 +84,7 @@ const App = () => {
           }
           />
           <Route path="/" render={() =>
-            user ? <Overview data={data}/> : <Redirect to='/login' />
+            user ? <Overview data={data} /> : <Redirect to='/login' />
           }
           />
         </Switch>
