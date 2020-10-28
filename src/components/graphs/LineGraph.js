@@ -1,8 +1,16 @@
 import React, { useEffect, useState } from 'react';
-import { LinearProgress } from '@material-ui/core';
-import { Charts, ChartContainer, ChartRow, YAxis, LineChart, Resizable, Legend, styler } from "react-timeseries-charts";
+import { Grid, LinearProgress } from '@material-ui/core';
+import { Charts, ChartContainer, ChartRow, YAxis, LineChart, Resizable, styler } from "react-timeseries-charts";
 import { TimeSeries, TimeRange } from 'pondjs';
 import moment from 'moment';
+import GraphLegend from './GraphLegend.js';
+import { makeStyles } from '@material-ui/core/styles';
+
+const useStyles = makeStyles(() => ({
+  legend: {
+    margin: 20,
+  }
+}));
 
 
 const LineGraph = ({ hidden, data, columns, graphId, graphTitle, currentTimeRange, setCurrentTimeRange }) => {
@@ -12,6 +20,8 @@ const LineGraph = ({ hidden, data, columns, graphId, graphTitle, currentTimeRang
   const [yAxisLimits, setYAxisLimits] = useState(null);
   const columnIds = columns.map((column) => column.id);
   const [activeColumns, setActiveColumns] = useState(columnIds);
+
+  const classes = useStyles();
 
   useEffect(() => {
     if (data && data.length !== 0) {
@@ -103,34 +113,6 @@ const LineGraph = ({ hidden, data, columns, graphId, graphTitle, currentTimeRang
     setCurrentTimeRange(timeRange);
   };
 
-  /**
-   * Legend-component related functionality and styling.
-   * Produces labels for the data and allows user to filter which data lines to show in the chart.
-   */
-  const legend = [
-    ...columns.map((column) => {
-      return (
-          {
-            key: column.id,
-            label: column.label,
-            disabled: !activeColumns.includes(column.id)
-          }
-      )
-    })
-  ];
-
-  const legendStyle = styler(columnIds, 'Dark2');
-
-  const handleSelectionChange = (columnId) => {
-    const newActive = [...activeColumns];
-    if (newActive.includes(columnId)) {
-      newActive.splice(newActive.indexOf(columnId), 1)
-    } else {
-      newActive.push(columnId)
-    }
-    setActiveColumns(newActive);
-  };
-
 
   /**
    * Produces line charts for the data.
@@ -166,7 +148,7 @@ const LineGraph = ({ hidden, data, columns, graphId, graphTitle, currentTimeRang
   };
 
   return (
-    <div>
+    <Grid item>
       <Resizable>
         <ChartContainer
           title={graphTitle}
@@ -203,13 +185,15 @@ const LineGraph = ({ hidden, data, columns, graphId, graphTitle, currentTimeRang
           </ChartRow>
         </ChartContainer>
       </Resizable>
-      <Legend
-        type="swatch"
-        style={legendStyle}
-        categories={legend}
-        onSelectionChange={handleSelectionChange}
-      />
-    </div>
+      <Grid container justify='center' className={classes.legend}>
+        <GraphLegend
+          columns={columns}
+          activeColumns={activeColumns}
+          setActiveColumns={setActiveColumns}
+          columnIds={columnIds}
+        />
+      </Grid>
+    </Grid>
   )
 };
 

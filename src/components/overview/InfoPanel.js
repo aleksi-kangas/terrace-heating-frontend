@@ -5,11 +5,14 @@ import { makeStyles } from '@material-ui/core/styles';
 
 const useStyles = makeStyles({
   container: {
-    margin: '50px',
+    margin: 50,
+  },
+  paper: {
+    margin: 50,
   },
   card: {
     borderBottom: '10px solid rgba(0, 150, 0, 0.5)',
-    margin: '0 2px !important',
+    margin: 20,
     width: 200,
   },
 });
@@ -29,8 +32,7 @@ const InfoPanel = ({ data }) => {
   }, [data]);
 
   return (
-    <div>
-      <Grid container className={classes.container}>
+      <Grid container className={classes.container} justify='center'>
         <Grid item component={Card} className={classes.card}>
           <CardContent>
             <Typography color='textSecondary' gutterBottom>Inside Temperature</Typography>
@@ -56,7 +58,6 @@ const InfoPanel = ({ data }) => {
           </CardContent>
         </Grid>
       </Grid>
-    </div>
   )
 };
 

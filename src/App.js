@@ -3,7 +3,6 @@ import { Route, Switch } from 'react-router-dom';
 import moment from 'moment';
 import { useSocket } from 'use-socketio/lib/io';
 import heatPumpService from './services/heatPump.js';
-import { Container } from '@material-ui/core';
 import Navigation from './components/navigation/Navigation.js';
 import Graphs from './components/graphs/Graphs.js';
 import Control from './components/Control.js';
@@ -17,6 +16,15 @@ const App = () => {
   const dataCoverTimePeriodHours = 24 * 7; // One week
 
   const history = useHistory();
+
+  useEffect(() => {
+    // Get logged in user from local storage
+    const loggedUser = window.localStorage.getItem('user');
+    if (loggedUser) {
+      const user = JSON.parse(loggedUser);
+      setUser(user);
+    }
+  }, []);
 
   // Fetching pre-existing data
   useEffect(() => {
@@ -57,38 +65,27 @@ const App = () => {
     }
   });
 
-  useEffect(() => {
-    // Get logged in user from local storage
-    const loggedUser = window.localStorage.getItem('user');
-    if (loggedUser) {
-      const user = JSON.parse(loggedUser);
-      setUser(user);
-    }
-  }, []);
-
   return (
     <div>
       <Navigation user={user} setUser={setUser}/>
-      <Container>
-        <Switch>
-          <Route path="/graphs" render={() =>
-            user ? <Graphs data={data}/> : <Redirect to="/login" />
-          }
-          />
-          <Route path="/control" render={() =>
-            user ? <Control user={user} /> : <Redirect to='/login' />
-          }
-          />
-          <Route path="/login" render={() =>
-            user ? <Redirect to='/' /> : <LoginForm history={history} setUser={setUser}/>
-          }
-          />
-          <Route path="/" render={() =>
-            user ? <Overview data={data} /> : <Redirect to='/login' />
-          }
-          />
-        </Switch>
-      </Container>
+      <Switch>
+        <Route path="/graphs" render={() =>
+          user ? <Graphs data={data}/> : <Redirect to="/login" />
+        }
+        />
+        <Route path="/control" render={() =>
+          user ? <Control user={user} /> : <Redirect to='/login' />
+        }
+        />
+        <Route path="/login" render={() =>
+          user ? <Redirect to='/' /> : <LoginForm history={history} setUser={setUser}/>
+        }
+        />
+        <Route path="/" render={() =>
+          user ? <Overview data={data} /> : <Redirect to='/login' />
+        }
+        />
+      </Switch>
     </div>
   );
 };

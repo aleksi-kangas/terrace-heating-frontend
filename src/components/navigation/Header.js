@@ -7,7 +7,8 @@ import IconButton from '@material-ui/core/IconButton';
 
 const useStyles = makeStyles(() => ({
   logout: {
-    marginLeft: 'auto'
+    marginLeft: 'auto',
+    color: 'white',
   }
 }));
 

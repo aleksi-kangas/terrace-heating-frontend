@@ -1,10 +1,13 @@
 import React from 'react';
+import { Grid } from '@material-ui/core';
 
-const Control = () => {
+const Control = ({ user }) => {
   return (
-    <div>
-      Control
-    </div>
+    <Grid container>
+      <Grid item>
+        Control...
+      </Grid>
+    </Grid>
   )
 };
 
