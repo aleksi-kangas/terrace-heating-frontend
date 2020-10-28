@@ -5,7 +5,6 @@ import InfoPanel from './InfoPanel.js';
 const useStyles = makeStyles({
   container: {
     margin: 50,
-    padding: 30,
   },
 });
 

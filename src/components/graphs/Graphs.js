@@ -1,19 +1,19 @@
 import React, { useState } from 'react';
-import { Grid, Paper, Tab, Tabs } from '@material-ui/core';
+import { Grid, Tab, Tabs } from '@material-ui/core';
 import TimeControlGroup from './TimeControlGroup.js';
 import { makeStyles } from '@material-ui/core/styles';
 import LineGraph from './LineGraph.js';
 
 const useStyles = makeStyles({
   container: {
-    margin: 50,
-    padding: 30,
+    margin: 20,
   },
   tabs: {
     borderRadius: 10,
     marginBottom: 10,
     marginTop: 10,
     background: 'gray',
+    color: 'white',
   }
 });
 
@@ -31,8 +31,18 @@ const variables = [
     columns: [
       { label: 'Inside °C', id: 'insideTemp' },
       { label: 'Outside °C', id: 'outsideTemp' },
+      { label: 'Hot Gas °C', id: 'hotGasTemp' },
     ],
   },
+  {
+    title: 'Ground-loop and Tanks',
+    columns: [
+      { label: 'Ground-loop Input °C', id: 'groundLoopTempInput'},
+      { label: 'Ground-loop Output °C', id: 'groundLoopTempOutput'},
+      { label: 'Lower Tank °C', id: 'lowerTankTemp'},
+      { label: 'Upper Tank °C', id: 'upperTankTemp'},
+    ]
+  }
 ];
 
 
@@ -79,7 +89,7 @@ const Graphs = ({ data }) => {
   );
 
   return (
-    <Grid item component={Paper} className={classes.container}>
+    <Grid item className={classes.container}>
       <Grid item className={classes.tabs}>
         {tabTitles}
       </Grid>

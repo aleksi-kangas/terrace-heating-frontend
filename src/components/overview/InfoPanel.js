@@ -5,7 +5,6 @@ import { makeStyles } from '@material-ui/core/styles';
 
 const useStyles = makeStyles({
   container: {
-    margin: 50,
   },
   paper: {
     margin: 50,
