@@ -3,6 +3,8 @@ import clsx from 'clsx';
 import { Card, CardContent, CircularProgress, Grid, Typography } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import moment from 'moment';
+import { useSocket } from 'use-socketio';
+import heatPumpService from '../../services/heatPump.js';
 
 const useStyles = makeStyles({
   card: {
@@ -29,10 +31,19 @@ const StatusPanel = ({ data }) => {
   useEffect(() => {
     if (data) {
       setLatestUpdate(moment(data[data.length - 1].time).format('HH:mm'));
-      setActiveCircuits(data[data.length - 1].activeHeatDistCircuits);
     }
   }, [data]);
 
+  // Fetching active circuits
+  useEffect(() => {
+    heatPumpService
+      .getActiveCircuits()
+      .then(_r => null);
+  }, []);
+
+  useSocket('activeCircuits', activeCircuitsData => {
+    setActiveCircuits(activeCircuitsData);
+  });
 
   return (
     <Grid container direction='column'>

@@ -12,4 +12,8 @@ const getLastWeek = async () => {
   return response.data;
 };
 
-export default { getLastWeek }
+const getActiveCircuits = async () => {
+  await axios.get('/api/heat-pump/circuits');
+};
+
+export default { getLastWeek, getActiveCircuits }
