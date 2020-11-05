@@ -11,6 +11,9 @@ const useStyles = makeStyles({
     margin: 20,
     width: 200,
   },
+  loading: {
+    borderBottom: '10px solid rgba(100, 100, 100, 0.5)'
+  },
   active: {
     borderBottom: '10px solid rgba(0, 150, 0, 0.5)',
   },
@@ -45,38 +48,48 @@ const StatusPanel = ({ data }) => {
     setActiveCircuits(activeCircuitsData);
   });
 
+  const statusColor = (circuitNumber) => {
+    if (!activeCircuits) return classes.loading;
+
+    if (circuitNumber === 3 && activeCircuits < 3) {
+      return classes.stopped;
+    } else {
+      return classes.active;
+    }
+  };
+
   return (
     <Grid container direction='column'>
       <Typography variant='h4' align='center' className={classes.header}>Heat Distribution Status</Typography>
       <Grid item container justify='center'>
-        <Grid item component={Card} className={clsx(classes.card, classes.active)}>
+        <Grid item component={Card} className={clsx(classes.card, statusColor(1))}>
           <CardContent>
             <Typography variant='h5' align='center'>Circuit 1</Typography>
-            <Typography color='textSecondary' align='center' component={'span'}>
+            <Typography color='textSecondary' align='center'>
               { activeCircuits ? 'Active' : <CircularProgress/> }
             </Typography>
           </CardContent>
         </Grid>
-        <Grid item component={Card} className={clsx(classes.card, classes.active)}>
+        <Grid item component={Card} className={clsx(classes.card, statusColor(2))}>
           <CardContent>
             <Typography variant='h5' align='center'>Circuit 2</Typography>
-            <Typography color='textSecondary' align='center' component={'span'}>
+            <Typography color='textSecondary' align='center'>
               { activeCircuits ? 'Active' : <CircularProgress/> }
             </Typography>
           </CardContent>
         </Grid>
-        <Grid item component={Card} className={clsx(classes.card, activeCircuits < 3 ? classes.stopped : classes.active)}>
+        <Grid item component={Card} className={clsx(classes.card, statusColor(3))}>
           <CardContent>
             <Typography variant='h5' align='center'>Circuit 3</Typography>
-            <Typography color='textSecondary' align='center' component={'span'}>
-              { activeCircuits === 3 ? 'Active' : 'Stopped' }
+            <Typography color='textSecondary' align='center'>
+              { activeCircuits ? (activeCircuits === 3 ? 'Active' : 'In-Active') : <CircularProgress/> }
             </Typography>
           </CardContent>
         </Grid>
-        <Grid item component={Card} className={clsx(classes.card, classes.active)}>
+        <Grid item component={Card} className={clsx(classes.card, statusColor(0))}>
           <CardContent>
             <Typography variant='h5' align='center'>Latest update</Typography>
-            <Typography color='textSecondary' align='center' component={'span'}>
+            <Typography color='textSecondary' align='center'>
               {latestUpdate ? latestUpdate : <CircularProgress/>}
             </Typography>
           </CardContent>
