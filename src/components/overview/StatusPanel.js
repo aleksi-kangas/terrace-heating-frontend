@@ -41,7 +41,7 @@ const StatusPanel = ({ data }) => {
   useEffect(() => {
     heatPumpService
       .getActiveCircuits()
-      .then(_r => null);
+      .then(res => setActiveCircuits(res));
   }, []);
 
   useSocket('activeCircuits', activeCircuitsData => {
