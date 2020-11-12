@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { connect } from 'react-redux';
 import { Grid, Tab, Tabs } from '@material-ui/core';
 import TimeControlGroup from './TimeControlGroup.js';
 import { makeStyles } from '@material-ui/core/styles';
@@ -107,4 +108,10 @@ const Graphs = ({ data }) => {
   )
 };
 
-export default Graphs;
+const mapStateToProps = (state) => {
+  return {
+    data: state.data.data
+  }
+};
+
+export default connect(mapStateToProps)(Graphs);

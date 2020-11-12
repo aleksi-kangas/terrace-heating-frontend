@@ -1,10 +1,11 @@
-import React, { useState } from 'react';
+import React from 'react';
+import { connect } from 'react-redux';
 import { Button, Grid, TextField } from '@material-ui/core';
-import MuiAlert from '@material-ui/lab/Alert';
 import LockIcon from '@material-ui/icons/Lock';
 import PersonIcon from '@material-ui/icons/Person';
 import { makeStyles } from '@material-ui/core/styles';
-import loginService from '../services/login.js';
+import { login } from '../reducers/userReducer.js';
+import Notification from './Notification.js';
 
 const useStyles = makeStyles(() => ({
   icon: {
@@ -15,41 +16,18 @@ const useStyles = makeStyles(() => ({
   }
 }));
 
-const LoginForm = ({ history, setUser }) => {
-  const [error, setError] = useState(null);
-
+const LoginForm = ({ history, login }) => {
   const classes = useStyles();
-
-  const notification = () => {
-    if (error) {
-      return (
-        <MuiAlert elevation={6} variant='standard' severity='error'>
-          {error}
-        </MuiAlert>
-      )
-    }
-  };
 
   const handleLogin = async (event) => {
     event.preventDefault();
-    try {
-      // Validate login on backend
-      const user = await loginService.login({
-        username: event.target.username.value,
-        password: event.target.password.value
-      });
-      // Set user information to browser's local storage
-      window.localStorage.setItem('user', JSON.stringify(user));
-      // Update state
-      setUser(user);
-      // Redirect
-      history.push('/')
-    } catch (error) {
-      setError('Wrong username or password!');
-      setTimeout(() => {
-        setError(null)
-      }, 5000)
-    }
+    const credentials = {
+      username: event.target.username.value,
+      password: event.target.password.value
+    };
+    login(credentials);
+    // Redirect
+    history.push('/');
   };
 
   return (
@@ -94,12 +72,10 @@ const LoginForm = ({ history, setUser }) => {
             </Grid>
           </Grid>
         </form>
-      </Grid>
-      <Grid item>
-        {error ? notification() : null}
+        <Notification/>
       </Grid>
     </Grid>
   )
 };
 
-export default LoginForm;
+export default connect(null, { login })(LoginForm);

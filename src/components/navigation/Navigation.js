@@ -11,7 +11,7 @@ const useStyles = makeStyles(() => ({
   }
 }));
 
-const Navigation = ({ user, setUser }) => {
+const Navigation = () => {
   const [sideMenuOpen, setSideMenuOpen] = useState(false);
 
   const classes = useStyles();
@@ -20,7 +20,7 @@ const Navigation = ({ user, setUser }) => {
     <div>
       <CssBaseline/>
       <AppBar position="static" className={classes.appBar}>
-        <Header setSideMenuOpen={setSideMenuOpen} user={user} setUser={setUser}/>
+        <Header setSideMenuOpen={setSideMenuOpen}/>
       </AppBar>
       <SideMenu sideMenuOpen={sideMenuOpen} setSideMenuOpen={setSideMenuOpen}/>
     </div>

@@ -1,8 +1,10 @@
 import React from 'react';
+import { connect } from 'react-redux';
 import { Button, Toolbar, Typography } from '@material-ui/core';
 import MenuIcon from '@material-ui/icons/Menu.js';
 import { makeStyles } from '@material-ui/core/styles';
 import IconButton from '@material-ui/core/IconButton';
+import { logout } from '../../reducers/userReducer.js';
 
 
 const useStyles = makeStyles(() => ({
@@ -13,7 +15,7 @@ const useStyles = makeStyles(() => ({
   }
 }));
 
-const Header = ({ setSideMenuOpen, user, setUser }) => {
+const Header = ({ setSideMenuOpen, user, logout }) => {
 
   const classes = useStyles();
 
@@ -27,11 +29,6 @@ const Header = ({ setSideMenuOpen, user, setUser }) => {
     )
   }
 
-  const handleLogout = () => {
-    window.localStorage.removeItem('user');
-    setUser(null)
-  };
-
   return (
     <Toolbar>
       <IconButton
@@ -44,11 +41,17 @@ const Header = ({ setSideMenuOpen, user, setUser }) => {
       <Typography variant='h6' noWrap>
         Terrace Heating Control
       </Typography>
-      <Button onClick={handleLogout} className={classes.logout}>
+      <Button onClick={logout} className={classes.logout}>
         Logout
       </Button>
     </Toolbar>
   )
 };
 
-export default Header;
+const mapStateToProps = (state) => {
+  return {
+    user: state.user
+  }
+};
+
+export default connect(mapStateToProps, { logout })(Header);

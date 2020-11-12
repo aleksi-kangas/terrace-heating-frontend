@@ -1,7 +1,7 @@
 import React from 'react';
 import { Container, Grid, Paper } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
-import InfoPanel from './InfoPanel.js';
+import TemperaturePanel from './TemperaturePanel.js';
 import StatusPanel from './StatusPanel.js';
 
 const useStyles = makeStyles({
@@ -12,16 +12,16 @@ const useStyles = makeStyles({
   },
 });
 
-const Overview = ({ data }) => {
+const Overview = () => {
   const classes = useStyles();
 
   return (
     <Container>
       <Grid item component={Paper} className={classes.container}>
-        <InfoPanel data={data}/>
+        <TemperaturePanel/>
       </Grid>
       <Grid item component={Paper} className={classes.container}>
-        <StatusPanel data={data}/>
+        <StatusPanel/>
       </Grid>
     </Container>
   )

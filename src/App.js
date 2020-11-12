@@ -1,39 +1,30 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
+import { connect } from 'react-redux';
 import { Route, Switch } from 'react-router-dom';
 import moment from 'moment';
 import { useSocket } from 'use-socketio/lib/io';
-import heatPumpService from './services/heatPump.js';
 import Navigation from './components/navigation/Navigation.js';
 import Graphs from './components/graphs/Graphs.js';
 import Control from './components/Control.js';
 import Overview from './components/overview/Overview.js';
 import LoginForm from './components/LoginForm.js';
 import { Redirect, useHistory } from 'react-router-dom';
+import { fetchUserFromLocalStorage } from './reducers/userReducer.js';
+import { initializeData, setData } from './reducers/dataReducer.js';
 
-const App = () => {
-  const [data, setData] = useState(null);
-  const [user, setUser] = useState(null);
+const App = ({ data, latest, initializeData, setData, user, fetchUserFromLocalStorage }) => {
   const dataCoverTimePeriodHours = 24 * 7; // One week
-
   const history = useHistory();
 
   useEffect(() => {
     // Get logged in user from local storage
-    const loggedUser = window.localStorage.getItem('user');
-    if (loggedUser) {
-      const user = JSON.parse(loggedUser);
-      setUser(user);
-    }
-  }, []);
+    fetchUserFromLocalStorage()
+  }, [fetchUserFromLocalStorage]);
 
   // Fetching pre-existing data
   useEffect(() => {
-    heatPumpService
-      .getLastWeek()
-      .then(data => {
-        setData(data);
-      });
-  }, []);
+    initializeData()
+  }, [initializeData]);
 
   // Subscribe to real-time data using socket.io
   useSocket('heatPumpData', heatPumpData => {
@@ -49,7 +40,7 @@ const App = () => {
         // If the data covers more than a fixed time (48 hours) period,
         // remove the oldest entry to accommodate a new entry as in a ring buffer.
         const startTime = moment(data[0].time);
-        const endTime = moment(data[data.length - 1]);
+        const endTime = moment(latest.time);
         const duration = moment.duration(endTime.diff(startTime));
         const hours = duration.asHours();
         if (hours < dataCoverTimePeriodHours) {
@@ -67,22 +58,22 @@ const App = () => {
 
   return (
     <div>
-      <Navigation user={user} setUser={setUser}/>
+      <Navigation/>
       <Switch>
         <Route path="/graphs" render={() =>
-          user ? <Graphs data={data}/> : <Redirect to="/login" />
+          user ? <Graphs/> : <Redirect to="/login" />
         }
         />
         <Route path="/control" render={() =>
-          user ? <Control user={user} /> : <Redirect to='/login' />
+          user ? <Control/> : <Redirect to='/login' />
         }
         />
         <Route path="/login" render={() =>
-          user ? <Redirect to='/' /> : <LoginForm history={history} setUser={setUser}/>
+          user ? <Redirect to='/' /> : <LoginForm history={history}/>
         }
         />
         <Route path="/" render={() =>
-          user ? <Overview data={data} /> : <Redirect to='/login' />
+          user ? <Overview/> : <Redirect to='/login' />
         }
         />
       </Switch>
@@ -90,4 +81,12 @@ const App = () => {
   );
 };
 
-export default App;
+const mapStateToProps = (state) => {
+  return {
+    data: state.data.data,
+    latest: state.data.latest,
+    user: state.user,
+  }
+};
+
+export default connect(mapStateToProps, { fetchUserFromLocalStorage, initializeData, setData })(App);

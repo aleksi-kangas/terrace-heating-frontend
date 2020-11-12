@@ -1,9 +1,8 @@
 import React, { useEffect, useState } from 'react';
+import { connect } from 'react-redux';
 import clsx from 'clsx';
-import { Card, CardContent, CircularProgress, Grid, Typography } from '@material-ui/core';
+import { Card, CardContent, CircularProgress, Grid, Switch, Typography } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
-import moment from 'moment';
-import { useSocket } from 'use-socketio';
 import heatPumpService from '../../services/heatPump.js';
 
 const useStyles = makeStyles({
@@ -19,23 +18,13 @@ const useStyles = makeStyles({
   },
   stopped: {
     borderBottom: '10px solid rgba(150, 0, 0, 0.5)',
-  },
-  header: {
-    margin: 10,
   }
 });
 
-const StatusPanel = ({ data }) => {
-  const [latestUpdate, setLatestUpdate] = useState(null);
+const StatusPanel = () => {
   const [activeCircuits, setActiveCircuits] = useState(null);
 
   const classes = useStyles();
-
-  useEffect(() => {
-    if (data) {
-      setLatestUpdate(moment(data[data.length - 1].time).format('HH:mm'));
-    }
-  }, [data]);
 
   // Fetching active circuits
   useEffect(() => {
@@ -44,59 +33,49 @@ const StatusPanel = ({ data }) => {
       .then(res => setActiveCircuits(res));
   }, []);
 
-  useSocket('activeCircuits', activeCircuitsData => {
-    setActiveCircuits(activeCircuitsData);
-  });
-
-  const statusColor = (circuitNumber) => {
+  const statusColor = () => {
     if (!activeCircuits) return classes.loading;
-
-    if (circuitNumber === 3 && activeCircuits < 3) {
+    if (activeCircuits < 3) {
       return classes.stopped;
     } else {
       return classes.active;
     }
   };
 
+  const handleTerraceHeatingToggle = () => {
+    const value = activeCircuits === 3 ? 2 : 3;
+    setActiveCircuits(value);
+  };
+
   return (
     <Grid container direction='column'>
-      <Typography variant='h4' align='center' className={classes.header}>Heat Distribution Status</Typography>
       <Grid item container justify='center'>
-        <Grid item component={Card} className={clsx(classes.card, statusColor(1))}>
+        <Grid item component={Card} className={clsx(classes.card, statusColor())}>
           <CardContent>
-            <Typography variant='h5' align='center'>Circuit 1</Typography>
-            <Typography color='textSecondary' align='center'>
-              { activeCircuits ? 'Active' : <CircularProgress/> }
+            <Typography variant='h6' align='center'>Terassilämmitys</Typography>
+            <Typography color='textSecondary' align='center' component={'span'}>
+              { activeCircuits ? (activeCircuits === 3 ? 'Päällä' : 'Pois päältä') : <CircularProgress/> }
             </Typography>
           </CardContent>
         </Grid>
-        <Grid item component={Card} className={clsx(classes.card, statusColor(2))}>
-          <CardContent>
-            <Typography variant='h5' align='center'>Circuit 2</Typography>
-            <Typography color='textSecondary' align='center'>
-              { activeCircuits ? 'Active' : <CircularProgress/> }
-            </Typography>
-          </CardContent>
-        </Grid>
-        <Grid item component={Card} className={clsx(classes.card, statusColor(3))}>
-          <CardContent>
-            <Typography variant='h5' align='center'>Circuit 3</Typography>
-            <Typography color='textSecondary' align='center'>
-              { activeCircuits ? (activeCircuits === 3 ? 'Active' : 'In-Active') : <CircularProgress/> }
-            </Typography>
-          </CardContent>
-        </Grid>
-        <Grid item component={Card} className={clsx(classes.card, statusColor(0))}>
-          <CardContent>
-            <Typography variant='h5' align='center'>Latest update</Typography>
-            <Typography color='textSecondary' align='center'>
-              {latestUpdate ? latestUpdate : <CircularProgress/>}
-            </Typography>
-          </CardContent>
+        <Grid item component={Card} className={clsx(classes.card, statusColor())}>
+          <Switch
+            checked={activeCircuits === 3}
+            onChange={handleTerraceHeatingToggle}
+            name="terraceHeatingToggle"
+          />
+
         </Grid>
       </Grid>
     </Grid>
   )
 };
 
-export default StatusPanel;
+const mapStateToProps = (state) => {
+  return {
+    data: state.data.data,
+    latest: state.data.latest
+  }
+};
+
+export default connect(mapStateToProps)(StatusPanel);
