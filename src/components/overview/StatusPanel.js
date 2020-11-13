@@ -42,8 +42,9 @@ const StatusPanel = () => {
     }
   };
 
-  const handleTerraceHeatingToggle = () => {
+  const handleTerraceHeatingToggle = async () => {
     const value = activeCircuits === 3 ? 2 : 3;
+    await heatPumpService.toggleCircuitThree(value);
     setActiveCircuits(value);
   };
 

@@ -17,4 +17,9 @@ const getActiveCircuits = async () => {
   return response.data;
 };
 
-export default { getLastWeek, getActiveCircuits }
+const toggleCircuitThree = async (activeCircuits) => {
+  const response = await axios.post(`/api/heat-pump/circuits/?active=${activeCircuits}`);
+  return response.data;
+};
+
+export default { getLastWeek, getActiveCircuits, toggleCircuitThree }
