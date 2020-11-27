@@ -21,6 +21,7 @@ export const login = (credentials) => {
       const user = await loginService.login(credentials);
       // Set user information to browser's local storage
       window.localStorage.setItem('user', JSON.stringify(user));
+      heatPumpService.setToken(user.token);
       dispatch({
         type: 'LOGIN',
         payload: user
@@ -37,6 +38,7 @@ export const login = (credentials) => {
 export const logout = () => {
   return dispatch => {
     window.localStorage.removeItem('user');
+    heatPumpService.setToken(null);
     dispatch({
       type: 'LOGOUT'
     })
