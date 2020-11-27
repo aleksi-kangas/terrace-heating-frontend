@@ -1,5 +1,6 @@
 import loginService from '../services/login.js';
 import { setNotification, removeNotification } from './notificationReducer.js';
+import heatPumpService from '../services/heatPump.js';
 
 const userReducer = (state = null, action) => {
   switch (action.type) {
@@ -45,6 +46,10 @@ export const logout = () => {
 export const fetchUserFromLocalStorage = () => {
   return dispatch => {
     const loggedUser = window.localStorage.getItem('user');
+    if (loggedUser) {
+      const parsedUser = JSON.parse(loggedUser);
+      heatPumpService.setToken(parsedUser.token);
+    }
     dispatch({
       type: 'FETCH_USER',
       payload: JSON.parse(loggedUser)

@@ -18,7 +18,7 @@ const App = ({ data, latest, initializeData, setData, user, fetchUserFromLocalSt
 
   useEffect(() => {
     // Get logged in user from local storage
-    fetchUserFromLocalStorage()
+    fetchUserFromLocalStorage();
   }, [fetchUserFromLocalStorage]);
 
   // Fetching pre-existing data
