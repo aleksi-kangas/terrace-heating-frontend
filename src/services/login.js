@@ -7,4 +7,6 @@ const login = async (userCredentials) => {
   return response.data
 };
 
-export default { login };
+const LoginService = { login };
+
+export default LoginService;

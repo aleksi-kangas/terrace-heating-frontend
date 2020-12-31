@@ -38,4 +38,8 @@ const toggleCircuitThree = async (activeCircuits) => {
   return response.data;
 };
 
-export default { getLastWeek, getActiveCircuits, setToken, toggleCircuitThree }
+const HeatPumpService = {
+  getLastWeek, getActiveCircuits, setToken, toggleCircuitThree
+};
+
+export default HeatPumpService;
