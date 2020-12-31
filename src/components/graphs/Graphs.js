@@ -1,14 +1,12 @@
 import React, { useState } from 'react';
 import { connect } from 'react-redux';
-import { Grid, Tab, Tabs } from '@material-ui/core';
-import TimeControlGroup from './TimeControlGroup.js';
+import LineChart from './LineChart.js';
+import { Container, Grid, Tab, Tabs } from '@material-ui/core';
+import { Link, Route } from 'react-router-dom';
 import { makeStyles } from '@material-ui/core/styles';
-import LineGraph from './LineGraph.js';
+import moment from 'moment';
 
 const useStyles = makeStyles({
-  container: {
-    margin: 20,
-  },
   tabs: {
     borderRadius: 10,
     marginBottom: 10,
@@ -18,93 +16,83 @@ const useStyles = makeStyles({
   }
 });
 
-const variables = [
+const graphVariables = [
   {
-    title: 'Head Distribution Circuits',
-    columns: [
+    title: 'Heat Distribution Circuits',
+    variables: [
       { label: 'Heat Distribution Circuit 1', id: 'heatDistCircuitTemp1' },
       { label: 'Heat Distribution Circuit 2', id: 'heatDistCircuitTemp2' },
       { label: 'Heat Distribution Circuit 3', id: 'heatDistCircuitTemp3' },
-    ],
+    ]
   },
   {
     title: 'General Temperatures',
-    columns: [
-      { label: 'Inside °C', id: 'insideTemp' },
-      { label: 'Outside °C', id: 'outsideTemp' },
-      { label: 'Hot Gas °C', id: 'hotGasTemp' },
-    ],
+    variables: [
+      { label: 'Inside', id: 'insideTemp' },
+      { label: 'Outside', id: 'outsideTemp' },
+      { label: 'Hot Gas', id: 'hotGasTemp' },
+    ]
   },
   {
     title: 'Ground-loop and Tanks',
-    columns: [
-      { label: 'Ground-loop Input °C', id: 'groundLoopTempInput'},
-      { label: 'Ground-loop Output °C', id: 'groundLoopTempOutput'},
-      { label: 'Lower Tank °C', id: 'lowerTankTemp'},
-      { label: 'Upper Tank °C', id: 'upperTankTemp'},
+    variables: [
+      { label: 'Ground-loop Input', id: 'groundLoopTempInput'},
+      { label: 'Ground-loop Output', id: 'groundLoopTempOutput'},
+      { label: 'Lower Tank', id: 'lowerTankTemp'},
+      { label: 'Upper Tank', id: 'upperTankTemp'},
     ]
   }
 ];
 
-
 const Graphs = ({ data }) => {
-  // Dynamic time range that changes when zooming the chart
-  const [currentTimeRange, setTimeRange] = useState(null);
-  const [activeGraph, setActiveGraph] = useState(0);
+  const [activeTab, setActiveTab] = useState(0);
 
   const classes = useStyles();
 
+  if (!data) return null;
+
   const handleChange = (event, newValue) => {
-    setActiveGraph(newValue)
+    setActiveTab(newValue)
   };
 
-  const tabContent = (
-    variables.map((graph, index) =>
-      <LineGraph
-        key={index}
-        hidden={activeGraph !== index}
-        data={data}
-        columns={graph.columns}
-        graphId={graph.title}
-        graphTitle={graph.title}
-        currentTimeRange={currentTimeRange}
-        setCurrentTimeRange={setTimeRange}
-      />
+  const tabCreator = () => {
+    return graphVariables.map((graph, index) =>
+      <Tab key={graph.title} label={graph.title} component={Link} to={`/graphs/${index + 1}`}/>
     )
-  );
+  };
 
-  const tabTitles = (
-    <Tabs
-      value={activeGraph}
-      onChange={handleChange}
-      centered
-      className={classes.tabs}
-      variant='fullWidth'
-    >
-      {variables.map((graph) => {
-        return (
-          <Tab key={graph.title} label={graph.title}/>
-        )
-      })}
-    </Tabs>
-  );
+  const graphCreator = () => {
+    const xAxis = data.map(entry => moment(entry.time));
+    const graphs = graphVariables.map((graph, index) =>
+      <LineChart key={index + 1} variables={graph.variables} xAxis={xAxis}/>
+    );
+
+    return (
+      graphs.map((graph) =>
+        <Route key={graph.key} path={`/graphs/${graph.key}`} render={() => graph}/>
+      )
+    )
+  };
 
   return (
-    <Grid item className={classes.container}>
-      <Grid item className={classes.tabs}>
-        {tabTitles}
-      </Grid>
-      <Grid item>
-        {tabContent}
-      </Grid>
-      {
-        /*
+    <Container>
+      <Grid container direction='column'>
         <Grid item>
-        <TimeControlGroup data={data} currentTimeRange={currentTimeRange} setTimeRange={setTimeRange}/>
+          <Tabs
+            value={activeTab}
+            onChange={handleChange}
+            centered
+            variant='fullWidth'
+            className={classes.tabs}
+          >
+            {tabCreator()}
+          </Tabs>
         </Grid>
-        */
-      }
-    </Grid>
+        <Grid item>
+          {graphCreator()}
+        </Grid>
+      </Grid>
+    </Container>
   )
 };
 

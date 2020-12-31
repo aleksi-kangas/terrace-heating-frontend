@@ -31,7 +31,7 @@ const SideMenu = ({ sideMenuOpen, setSideMenuOpen }) => {
         </ListItem>
         <ListItem>
           <ShowChartIcon />
-          <Link to='/graphs'>
+          <Link to='/graphs/1'>
             <Button color="primary" onClick={() => setSideMenuOpen(false)}>
               <ListItemText>
                 Graphs

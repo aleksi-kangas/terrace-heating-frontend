@@ -13,7 +13,7 @@ import { fetchUserFromLocalStorage } from './reducers/userReducer.js';
 import { initializeData, setData } from './reducers/dataReducer.js';
 
 const App = ({ data, latest, initializeData, setData, user, fetchUserFromLocalStorage }) => {
-  const dataCoverTimePeriodHours = 24 * 7; // One week
+  const dataCoverTimePeriodHours = 24 * 31; // One month
   const history = useHistory();
 
   useEffect(() => {
@@ -60,19 +60,19 @@ const App = ({ data, latest, initializeData, setData, user, fetchUserFromLocalSt
     <div>
       <Navigation/>
       <Switch>
-        <Route path="/graphs" render={() =>
-          user ? <Graphs/> : <Redirect to="/login" />
+        <Route path='/graphs/' render={() =>
+          user ? <Graphs/> : <Redirect to='/login' />
         }
         />
         <Route path="/control" render={() =>
           user ? <Control/> : <Redirect to='/login' />
         }
         />
-        <Route path="/login" render={() =>
+        <Route path='/login' render={() =>
           user ? <Redirect to='/' /> : <LoginForm history={history}/>
         }
         />
-        <Route path="/" render={() =>
+        <Route path='/' render={() =>
           user ? <Overview/> : <Redirect to='/login' />
         }
         />

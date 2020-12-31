@@ -153,11 +153,11 @@ const LineGraph = ({ hidden, data, columns, graphId, graphTitle, currentTimeRang
         <ChartContainer
           title={graphTitle}
           style={{
-            background: "#201d1e",
+            background: "white",
             borderRadius: 10,
             borderStyle: "solid",
             borderWidth: 1,
-            borderColor: "#232122"
+            borderColor: "gray"
           }}
           padding={20}
           enableDragZoom
