@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
 import { Route, Switch } from 'react-router-dom';
 import moment from 'moment';
-import { useSocket } from 'use-socketio/lib/io';
+import { useSocket } from 'use-socketio';
 import Navigation from './components/navigation/Navigation.js';
 import Graphs from './components/graphs/Graphs.js';
 import Control from './components/Control.js';
@@ -27,7 +27,7 @@ const App = ({ data, latest, initializeData, setData, user, fetchUserFromLocalSt
   }, [initializeData]);
 
   // Subscribe to real-time data using socket.io
-  useSocket('heatPumpData', heatPumpData => {
+  useSocket('heatPumpData', (heatPumpData) => {
     // Wait until pre-existing data is loaded before adding new data
     if (data) {
       if (data.length === 0) {

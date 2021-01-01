@@ -2,15 +2,16 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
 import { BrowserRouter as Router } from 'react-router-dom';
-import config from './utils/config.js';
 import App from './App.js';
 import store from './store.js'
 import { SocketIOProvider } from 'use-socketio';
 
+const options = { transports: ['websocket'] };
+
 ReactDOM.render(
   <Provider store={store}>
     <Router>
-      <SocketIOProvider url={config.SOCKET_IO_URL}>
+      <SocketIOProvider url={'ws://localhost:3003'} opts={options}>
         <App />
       </SocketIOProvider>
     </Router>
