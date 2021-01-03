@@ -2,6 +2,7 @@ import React from 'react';
 import 'chartjs-plugin-zoom';
 import { connect } from 'react-redux';
 import { Line } from 'react-chartjs-2';
+import { fi } from 'date-fns/locale';
 import { makeStyles } from '@material-ui/core/styles';
 import { Atlas6 } from 'chartjs-plugin-colorschemes/src/colorschemes/colorschemes.office.js';
 
@@ -35,23 +36,37 @@ const LineChart = ({ data, variables, xAxis }) => {
     datasets: dataSets,
   };
 
+  // TODO Fix localization; adapters.date
+
   const options = {
     maintainAspectRatio: false,
     scales: {
+      adapters: {
+        date: {
+          locale: fi,
+        }
+      },
       xAxes: [{
         type: 'time',
         time: {
           tooltipFormat: 'YYYY-MM-DD HH:mm',
           unit: 'hour',
-          unitStepSize: '0.5',
+          unitStepSize: '1',
           displayFormats: {
             hour: 'HH:mm',
-            minute: 'mm'
+            //day: 'DD MMM',
           },
+        },
+        ticks: {
+          major: {
+            enabled: true,
+            fontStyle: 'bold',
+            fontSize: 14,
+          }
         },
         scaleLabel: {
           display: true,
-          labelString: 'Time'
+          labelString: 'Time',
         },
       }],
       yAxes: [{
@@ -59,7 +74,7 @@ const LineChart = ({ data, variables, xAxis }) => {
           display: true,
           labelString: 'Celsius (°C)'
         },
-      }]
+      }],
     },
     plugins: {
       zoom: {

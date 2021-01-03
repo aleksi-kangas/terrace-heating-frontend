@@ -37,7 +37,7 @@ const App = ({ data, latest, initializeData, setData, user, fetchUserFromLocalSt
         setData(newData);
       } else {
         // Calculate the time period that data covers
-        // If the data covers more than a fixed time (48 hours) period,
+        // If the data covers more than a fixed time (one month) period,
         // remove the oldest entry to accommodate a new entry as in a ring buffer.
         const startTime = moment(data[0].time);
         const endTime = moment(latest.time);

@@ -31,6 +31,7 @@ const graphVariables = [
       { label: 'Inside', id: 'insideTemp' },
       { label: 'Outside', id: 'outsideTemp' },
       { label: 'Hot Gas', id: 'hotGasTemp' },
+      { label: 'Compressor Usage', id: 'compressorUsage' },
     ]
   },
   {
