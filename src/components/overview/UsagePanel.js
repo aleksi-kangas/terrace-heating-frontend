@@ -1,28 +1,48 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 import { Line } from 'react-chartjs-2';
+import GaugeChart from 'react-gauge-chart';
 import { Atlas6 } from 'chartjs-plugin-colorschemes/src/colorschemes/colorschemes.office.js';
+import { Grid, Paper } from '@material-ui/core';
+import { makeStyles } from '@material-ui/core/styles';
+
+const useStyles = makeStyles({
+  container: {
+    margin: 20,
+    padding: 10,
+    height: '300px'
+  },
+});
 
 const UsagePanel = ({ data }) => {
+  const classes = useStyles();
+  const [latestUsage, setLatestUsage] = useState(0);
+  const [dataSets, setDataSets] = useState([]);
+
+  useEffect(() => {
+    if (data) {
+      const dataSet = {
+        label: 'Compressor Usage',
+        data: data.map((entry) => {
+          if (entry.compressorUsage) {
+            return entry.compressorUsage * 100;
+          } else {
+            return Number.NaN;
+          }
+        }),
+        borderColor: Atlas6[2],
+        fill: true,
+        pointRadius: 0,
+        pointHitRadius: 5,
+        spanGaps: true,
+      };
+      setDataSets([dataSet]);
+      const usages = data.filter((entry) => entry.compressorUsage != null);
+      setLatestUsage(usages[usages.length - 1].compressorUsage);
+    }
+  }, [data]);
 
   if (!data) return null;
-
-  const dataSets = [{
-    label: 'Compressor Usage',
-    data: data.map((entry) => {
-      if (entry.compressorUsage) {
-        return entry.compressorUsage * 100;
-      } else {
-        return Number.NaN;
-      }
-    }),
-    borderColor: Atlas6[2],
-    fill: true,
-    pointRadius: 0,
-    pointHitRadius: 5,
-    spanGaps: true,
-  }];
-
 
   const lineData = {
     labels: data.map((entry) => entry.time),
@@ -93,7 +113,21 @@ const UsagePanel = ({ data }) => {
   };
 
   return (
-    <Line data={lineData} options={options}/>
+    <Grid container item component={Paper} className={classes.container} justify='center'>
+      <Grid container item lg={4} justify='center' direction='column'>
+        <GaugeChart
+          id='1'
+          animate={false}
+          nrOfLevels={20}
+          percent={latestUsage}
+          textColor='black'
+          needleColor='gray'
+        />
+      </Grid>
+      <Grid container item lg={8} justify='center' direction='column'>
+        <Line data={lineData} options={options}/>
+      </Grid>
+    </Grid>
   )
 };
 
