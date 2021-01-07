@@ -12,7 +12,8 @@ const useStyles = makeStyles(() => ({
     padding: 10
   },
   button: {
-    padding: 20
+    padding: 20,
+    color: '#5390fe'
   }
 }));
 
@@ -66,7 +67,7 @@ const LoginForm = ({ history, login }) => {
               />
             </Grid>
             <Grid item className={classes.button}>
-              <Button variant='contained' type='submit'>
+              <Button variant='contained' type='submit' color='secondary'>
                 Login
               </Button>
             </Grid>

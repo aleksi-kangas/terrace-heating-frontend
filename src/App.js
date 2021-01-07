@@ -11,6 +11,24 @@ import LoginForm from './components/LoginForm.js';
 import { Redirect, useHistory } from 'react-router-dom';
 import { fetchUserFromLocalStorage } from './reducers/userReducer.js';
 import { initializeData, setData } from './reducers/dataReducer.js';
+import { MuiThemeProvider } from '@material-ui/core/styles';
+import { createMuiTheme } from '@material-ui/core';
+import CssBaseline from "@material-ui/core/CssBaseline";
+import { blueGrey } from '@material-ui/core/colors';
+
+const theme = createMuiTheme({
+  palette: {
+    primary: {
+      main: '#5390fe',
+    },
+    secondary: {
+      main: blueGrey[900],
+    },
+    background: {
+      default: '#F6F7FF'
+    }
+  }
+});
 
 const App = ({ data, latest, initializeData, setData, user, fetchUserFromLocalStorage }) => {
   const dataCoverTimePeriodHours = 24 * 31; // One month
@@ -57,27 +75,31 @@ const App = ({ data, latest, initializeData, setData, user, fetchUserFromLocalSt
   });
 
   return (
-    <div>
-      <Navigation/>
-      <Switch>
-        <Route path='/graphs/' render={() =>
-          user ? <Graphs/> : <Redirect to='/login' />
-        }
-        />
-        <Route path="/control" render={() =>
-          user ? <Control/> : <Redirect to='/login' />
-        }
-        />
-        <Route path='/login' render={() =>
-          user ? <Redirect to='/' /> : <LoginForm history={history}/>
-        }
-        />
-        <Route path='/' render={() =>
-          user ? <Overview/> : <Redirect to='/login' />
-        }
-        />
-      </Switch>
-    </div>
+    <MuiThemeProvider theme={theme}>
+      <CssBaseline/>
+      <div>
+        <Navigation/>
+        <Switch>
+          <Route path='/graphs/' render={() =>
+            user ? <Graphs/> : <Redirect to='/login' />
+          }
+          />
+          <Route path="/control" render={() =>
+            user ? <Control/> : <Redirect to='/login' />
+          }
+          />
+          <Route path='/login' render={() =>
+            user ? <Redirect to='/' /> : <LoginForm history={history}/>
+          }
+          />
+          <Route path='/' render={() =>
+            user ? <Overview/> : <Redirect to='/login' />
+          }
+          />
+        </Switch>
+      </div>
+    </MuiThemeProvider>
+
   );
 };
 

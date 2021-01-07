@@ -7,7 +7,7 @@ import CssBaseline from '@material-ui/core/CssBaseline';
 
 const useStyles = makeStyles(() => ({
   appBar: {
-    background: 'gray',
+    background: '#5390fe',
   }
 }));
 

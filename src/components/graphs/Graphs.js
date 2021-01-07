@@ -1,18 +1,23 @@
 import React, { useState } from 'react';
+import moment from 'moment';
 import { connect } from 'react-redux';
 import LineChart from './LineChart.js';
-import { Container, Grid, Tab, Tabs } from '@material-ui/core';
+import { Container, Grid, Paper, Tab, Tabs } from '@material-ui/core';
 import { Link, Route } from 'react-router-dom';
 import { makeStyles } from '@material-ui/core/styles';
-import moment from 'moment';
 
 const useStyles = makeStyles({
   tabs: {
     borderRadius: 10,
     marginBottom: 10,
     marginTop: 10,
-    background: 'gray',
+    background: '#5390fe',
     color: 'white',
+  },
+  container: {
+    marginTop: 20,
+    borderRadius: 4,
+    boxShadow: '0px 3px 11px 0px #c0c4e0'
   }
 });
 
@@ -76,7 +81,7 @@ const Graphs = ({ data }) => {
   };
 
   return (
-    <Container>
+    <Container component={Paper} className={classes.container}>
       <Grid container direction='column'>
         <Grid item>
           <Tabs
