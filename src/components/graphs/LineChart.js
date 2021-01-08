@@ -116,7 +116,7 @@ const LineChart = ({ data, variables, xAxis }) => {
 
 const mapStateToProps = (state) => {
   return {
-    data: state.data.data
+    data: state.data
   }
 };
 

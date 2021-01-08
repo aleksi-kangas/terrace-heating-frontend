@@ -13,10 +13,10 @@ const useStyles = makeStyles({
     boxShadow: '0px 3px 11px 0px #c0c4e0'
   },
   text: {
-    color: '#000000',
+    color: '#131313',
   },
-  column: {
-    padding: 20,
+  gauge: {
+    padding: 15,
   },
 });
 
@@ -120,7 +120,7 @@ const UsagePanel = ({ data }) => {
 
   return (
     <Grid container item component={Paper} className={classes.container} justify='center'>
-      <Grid container item lg={4} justify='center' direction='column' className={classes.column}>
+      <Grid container item lg={4} justify='center' direction='column' className={classes.gauge}>
         <GaugeChart
           id='1'
           animate={false}
@@ -129,11 +129,11 @@ const UsagePanel = ({ data }) => {
           textColor='black'
           needleColor='gray'
         />
-        <Typography variant='h5' className={classes.text} align='center'>
+        <Typography variant='h6' className={classes.text} align='center'>
           Compressor Usage
         </Typography>
       </Grid>
-      <Grid container item lg={8} justify='center' direction='column' className={classes.column}>
+      <Grid container item lg={8} justify='center' direction='column'>
         <Line data={lineData} options={options}/>
       </Grid>
     </Grid>
@@ -142,7 +142,7 @@ const UsagePanel = ({ data }) => {
 
 const mapStateToProps = (state) => {
   return {
-    data: state.data.data
+    data: state.data
   }
 };
 

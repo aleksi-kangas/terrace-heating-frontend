@@ -1,12 +1,9 @@
 import heatPumpService from '../services/heatPump.js';
 
-const dataReducer = (state = {}, action) => {
+const dataReducer = (state = null, action) => {
   switch (action.type) {
     case 'SET_DATA':
-      return {
-        data: action.payload,
-        latest: action.payload[0]
-      };
+      return action.payload;
     default:
       return state;
   }

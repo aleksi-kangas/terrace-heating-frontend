@@ -30,7 +30,7 @@ const theme = createMuiTheme({
   }
 });
 
-const App = ({ data, latest, initializeData, setData, user, fetchUserFromLocalStorage }) => {
+const App = ({ data, initializeData, setData, user, fetchUserFromLocalStorage }) => {
   const dataCoverTimePeriodHours = 24 * 31; // One month
   const history = useHistory();
 
@@ -58,7 +58,7 @@ const App = ({ data, latest, initializeData, setData, user, fetchUserFromLocalSt
         // If the data covers more than a fixed time (one month) period,
         // remove the oldest entry to accommodate a new entry as in a ring buffer.
         const startTime = moment(data[0].time);
-        const endTime = moment(latest.time);
+        const endTime = moment(data[data.length - 1].time);
         const duration = moment.duration(endTime.diff(startTime));
         const hours = duration.asHours();
         if (hours < dataCoverTimePeriodHours) {
@@ -105,8 +105,7 @@ const App = ({ data, latest, initializeData, setData, user, fetchUserFromLocalSt
 
 const mapStateToProps = (state) => {
   return {
-    data: state.data.data,
-    latest: state.data.latest,
+    data: state.data,
     user: state.user,
   }
 };

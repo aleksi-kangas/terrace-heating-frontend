@@ -11,7 +11,7 @@ const useStyles = makeStyles({
     borderRadius: 10,
     marginBottom: 10,
     marginTop: 10,
-    background: '#5390fe',
+    background: '#5796f5',
     color: 'white',
   },
   container: {
@@ -104,7 +104,7 @@ const Graphs = ({ data }) => {
 
 const mapStateToProps = (state) => {
   return {
-    data: state.data.data
+    data: state.data
   }
 };
 
