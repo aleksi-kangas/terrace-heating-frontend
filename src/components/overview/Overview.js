@@ -1,28 +1,27 @@
 import React from 'react';
-import { Container, Grid, Paper } from '@material-ui/core';
+import { Grid } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
-import TemperaturePanel from './TemperaturePanel.js';
 import StatusPanel from './StatusPanel.js';
 import UsagePanel from './UsagePanel.js';
 
 const useStyles = makeStyles({
   container: {
-    height: '300px'
-  },
+    padding: 50,
+  }
 });
 
 const Overview = () => {
   const classes = useStyles();
 
   return (
-    <Container>
-      <Grid container justify='center' className={classes.container}>
+    <Grid container className={classes.container}>
+      <Grid container justify='center'>
         <StatusPanel/>
       </Grid>
-      <Grid container justify='center' className={classes.container}>
+      <Grid container justify='center'>
         <UsagePanel/>
       </Grid>
-    </Container>
+    </Grid>
   )
 };
 

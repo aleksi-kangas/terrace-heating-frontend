@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import moment from 'moment';
+import clsx from 'clsx';
 import { connect } from 'react-redux';
 import LineChart from './LineChart.js';
 import { Container, Grid, Paper, Tab, Tabs } from '@material-ui/core';
@@ -8,16 +9,20 @@ import { makeStyles } from '@material-ui/core/styles';
 
 const useStyles = makeStyles({
   tabs: {
-    borderRadius: 10,
     marginBottom: 10,
-    marginTop: 10,
+    borderRadius: 10,
     background: '#5796f5',
     color: 'white',
   },
+  graph: {
+    padding: 10,
+  },
   container: {
-    marginTop: 20,
+    padding: 50,
+  },
+  shadow: {
     borderRadius: 4,
-    boxShadow: '0px 3px 11px 0px #c0c4e0'
+    boxShadow: '0px 3px 11px 0px #c0c4e0',
   }
 });
 
@@ -81,24 +86,22 @@ const Graphs = ({ data }) => {
   };
 
   return (
-    <Container component={Paper} className={classes.container}>
-      <Grid container direction='column'>
+      <Grid container direction='column' className={classes.container}>
         <Grid item>
           <Tabs
             value={activeTab}
             onChange={handleChange}
             centered
             variant='fullWidth'
-            className={classes.tabs}
+            className={clsx(classes.tabs, classes.shadow)}
           >
             {tabCreator()}
           </Tabs>
         </Grid>
-        <Grid item>
+        <Grid item component={Paper} className={clsx(classes.graph, classes.shadow)}>
           {graphCreator()}
         </Grid>
       </Grid>
-    </Container>
   )
 };
 

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 import clsx from 'clsx';
-import { Card, CardContent, Checkbox, FormControlLabel, CircularProgress, Grid, Paper, Switch, Typography } from '@material-ui/core';
+import { Card, CardContent, Checkbox, FormControlLabel, Grid, Paper, Switch, Typography } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import heatPumpService from '../../services/heatPump.js';
 import { Line } from 'react-chartjs-2';
@@ -19,7 +19,7 @@ const useStyles = makeStyles({
     color: '#131313',
   },
   column: {
-    padding: 20,
+    padding: 10,
   },
   card: {
     margin: 10,
@@ -114,7 +114,7 @@ const StatusPanel = ({ data }) => {
       yAxes: [{
         scaleLabel: {
           display: true,
-          labelString: 'Usage %'
+          labelString: 'Celsius (°C)'
         },
       }],
     },
@@ -150,10 +150,10 @@ const StatusPanel = ({ data }) => {
 
   return (
     <Grid container item justify='space-between' className={classes.container}>
-      <Grid container item component={Paper} lg={7} justify='center' direction='column' className={clsx(classes.column, classes.shadow)}>
+      <Grid container item component={Paper} sm={7} lg={7} justify='center' direction='column' className={clsx(classes.column, classes.shadow)}>
         <Line data={lineData} options={options} />
       </Grid>
-      <Grid container item component={Paper} lg={4} justify='center' direction='column' className={clsx(classes.column, classes.shadow)}>
+      <Grid container item component={Paper} sm={4} lg={4} justify='center' direction='column' className={clsx(classes.column, classes.shadow)}>
         <Card className={clsx(classes.card, statusColor())}>
           <CardContent>
             <Typography variant='h6' className={classes.text} align='center'>

@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
+import clsx from 'clsx';
 import { Line } from 'react-chartjs-2';
 import GaugeChart from 'react-gauge-chart';
 import { Atlas6 } from 'chartjs-plugin-colorschemes/src/colorschemes/colorschemes.office.js';
@@ -9,14 +10,14 @@ import { makeStyles } from '@material-ui/core/styles';
 const useStyles = makeStyles({
   container: {
     margin: 20,
+    padding: 10,
+  },
+  shadow: {
     borderRadius: 4,
     boxShadow: '0px 3px 11px 0px #c0c4e0'
   },
   text: {
     color: '#131313',
-  },
-  gauge: {
-    padding: 15,
   },
 });
 
@@ -84,7 +85,7 @@ const UsagePanel = ({ data }) => {
       yAxes: [{
         scaleLabel: {
           display: true,
-          labelString: 'Usage %'
+          labelString: 'Usage (%)'
         },
       }],
     },
@@ -119,8 +120,8 @@ const UsagePanel = ({ data }) => {
   };
 
   return (
-    <Grid container item component={Paper} className={classes.container} justify='center'>
-      <Grid container item lg={4} justify='center' direction='column' className={classes.gauge}>
+    <Grid container item component={Paper} className={clsx(classes.container, classes.shadow)} justify='space-evenly'>
+      <Grid container item sm={4} lg={3} justify='center' direction='column'>
         <GaugeChart
           id='1'
           animate={false}
@@ -133,7 +134,7 @@ const UsagePanel = ({ data }) => {
           Compressor Usage
         </Typography>
       </Grid>
-      <Grid container item lg={8} justify='center' direction='column'>
+      <Grid container item sm={8} lg={8} justify='center' direction='column'>
         <Line data={lineData} options={options}/>
       </Grid>
     </Grid>
