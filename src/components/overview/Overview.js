@@ -7,8 +7,6 @@ import UsagePanel from './UsagePanel.js';
 
 const useStyles = makeStyles({
   container: {
-    margin: 20,
-    padding: 10,
     height: '300px'
   },
 });
@@ -18,12 +16,10 @@ const Overview = () => {
 
   return (
     <Container>
-      <Grid container justify='center'>
-        <Grid item container component={Paper} className={classes.container}>
-          STATUSPANEL
-        </Grid>
+      <Grid container justify='center' className={classes.container}>
+        <StatusPanel/>
       </Grid>
-      <Grid container justify='center'>
+      <Grid container justify='center' className={classes.container}>
         <UsagePanel/>
       </Grid>
     </Container>
