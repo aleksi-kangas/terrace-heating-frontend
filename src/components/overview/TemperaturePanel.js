@@ -22,7 +22,7 @@ const useStyles = makeStyles({
 });
 
 
-const TemperaturePanel = ({ data, latest }) => {
+const TemperaturePanel = ({ data }) => {
   const [status, setStatus] = useState(null);
 
   moment.locale('fi');
@@ -30,8 +30,8 @@ const TemperaturePanel = ({ data, latest }) => {
   const classes = useStyles();
 
   useEffect(() => {
-    if (latest) {
-      const outsideTemp = latest.outsideTemp;
+    if (data) {
+      const outsideTemp = data[data.length - 1].outsideTemp;
       if (outsideTemp > 10) {
         setStatus({
           color: classes.green,
@@ -82,8 +82,7 @@ const TemperaturePanel = ({ data, latest }) => {
 
 const mapStateToProps = (state) => {
   return {
-    data: state.data.data,
-    latest: state.data.latest
+    data: state.data
   }
 };
 

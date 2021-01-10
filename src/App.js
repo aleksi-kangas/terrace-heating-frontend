@@ -5,7 +5,7 @@ import moment from 'moment';
 import { useSocket } from 'use-socketio';
 import Navigation from './components/navigation/Navigation.js';
 import Graphs from './components/graphs/Graphs.js';
-import Control from './components/Control.js';
+import Control from './components/control/Control.js';
 import Overview from './components/overview/Overview.js';
 import LoginForm from './components/LoginForm.js';
 import { Redirect, useHistory } from 'react-router-dom';
