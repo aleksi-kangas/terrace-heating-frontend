@@ -77,7 +77,7 @@ const TogglePanel = ({ data }) => {
   };
 
   const handleNormalStartup = async () => {
-    await heatPumpService.startCircuitThree(true);
+    await heatPumpService.startCircuitThree(false);
     setActiveCircuits(3);
   };
 
