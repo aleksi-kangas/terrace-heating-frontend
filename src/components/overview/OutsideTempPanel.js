@@ -1,15 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 import clsx from 'clsx';
-import { Card, CardContent, Checkbox, FormControlLabel, Grid, Paper, Switch, Typography } from '@material-ui/core';
+import { Grid, Paper } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
-import heatPumpService from '../../services/heatPump.js';
 import { Line } from 'react-chartjs-2';
 import { Atlas6 } from 'chartjs-plugin-colorschemes/src/colorschemes/colorschemes.office.js';
 
 const useStyles = makeStyles({
   container: {
-    margin: 20,
+    padding: 10,
   },
   shadow: {
     borderRadius: 4,
@@ -35,19 +34,10 @@ const useStyles = makeStyles({
   }
 });
 
-const StatusPanel = ({ data }) => {
-  const [activeCircuits, setActiveCircuits] = useState(null);
+const OutsideTempPanel = ({ data }) => {
   const [dataSets, setDataSets] = useState([]);
-  const [useSoftStart, setUseSoftStart] = useState(false);
 
   const classes = useStyles();
-
-  // Fetching active circuits
-  useEffect(() => {
-    heatPumpService
-      .getActiveCircuits()
-      .then(res => setActiveCircuits(res));
-  }, []);
 
   useEffect(() => {
     if (data) {
@@ -65,21 +55,6 @@ const StatusPanel = ({ data }) => {
 
   if (!data) return null;
 
-  const statusColor = () => {
-    if (!activeCircuits) return classes.loading;
-    if (activeCircuits < 3) {
-      return classes.stopped;
-    } else {
-      return classes.active;
-    }
-  };
-
-  const handleTerraceHeatingToggle = async () => {
-    const value = activeCircuits === 3 ? 2 : 3;
-    await heatPumpService.toggleCircuitThree(value);
-    setActiveCircuits(value);
-  };
-
   const lineData = {
     labels: data.map((entry) => entry.time),
     datasets: dataSets
@@ -96,7 +71,6 @@ const StatusPanel = ({ data }) => {
           unitStepSize: '1',
           displayFormats: {
             hour: 'HH:mm',
-            //day: 'DD MMM',
           },
         },
         ticks: {
@@ -149,37 +123,8 @@ const StatusPanel = ({ data }) => {
   };
 
   return (
-    <Grid container item justify='space-between' className={classes.container}>
-      <Grid container item component={Paper} sm={7} lg={7} justify='center' direction='column' className={clsx(classes.column, classes.shadow)}>
-        <Line data={lineData} options={options} />
-      </Grid>
-      <Grid container item component={Paper} sm={4} lg={4} justify='center' direction='column' className={clsx(classes.column, classes.shadow)}>
-        <Card className={clsx(classes.card, statusColor())}>
-          <CardContent>
-            <Typography variant='h6' className={classes.text} align='center'>
-              STATUS OF HEAT PUMP CIRCUITS
-              WITH SWITCH
-            </Typography>
-          </CardContent>
-        </Card>
-        <Card className={classes.card}>
-          <Grid container justify='space-evenly' component={CardContent}>
-            <Grid item>
-              <Switch
-                checked={activeCircuits === 3}
-                onChange={handleTerraceHeatingToggle}
-                name="terraceHeatingToggle"
-              />
-            </Grid>
-            <Grid item>
-              <FormControlLabel
-                control={<Checkbox checked={useSoftStart} onChange={() => setUseSoftStart(!useSoftStart)} name="softStart" />}
-                label="Soft Start"
-              />
-            </Grid>
-          </Grid>
-        </Card>
-      </Grid>
+    <Grid container item component={Paper} lg={7} className={clsx(classes.container, classes.shadow)} justify='space-evenly'>
+      <Line data={lineData} options={options} />
     </Grid>
   )
 };
@@ -190,4 +135,4 @@ const mapStateToProps = (state) => {
   }
 };
 
-export default connect(mapStateToProps)(StatusPanel);
+export default connect(mapStateToProps)(OutsideTempPanel);

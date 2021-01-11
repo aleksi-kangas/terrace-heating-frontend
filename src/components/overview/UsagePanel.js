@@ -9,7 +9,6 @@ import { makeStyles } from '@material-ui/core/styles';
 
 const useStyles = makeStyles({
   container: {
-    margin: 20,
     padding: 10,
   },
   shadow: {
