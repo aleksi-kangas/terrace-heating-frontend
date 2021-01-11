@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import clsx from 'clsx';
 import { Card, CardActions, CardContent, Grid, Switch, Typography } from '@material-ui/core';
 import CheckCircleOutlineIcon from '@material-ui/icons/CheckCircleOutline';
 import CloseIcon from '@material-ui/icons/Close';
@@ -11,7 +12,11 @@ const useStyles = makeStyles({
   },
   card: {
     margin: 20,
-  }
+  },
+  shadow: {
+    borderRadius: 4,
+    boxShadow: '0px 3px 11px 0px #c0c4e0'
+  },
 });
 
 const Control = () => {
@@ -26,7 +31,7 @@ const Control = () => {
 
   return (
     <Grid container direction='column' alignItems='center'>
-      <Card className={classes.card}>
+      <Card className={clsx(classes.card, classes.shadow)}>
         <CardContent>
           <Typography variant='h5'>
             Scheduling

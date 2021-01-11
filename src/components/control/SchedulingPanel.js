@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import HeatPumpService from '../../services/heatPump.js';
+import clsx from 'clsx';
 import {
-  Button, CircularProgress, Grid, Paper, Switch,
+  Button, CircularProgress, Grid, Paper,
   Table, TableHead, TableBody, TableContainer, TableCell, TableRow, TextField, Typography
 } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
@@ -10,6 +11,10 @@ const useStyles = makeStyles({
   container: {
     padding: 20,
     margin: 20
+  },
+  shadow: {
+    borderRadius: 4,
+    boxShadow: '0px 3px 11px 0px #c0c4e0'
   },
   value: {
    marginRight: 20
@@ -82,7 +87,7 @@ const SchedulingPanel = ({ variable, title }) => {
   };
 
   return (
-    <Grid container component={Paper} className={classes.container}>
+    <Grid container component={Paper} className={clsx(classes.container, classes.shadow)}>
       {!registerValues ? <CircularProgress/> :
       <form onSubmit={handleSubmit}>
         <Grid container item justify='center'>
