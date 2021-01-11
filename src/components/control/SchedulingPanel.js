@@ -21,7 +21,6 @@ const useStyles = makeStyles({
 
 const SchedulingPanel = ({ variable, title }) => {
   const [registerValues, setRegisterValues] = useState(null);
-  const [scheduleActive, setScheduleActive] = useState(false);
 
   const classes = useStyles();
 
@@ -55,7 +54,7 @@ const SchedulingPanel = ({ variable, title }) => {
                   {registerValues[weekDay.toLowerCase()][columnName]}
                 </Typography>
               </Grid>
-              <Grid item xs={2} sm={8} md={4} lg={6} xl={4}>
+              <Grid item xs={8} sm={8} md={4} lg={8} xl={6}>
                 <TextField
                   variant='outlined'
                   size='small'
@@ -82,12 +81,6 @@ const SchedulingPanel = ({ variable, title }) => {
     await HeatPumpService.setSchedule(variable, schedule);
   };
 
-  const handleScheduleToggle = async () => {
-    // TODO
-    console.log('Toggled');
-    setScheduleActive(!scheduleActive)
-  };
-
   return (
     <Grid container component={Paper} className={classes.container}>
       {!registerValues ? <CircularProgress/> :
@@ -103,9 +96,9 @@ const SchedulingPanel = ({ variable, title }) => {
               <TableHead>
                 <TableRow>
                   <TableCell size='small'>Weekday</TableCell>
-                  <TableCell size='small'>Start time</TableCell>
-                  <TableCell size='small'>End time</TableCell>
-                  <TableCell size='small'>Temperature Delta</TableCell>
+                  <TableCell size='small'>Start Hour</TableCell>
+                  <TableCell size='small'>End Hour</TableCell>
+                  <TableCell size='small'>Temperature Delta (+ °C)</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
@@ -115,12 +108,6 @@ const SchedulingPanel = ({ variable, title }) => {
           </TableContainer>
         </Grid>
         <Grid container item justify='space-evenly'>
-          <Switch className={classes.switchButton}
-            color='primary'
-            checked={scheduleActive}
-            onChange={handleScheduleToggle}
-            name='scheduleActiveToggle'
-          />
           <Button type='submit' variant='contained' color='primary' className={classes.switchButton}>
             Save
           </Button>
