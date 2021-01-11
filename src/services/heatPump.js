@@ -30,11 +30,16 @@ const getActiveCircuits = async () => {
   return response.data;
 };
 
-const toggleCircuitThree = async (activeCircuits) => {
+const startCircuitThree = async (softStart) => {
   const data = {
-    circuits: activeCircuits
+    softStart
   };
-  const response = await axios.post(`/api/heat-pump/circuits`, data, getConfig());
+  const response = await axios.post(`/api/heat-pump/start`, data, getConfig());
+  return response.data;
+};
+
+const stopCircuitThree = async () => {
+  const response = await axios.post(`/api/heat-pump/stop`, null, getConfig());
   return response.data;
 };
 
@@ -53,7 +58,7 @@ const setSchedule = async (variable, schedule) => {
 };
 
 const HeatPumpService = {
-  getLastWeek, getActiveCircuits, getSchedule, setSchedule, setToken, toggleCircuitThree
+  getLastWeek, getActiveCircuits, getSchedule, setSchedule, setToken, startCircuitThree, stopCircuitThree,
 };
 
 export default HeatPumpService;
