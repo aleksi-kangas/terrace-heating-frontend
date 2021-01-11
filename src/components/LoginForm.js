@@ -5,7 +5,6 @@ import LockIcon from '@material-ui/icons/Lock';
 import PersonIcon from '@material-ui/icons/Person';
 import { makeStyles } from '@material-ui/core/styles';
 import { login } from '../reducers/userReducer.js';
-import Notification from './Notification.js';
 
 const useStyles = makeStyles(() => ({
   icon: {
@@ -73,7 +72,6 @@ const LoginForm = ({ history, login }) => {
             </Grid>
           </Grid>
         </form>
-        <Notification/>
       </Grid>
     </Grid>
   )

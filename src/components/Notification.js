@@ -7,8 +7,8 @@ const Notification = ({ notification }) => {
      return null;
   }
   return (
-    <MuiAlert elevation={6} variant='standard' severity='error'>
-      {notification}
+    <MuiAlert elevation={6} variant='standard' severity={notification.type}>
+      {notification.message}
     </MuiAlert>
   )
 };

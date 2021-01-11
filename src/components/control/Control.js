@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
+import { connect } from 'react-redux';
 import clsx from 'clsx';
 import { Card, CardActions, CardContent, Grid, Switch, Typography } from '@material-ui/core';
 import CheckCircleOutlineIcon from '@material-ui/icons/CheckCircleOutline';
 import CloseIcon from '@material-ui/icons/Close';
 import SchedulingPanel from './SchedulingPanel.js';
 import { makeStyles } from '@material-ui/core/styles';
+import { removeNotification, setNotification } from '../../reducers/notificationReducer.js';
 
 const useStyles = makeStyles({
   container: {
@@ -19,14 +21,19 @@ const useStyles = makeStyles({
   },
 });
 
-const Control = () => {
+const Control = ({ setNotification, removeNotification }) => {
   const [scheduleActive, setScheduleActive] = useState(false);
   const classes = useStyles();
 
-  const handleScheduleToggle = async () => {
+  const handleScheduleToggle = () => {
     // TODO
-    console.log('Toggled');
-    setScheduleActive(!scheduleActive)
+    setScheduleActive(!scheduleActive);
+    const message = scheduleActive ? 'Scheduling disabled' : 'Scheduling enabled';
+    const type = scheduleActive ? 'info' : 'success';
+    setNotification(message, type);
+    setTimeout(() => {
+      removeNotification();
+    }, 5000);
   };
 
   return (
@@ -61,4 +68,4 @@ const Control = () => {
   )
 };
 
-export default Control;
+export default connect(null, { setNotification, removeNotification })(Control);

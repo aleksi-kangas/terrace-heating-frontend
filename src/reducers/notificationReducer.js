@@ -9,11 +9,11 @@ const notificationReducer = (state = null, action) => {
   }
 };
 
-export const setNotification = (message) => {
+export const setNotification = (message, type) => {
   return dispatch => {
     dispatch({
       type: 'SET_NOTIFICATION',
-      payload: message
+      payload: { message, type }
     });
   }
 };

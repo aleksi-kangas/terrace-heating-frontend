@@ -4,6 +4,7 @@ import { Route, Switch } from 'react-router-dom';
 import moment from 'moment';
 import { useSocket } from 'use-socketio';
 import Navigation from './components/navigation/Navigation.js';
+import Notification from './components/Notification.js';
 import Graphs from './components/graphs/Graphs.js';
 import Control from './components/control/Control.js';
 import Overview from './components/overview/Overview.js';
@@ -79,6 +80,7 @@ const App = ({ data, initializeData, setData, user, fetchUserFromLocalStorage })
       <CssBaseline/>
       <div>
         <Navigation/>
+        <Notification />
         <Switch>
           <Route path='/graphs/' render={() =>
             user ? <Graphs/> : <Redirect to='/login' />

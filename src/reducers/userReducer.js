@@ -27,7 +27,7 @@ export const login = (credentials) => {
         payload: user
       });
     } catch (e) {
-      dispatch(setNotification('Wrong username or password'));
+      dispatch(setNotification('Wrong username or password', 'error'));
       setTimeout(() => {
         dispatch(removeNotification());
       }, 5000)
