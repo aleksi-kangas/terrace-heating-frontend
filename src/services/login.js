@@ -9,7 +9,7 @@ const baseUrl = '/api/login';
  */
 const login = async (userCredentials) => {
   const response = await axios.post(baseUrl, userCredentials);
-  return response.data
+  return response.data;
 };
 
 const LoginService = { login };

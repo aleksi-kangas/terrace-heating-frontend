@@ -5,18 +5,16 @@ import moment from 'moment';
 let token = null;
 
 const setToken = (newToken) => {
-  token = `bearer ${newToken}`
+  token = `bearer ${newToken}`;
 };
 
 /**
  * Create authorization configuration object for API requests.
  * @return {Object} object containing authorization-header
  */
-const getConfig = () => {
-  return {
-    headers: { Authorization: token }
-  }
-};
+const getConfig = () => ({
+  headers: { Authorization: token },
+});
 
 const baseUrl = '/api/heat-pump';
 
@@ -49,9 +47,9 @@ const getActiveCircuits = async () => {
  */
 const startCircuitThree = async (softStart) => {
   const data = {
-    softStart
+    softStart,
   };
-  const response = await axios.post(`/api/heat-pump/start`, data, getConfig());
+  const response = await axios.post('/api/heat-pump/start', data, getConfig());
   return response.data;
 };
 
@@ -59,7 +57,7 @@ const startCircuitThree = async (softStart) => {
  * Stop the heat distribution circuit three via API.
  */
 const stopCircuitThree = async () => {
-  const response = await axios.post(`/api/heat-pump/stop`, null, getConfig());
+  const response = await axios.post('/api/heat-pump/stop', null, getConfig());
   return response.data;
 };
 
@@ -82,9 +80,9 @@ const getSchedule = async (variable) => {
 const setSchedule = async (variable, schedule) => {
   const data = {
     variable,
-    schedule
+    schedule,
   };
-  const response = await axios.post(`/api/heat-pump/schedules`, data, getConfig());
+  const response = await axios.post('/api/heat-pump/schedules', data, getConfig());
   return response.data;
 };
 

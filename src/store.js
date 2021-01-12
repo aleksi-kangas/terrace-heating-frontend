@@ -1,12 +1,11 @@
 import thunk from 'redux-thunk';
 import { createStore, combineReducers, applyMiddleware } from 'redux';
 import { composeWithDevTools } from 'redux-devtools-extension';
-import userReducer from './reducers/userReducer.js';
-import notificationReducer from './reducers/notificationReducer.js';
-import dataReducer from './reducers/dataReducer.js';
-import scheduleReducer from './reducers/scheduleReducer.js';
-import circuitReducer from './reducers/circuitReducer.js';
-
+import userReducer from './reducers/userReducer';
+import notificationReducer from './reducers/notificationReducer';
+import dataReducer from './reducers/dataReducer';
+import scheduleReducer from './reducers/scheduleReducer';
+import circuitReducer from './reducers/circuitReducer';
 
 const reducer = combineReducers({
   data: dataReducer,
@@ -18,7 +17,7 @@ const reducer = combineReducers({
 
 const store = createStore(
   reducer,
-  composeWithDevTools(applyMiddleware(thunk))
+  composeWithDevTools(applyMiddleware(thunk)),
 );
 
 export default store;

@@ -4,7 +4,7 @@ import clsx from 'clsx';
 import { Grid, Paper } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import { Line } from 'react-chartjs-2';
-import { Atlas6 } from 'chartjs-plugin-colorschemes/src/colorschemes/colorschemes.office.js';
+import { Atlas6 } from 'chartjs-plugin-colorschemes/src/colorschemes/colorschemes.office';
 
 const useStyles = makeStyles({
   container: {
@@ -12,7 +12,7 @@ const useStyles = makeStyles({
   },
   shadow: {
     borderRadius: 4,
-    boxShadow: '0px 3px 11px 0px #c0c4e0'
+    boxShadow: '0px 3px 11px 0px #c0c4e0',
   },
   text: {
     color: '#131313',
@@ -24,14 +24,14 @@ const useStyles = makeStyles({
     margin: 10,
   },
   loading: {
-    borderBottom: '10px solid rgba(100, 100, 100, 0.5)'
+    borderBottom: '10px solid rgba(100, 100, 100, 0.5)',
   },
   active: {
     borderBottom: '10px solid rgba(0, 150, 0, 0.5)',
   },
   stopped: {
     borderBottom: '10px solid rgba(150, 0, 0, 0.5)',
-  }
+  },
 });
 
 const OutsideTempPanel = ({ data }) => {
@@ -57,7 +57,7 @@ const OutsideTempPanel = ({ data }) => {
 
   const lineData = {
     labels: data.map((entry) => entry.time),
-    datasets: dataSets
+    datasets: dataSets,
   };
 
   const options = {
@@ -78,7 +78,7 @@ const OutsideTempPanel = ({ data }) => {
             enabled: true,
             fontStyle: 'bold',
             fontSize: 14,
-          }
+          },
         },
         scaleLabel: {
           display: true,
@@ -88,7 +88,7 @@ const OutsideTempPanel = ({ data }) => {
       yAxes: [{
         scaleLabel: {
           display: true,
-          labelString: 'Celsius (°C)'
+          labelString: 'Celsius (°C)',
         },
       }],
     },
@@ -99,11 +99,11 @@ const OutsideTempPanel = ({ data }) => {
           mode: 'x',
           rangeMin: {
             x: data[0].time.valueOf(),
-            y: null
+            y: null,
           },
           rangeMax: {
             x: data[data.length - 1].time.valueOf(),
-            y: null
+            y: null,
           },
         },
         zoom: {
@@ -118,21 +118,19 @@ const OutsideTempPanel = ({ data }) => {
           },
         },
         speed: 15,
-      }
-    }
+      },
+    },
   };
 
   return (
-    <Grid container item component={Paper} lg={7} className={clsx(classes.container, classes.shadow)} justify='space-evenly'>
+    <Grid container item component={Paper} lg={7} className={clsx(classes.container, classes.shadow)} justify="space-evenly">
       <Line data={lineData} options={options} />
     </Grid>
-  )
+  );
 };
 
-const mapStateToProps = (state) => {
-  return {
-    data: state.data
-  }
-};
+const mapStateToProps = (state) => ({
+  data: state.data,
+});
 
 export default connect(mapStateToProps)(OutsideTempPanel);

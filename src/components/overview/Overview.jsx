@@ -1,9 +1,9 @@
 import React from 'react';
 import { Grid } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
-import OutsideTempPanel from './OutsideTempPanel.js';
-import UsagePanel from './UsagePanel.js';
-import TogglePanel from './TogglePanel.js';
+import OutsideTempPanel from './OutsideTempPanel';
+import UsagePanel from './UsagePanel';
+import TogglePanel from './TogglePanel';
 
 const useStyles = makeStyles({
   container: {
@@ -11,8 +11,8 @@ const useStyles = makeStyles({
   },
   row: {
     margin: 20,
-    height: '250px'
-  }
+    height: '250px',
+  },
 });
 
 const Overview = () => {
@@ -20,15 +20,15 @@ const Overview = () => {
 
   return (
     <Grid container className={classes.container}>
-      <Grid container item className={classes.row} justify='space-between'>
-        <OutsideTempPanel/>
-        <TogglePanel/>
+      <Grid container item className={classes.row} justify="space-between">
+        <OutsideTempPanel />
+        <TogglePanel />
       </Grid>
       <Grid container item className={classes.row}>
-        <UsagePanel/>
+        <UsagePanel />
       </Grid>
     </Grid>
-  )
+  );
 };
 
 export default Overview;

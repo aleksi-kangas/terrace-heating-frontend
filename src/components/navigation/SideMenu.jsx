@@ -1,9 +1,11 @@
 import React from 'react';
-import { Button, Drawer, List, ListItem, ListItemText } from '@material-ui/core';
+import {
+  Button, Drawer, List, ListItem, ListItemText,
+} from '@material-ui/core';
 import { Link } from 'react-router-dom';
-import AssessmentIcon from '@material-ui/icons/Assessment.js';
-import ShowChartIcon from '@material-ui/icons/ShowChart.js';
-import TuneIcon from '@material-ui/icons/Tune.js';
+import AssessmentIcon from '@material-ui/icons/Assessment';
+import ShowChartIcon from '@material-ui/icons/ShowChart';
+import TuneIcon from '@material-ui/icons/Tune';
 import { makeStyles } from '@material-ui/core/styles';
 import { blueGrey } from '@material-ui/core/colors';
 
@@ -17,27 +19,26 @@ const useStyles = makeStyles((theme) => ({
     borderWidth: 2,
     borderColor: blueGrey[400],
     borderStyle: 'solid',
-    width: '100px'
+    width: '100px',
   },
   listItem: {
     marginBottom: -10,
   },
   paper: {
-    background: '#F6F7FF'
-  }
+    background: '#F6F7FF',
+  },
 }));
 
 const SideMenu = ({ sideMenuOpen, setSideMenuOpen }) => {
-
   const classes = useStyles();
 
   const drawer = (
     <List>
       <ListItem className={classes.listItem}>
-        <AssessmentIcon/>
-        <Link to='/' style={{ textDecoration: 'none' }}>
-          <ListItemText >
-            <Button color='primary' onClick={() => setSideMenuOpen(false)} className={classes.button}>
+        <AssessmentIcon />
+        <Link to="/" style={{ textDecoration: 'none' }}>
+          <ListItemText>
+            <Button color="primary" onClick={() => setSideMenuOpen(false)} className={classes.button}>
               Overview
             </Button>
           </ListItemText>
@@ -45,9 +46,9 @@ const SideMenu = ({ sideMenuOpen, setSideMenuOpen }) => {
       </ListItem>
       <ListItem className={classes.listItem}>
         <ShowChartIcon />
-        <Link to='/graphs/1' style={{ textDecoration: 'none' }}>
+        <Link to="/graphs/1" style={{ textDecoration: 'none' }}>
           <ListItemText>
-            <Button color='primary' onClick={() => setSideMenuOpen(false)} className={classes.button}>
+            <Button color="primary" onClick={() => setSideMenuOpen(false)} className={classes.button}>
               Graphs
             </Button>
           </ListItemText>
@@ -55,9 +56,9 @@ const SideMenu = ({ sideMenuOpen, setSideMenuOpen }) => {
       </ListItem>
       <ListItem className={classes.listItem}>
         <TuneIcon />
-        <Link to='/control' style={{ textDecoration: 'none' }}>
+        <Link to="/control" style={{ textDecoration: 'none' }}>
           <ListItemText>
-            <Button color='primary' onClick={() => setSideMenuOpen(false)} className={classes.button}>
+            <Button color="primary" onClick={() => setSideMenuOpen(false)} className={classes.button}>
               Control
             </Button>
           </ListItemText>
@@ -69,8 +70,8 @@ const SideMenu = ({ sideMenuOpen, setSideMenuOpen }) => {
   return (
     <Drawer
       classes={{ paper: classes.paper }}
-      variant='temporary'
-      anchor='left'
+      variant="temporary"
+      anchor="left"
       open={sideMenuOpen}
       onClose={() => setSideMenuOpen(false)}
       ModalProps={{

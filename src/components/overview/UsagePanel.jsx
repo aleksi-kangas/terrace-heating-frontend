@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import clsx from 'clsx';
 import { Line } from 'react-chartjs-2';
 import GaugeChart from 'react-gauge-chart';
-import { Atlas6 } from 'chartjs-plugin-colorschemes/src/colorschemes/colorschemes.office.js';
+import { Atlas6 } from 'chartjs-plugin-colorschemes/src/colorschemes/colorschemes.office';
 import { Grid, Paper, Typography } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 
@@ -13,7 +13,7 @@ const useStyles = makeStyles({
   },
   shadow: {
     borderRadius: 4,
-    boxShadow: '0px 3px 11px 0px #c0c4e0'
+    boxShadow: '0px 3px 11px 0px #c0c4e0',
   },
   text: {
     color: '#131313',
@@ -32,9 +32,8 @@ const UsagePanel = ({ data }) => {
         data: data.map((entry) => {
           if (entry.compressorUsage) {
             return entry.compressorUsage * 100;
-          } else {
-            return Number.NaN;
           }
+          return Number.NaN;
         }),
         borderColor: Atlas6[2],
         fill: true,
@@ -52,7 +51,7 @@ const UsagePanel = ({ data }) => {
 
   const lineData = {
     labels: data.map((entry) => entry.time),
-    datasets: dataSets
+    datasets: dataSets,
   };
 
   const options = {
@@ -66,7 +65,7 @@ const UsagePanel = ({ data }) => {
           unitStepSize: '1',
           displayFormats: {
             hour: 'HH:mm',
-            //day: 'DD MMM',
+            // day: 'DD MMM',
           },
         },
         ticks: {
@@ -74,7 +73,7 @@ const UsagePanel = ({ data }) => {
             enabled: true,
             fontStyle: 'bold',
             fontSize: 14,
-          }
+          },
         },
         scaleLabel: {
           display: true,
@@ -84,7 +83,7 @@ const UsagePanel = ({ data }) => {
       yAxes: [{
         scaleLabel: {
           display: true,
-          labelString: 'Usage (%)'
+          labelString: 'Usage (%)',
         },
       }],
     },
@@ -95,11 +94,11 @@ const UsagePanel = ({ data }) => {
           mode: 'x',
           rangeMin: {
             x: data[0].time.valueOf(),
-            y: null
+            y: null,
           },
           rangeMax: {
             x: data[data.length - 1].time.valueOf(),
-            y: null
+            y: null,
           },
         },
         zoom: {
@@ -114,36 +113,34 @@ const UsagePanel = ({ data }) => {
           },
         },
         speed: 15,
-      }
-    }
+      },
+    },
   };
 
   return (
-    <Grid container item component={Paper} className={clsx(classes.container, classes.shadow)} justify='space-evenly'>
-      <Grid container item sm={4} lg={3} justify='center' direction='column'>
+    <Grid container item component={Paper} className={clsx(classes.container, classes.shadow)} justify="space-evenly">
+      <Grid container item sm={4} lg={3} justify="center" direction="column">
         <GaugeChart
-          id='1'
+          id="1"
           animate={false}
           nrOfLevels={20}
           percent={latestUsage}
-          textColor='black'
-          needleColor='gray'
+          textColor="black"
+          needleColor="gray"
         />
-        <Typography variant='h6' className={classes.text} align='center'>
+        <Typography variant="h6" className={classes.text} align="center">
           Compressor Usage
         </Typography>
       </Grid>
-      <Grid container item sm={8} lg={8} justify='center' direction='column'>
-        <Line data={lineData} options={options}/>
+      <Grid container item sm={8} lg={8} justify="center" direction="column">
+        <Line data={lineData} options={options} />
       </Grid>
     </Grid>
-  )
+  );
 };
 
-const mapStateToProps = (state) => {
-  return {
-    data: state.data
-  }
-};
+const mapStateToProps = (state) => ({
+  data: state.data,
+});
 
 export default connect(mapStateToProps)(UsagePanel);

@@ -4,13 +4,12 @@ import { connect } from 'react-redux';
 import { Line } from 'react-chartjs-2';
 import { fi } from 'date-fns/locale';
 import { makeStyles } from '@material-ui/core/styles';
-import { Atlas6 } from 'chartjs-plugin-colorschemes/src/colorschemes/colorschemes.office.js';
-
+import { Atlas6 } from 'chartjs-plugin-colorschemes/src/colorschemes/colorschemes.office';
 
 const useStyles = makeStyles(() => ({
   canvasContainer: {
-    height: '60vh'
-  }
+    height: '60vh',
+  },
 }));
 
 const LineChart = ({ data, variables, xAxis }) => {
@@ -26,9 +25,9 @@ const LineChart = ({ data, variables, xAxis }) => {
       borderColor: Atlas6[index],
       fill: false,
       pointRadius: 0,
-      pointHitRadius: 5
+      pointHitRadius: 5,
     };
-    dataSets.push(dataSet)
+    dataSets.push(dataSet);
   });
 
   const lineData = {
@@ -44,7 +43,7 @@ const LineChart = ({ data, variables, xAxis }) => {
       adapters: {
         date: {
           locale: fi,
-        }
+        },
       },
       xAxes: [{
         type: 'time',
@@ -54,7 +53,7 @@ const LineChart = ({ data, variables, xAxis }) => {
           unitStepSize: '1',
           displayFormats: {
             hour: 'HH:mm',
-            //day: 'DD MMM',
+            // day: 'DD MMM',
           },
         },
         ticks: {
@@ -62,7 +61,7 @@ const LineChart = ({ data, variables, xAxis }) => {
             enabled: true,
             fontStyle: 'bold',
             fontSize: 14,
-          }
+          },
         },
         scaleLabel: {
           display: true,
@@ -72,7 +71,7 @@ const LineChart = ({ data, variables, xAxis }) => {
       yAxes: [{
         scaleLabel: {
           display: true,
-          labelString: 'Celsius (°C)'
+          labelString: 'Celsius (°C)',
         },
       }],
     },
@@ -83,11 +82,11 @@ const LineChart = ({ data, variables, xAxis }) => {
           mode: 'x',
           rangeMin: {
             x: xAxis[0].valueOf(),
-            y: null
+            y: null,
           },
           rangeMax: {
             x: xAxis[xAxis.length - 1].valueOf(),
-            y: null
+            y: null,
           },
         },
         zoom: {
@@ -102,22 +101,19 @@ const LineChart = ({ data, variables, xAxis }) => {
           },
         },
         speed: 15,
-      }
-    }
+      },
+    },
   };
-
 
   return (
     <div className={classes.canvasContainer}>
-      <Line data={lineData} options={options}/>
+      <Line data={lineData} options={options} />
     </div>
-  )
+  );
 };
 
-const mapStateToProps = (state) => {
-  return {
-    data: state.data
-  }
-};
+const mapStateToProps = (state) => ({
+  data: state.data,
+});
 
 export default connect(mapStateToProps)(LineChart);

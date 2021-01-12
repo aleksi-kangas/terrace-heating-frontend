@@ -4,16 +4,16 @@ import { Button, Grid, TextField } from '@material-ui/core';
 import LockIcon from '@material-ui/icons/Lock';
 import PersonIcon from '@material-ui/icons/Person';
 import { makeStyles } from '@material-ui/core/styles';
-import { login } from '../reducers/userReducer.js';
+import { login } from '../reducers/userReducer';
 
 const useStyles = makeStyles(() => ({
   icon: {
-    padding: 10
+    padding: 10,
   },
   button: {
     padding: 20,
-    color: '#5390fe'
-  }
+    color: '#5390fe',
+  },
 }));
 
 const LoginForm = ({ history, login }) => {
@@ -23,7 +23,7 @@ const LoginForm = ({ history, login }) => {
     event.preventDefault();
     const credentials = {
       username: event.target.username.value,
-      password: event.target.password.value
+      password: event.target.password.value,
     };
     login(credentials);
     // Redirect
@@ -33,40 +33,40 @@ const LoginForm = ({ history, login }) => {
   return (
     <Grid
       container
-      direction='column'
-      alignItems='center'
+      direction="column"
+      alignItems="center"
     >
       <Grid item>
         <form onSubmit={handleLogin}>
           <Grid
             container
-            direction='column'
-            alignItems='center'
-            justify='center'
+            direction="column"
+            alignItems="center"
+            justify="center"
           >
             <Grid item className={classes.icon}>
-              <PersonIcon fontSize='large'/>
+              <PersonIcon fontSize="large" />
             </Grid>
             <Grid item>
               <TextField
-                id='username'
-                label='Username'
-                placeholder='Username'
+                id="username"
+                label="Username"
+                placeholder="Username"
               />
             </Grid>
             <Grid item className={classes.icon}>
-              <LockIcon fontSize='large'/>
+              <LockIcon fontSize="large" />
             </Grid>
             <Grid item>
               <TextField
-                id='password'
-                label='Password'
-                placeholder='Password'
-                type='password'
+                id="password"
+                label="Password"
+                placeholder="Password"
+                type="password"
               />
             </Grid>
             <Grid item className={classes.button}>
-              <Button variant='contained' type='submit' color='secondary'>
+              <Button variant="contained" type="submit" color="secondary">
                 Login
               </Button>
             </Grid>
@@ -74,7 +74,7 @@ const LoginForm = ({ history, login }) => {
         </form>
       </Grid>
     </Grid>
-  )
+  );
 };
 
 export default connect(null, { login })(LoginForm);

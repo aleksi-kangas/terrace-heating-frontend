@@ -17,24 +17,20 @@ const notificationReducer = (state = null, action) => {
  * @param message
  * @param type either 'error' or 'success'
  */
-export const setNotification = (message, type) => {
-  return dispatch => {
-    dispatch({
-      type: 'SET_NOTIFICATION',
-      payload: { message, type }
-    });
-  }
+export const setNotification = (message, type) => (dispatch) => {
+  dispatch({
+    type: 'SET_NOTIFICATION',
+    payload: { message, type },
+  });
 };
 
 /**
  * Dispatcher for removing the notification message.
  */
-export const removeNotification = () => {
-  return dispatch => {
-    dispatch({
-      type: 'REMOVE_NOTIFICATION'
-    });
-  }
+export const removeNotification = () => (dispatch) => {
+  dispatch({
+    type: 'REMOVE_NOTIFICATION',
+  });
 };
 
 export default notificationReducer;
