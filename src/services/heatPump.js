@@ -1,13 +1,17 @@
 import axios from 'axios';
 import moment from 'moment';
 
-// Authorization
+// Authorization (bearer) token
 let token = null;
 
 const setToken = (newToken) => {
   token = `bearer ${newToken}`
 };
 
+/**
+ * Create authorization configuration object for API requests.
+ * @return {Object} object containing authorization-header
+ */
 const getConfig = () => {
   return {
     headers: { Authorization: token }
@@ -16,7 +20,12 @@ const getConfig = () => {
 
 const baseUrl = '/api/heat-pump';
 
-const getLastWeek = async () => {
+/**
+ * Request heat-pump data from a given date onwards from the API.
+ * Timestamp is defined by query strings: year, month and day.
+ * @return [Object] array of heat-pump data entries
+ */
+const getHeatPumpData = async () => {
   const date = moment();
   date.subtract(1, 'week');
   const dateParts = date.format('YYYY-MM-DD').split('-');
@@ -25,11 +34,19 @@ const getLastWeek = async () => {
   return response.data;
 };
 
+/**
+ * Request the number of active heat distribution circuits from the API.
+ * @return { Number }
+ */
 const getActiveCircuits = async () => {
   const response = await axios.get('/api/heat-pump/circuits', getConfig());
   return response.data;
 };
 
+/**
+ * Start the heat distribution circuit three via API.
+ * @param softStart boolean - should soft-start functionality be used
+ */
 const startCircuitThree = async (softStart) => {
   const data = {
     softStart
@@ -38,16 +55,30 @@ const startCircuitThree = async (softStart) => {
   return response.data;
 };
 
+/**
+ * Stop the heat distribution circuit three via API.
+ */
 const stopCircuitThree = async () => {
   const response = await axios.post(`/api/heat-pump/stop`, null, getConfig());
   return response.data;
 };
 
+/**
+ * Request heating schedule of the given variable from the API.
+ * @param variable either 'lowerTank' or 'heatDistCircuit3'
+ * @return {Object} containing the heating schedule of the variable
+ */
 const getSchedule = async (variable) => {
   const response = await axios.get(`/api/heat-pump/schedules/${variable}`, getConfig());
   return response.data;
 };
 
+/**
+ * Set heating schedule of the given variable via API.
+ * @param variable either 'lowerTank' or 'heatDistCircuit3'
+ * @param schedule object containing the schedule to set, e.g.
+ * { monday: { start: Number, end: Number, delta: Number }, ... }
+ */
 const setSchedule = async (variable, schedule) => {
   const data = {
     variable,
@@ -58,7 +89,7 @@ const setSchedule = async (variable, schedule) => {
 };
 
 const HeatPumpService = {
-  getLastWeek, getActiveCircuits, getSchedule, setSchedule, setToken, startCircuitThree, stopCircuitThree,
+  getHeatPumpData, getActiveCircuits, getSchedule, setSchedule, setToken, startCircuitThree, stopCircuitThree,
 };
 
 export default HeatPumpService;

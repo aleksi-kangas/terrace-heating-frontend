@@ -2,6 +2,9 @@ import loginService from '../services/login.js';
 import { setNotification, removeNotification } from './notificationReducer.js';
 import heatPumpService from '../services/heatPump.js';
 
+/**
+ * Handles the dispatched actions to update the user status to the Redux state.
+ */
 const userReducer = (state = null, action) => {
   switch (action.type) {
     case 'LOGIN':
@@ -15,6 +18,10 @@ const userReducer = (state = null, action) => {
   }
 };
 
+/**
+ * Dispatcher for logging in a user.
+ * @param credentials Object { username: String, password: String }
+ */
 export const login = (credentials) => {
   return async dispatch => {
     try {
@@ -35,6 +42,9 @@ export const login = (credentials) => {
   }
 };
 
+/**
+ * Dispatcher for logging out a user.
+ */
 export const logout = () => {
   return dispatch => {
     window.localStorage.removeItem('user');
@@ -45,6 +55,9 @@ export const logout = () => {
   }
 };
 
+/**
+ * Dispatcher for fetching the logged in user from local storage and updating state accordingly.
+ */
 export const fetchUserFromLocalStorage = () => {
   return dispatch => {
     const loggedUser = window.localStorage.getItem('user');

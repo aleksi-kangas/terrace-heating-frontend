@@ -32,20 +32,24 @@ const theme = createMuiTheme({
 });
 
 const App = ({ data, initializeData, setData, user, fetchUserFromLocalStorage }) => {
+  /*
+   Data covers on month period to reduce data transfer and increase performance,
+   since older data is not needed for monitoring general trends.
+   */
   const dataCoverTimePeriodHours = 24 * 31; // One month
   const history = useHistory();
 
+  // Fetch user that's logged in from local storage
   useEffect(() => {
-    // Get logged in user from local storage
     fetchUserFromLocalStorage();
   }, [fetchUserFromLocalStorage]);
 
-  // Fetching pre-existing data
+  // Fetch pre-existing data from the API on first mount
   useEffect(() => {
     initializeData()
   }, [initializeData]);
 
-  // Subscribe to real-time data using socket.io
+  // Subscribe to real-time updates from the server using socket.io
   useSocket('heatPumpData', (heatPumpData) => {
     // Wait until pre-existing data is loaded before adding new data
     if (data) {
@@ -55,9 +59,13 @@ const App = ({ data, initializeData, setData, user, fetchUserFromLocalStorage })
         newData.push(heatPumpData);
         setData(newData);
       } else {
-        // Calculate the time period that data covers
-        // If the data covers more than a fixed time (one month) period,
-        // remove the oldest entry to accommodate a new entry as in a ring buffer.
+        /*
+        Heat-pump data is stored in a 'ring buffer' and therefore,
+        some calculations are needed.
+        Calculate the time period which is covered by the data.
+        If the period exceeds the length of dataCoverTimePeriodHours,
+        remove the oldest entry to accommodate the new entry.
+         */
         const startTime = moment(data[0].time);
         const endTime = moment(data[data.length - 1].time);
         const duration = moment.duration(endTime.diff(startTime));

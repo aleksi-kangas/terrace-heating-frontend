@@ -1,3 +1,6 @@
+/**
+ * Handles the dispatched actions to update the notification to the Redux state.
+ */
 const notificationReducer = (state = null, action) => {
   switch (action.type) {
     case 'SET_NOTIFICATION':
@@ -9,6 +12,11 @@ const notificationReducer = (state = null, action) => {
   }
 };
 
+/**
+ * Dispatcher for setting the notification message.
+ * @param message
+ * @param type either 'error' or 'success'
+ */
 export const setNotification = (message, type) => {
   return dispatch => {
     dispatch({
@@ -18,6 +26,9 @@ export const setNotification = (message, type) => {
   }
 };
 
+/**
+ * Dispatcher for removing the notification message.
+ */
 export const removeNotification = () => {
   return dispatch => {
     dispatch({
