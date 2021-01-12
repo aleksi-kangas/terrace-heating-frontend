@@ -1,68 +1,41 @@
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+# Terrace Heating Frontend
+> A React.js frontend which enables monitoring and controlling of a terrace heating system.
 
-## Available Scripts
+A personal project for gaining a deeper understanding of Full Stack development
+by building a meaningful application for real world use.
 
-In the project directory, you can run:
+In a nutshell, this project enables monitoring and controlling the heating system for an enclosed terrace at my parents' home.
 
-### `npm start`
+#### Background Motivation
+At my parents' home, there is an enclosed terrace for which the heating (ground & air) is provided by a *Lämpöässä* ground source heat-pump.
 
-Runs the app in the development mode.<br />
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+As I found that monitoring and controlling the heat-pump was a bit cumbersome through the provided cloud platform,
+I visioned about a simple and responsive web application which would provide my family members an easy way of using the terrace heating system.
 
-The page will reload if you make edits.<br />
-You will also see any lint errors in the console.
+This repository contains the implementation of the frontend portion of the application.
 
-### `npm test`
+### Table of Contents
+[Features](#features)  
+[Demo](#demo)   
+[Implementation](#implementation)
 
-Launches the test runner in the interactive watch mode.<br />
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+## Features
+The features of the React.js frontend include:
+- A simple overview of the status of the heating system.
+- Provides ability to control the status of the heating system with a dynamic startup process.
+- Multiple graphs for monitoring different aspects of the heat-pump.
+- Controlling the schedule for boosted heating.
 
-### `npm run build`
 
-Builds the app for production to the `build` folder.<br />
-It correctly bundles React in production mode and optimizes the build for the best performance.
+## Demo
+There's a simplified demo application hosted on Heroku.
 
-The build is minified and the filenames include the hashes.<br />
-Your app is ready to be deployed!
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+TODO Heroku link
 
-### `npm run eject`
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+## Implementation
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
 
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/code-splitting
-
-### Analyzing the Bundle Size
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size
-
-### Making a Progressive Web App
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app
-
-### Advanced Configuration
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/advanced-configuration
-
-### Deployment
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/deployment
-
-### `npm run build` fails to minify
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify
