@@ -12,6 +12,8 @@ import LoginForm from './components/LoginForm.js';
 import { Redirect, useHistory } from 'react-router-dom';
 import { fetchUserFromLocalStorage } from './reducers/userReducer.js';
 import { initializeData, setData } from './reducers/dataReducer.js';
+import { fetchActiveCircuits } from './reducers/circuitReducer.js';
+import { fetchSchedule } from './reducers/scheduleReducer.js';
 import { MuiThemeProvider } from '@material-ui/core/styles';
 import { createMuiTheme } from '@material-ui/core';
 import CssBaseline from "@material-ui/core/CssBaseline";
@@ -31,7 +33,8 @@ const theme = createMuiTheme({
   }
 });
 
-const App = ({ data, initializeData, setData, user, fetchUserFromLocalStorage }) => {
+const App = (
+  { data, initializeData, setData, user, fetchUserFromLocalStorage, fetchActiveCircuits, fetchSchedule }) => {
   /*
    Data covers on month period to reduce data transfer and increase performance,
    since older data is not needed for monitoring general trends.
@@ -48,6 +51,17 @@ const App = ({ data, initializeData, setData, user, fetchUserFromLocalStorage })
   useEffect(() => {
     initializeData()
   }, [initializeData]);
+
+  // Fetching active circuits
+  useEffect(() => {
+    fetchActiveCircuits();
+  }, [fetchActiveCircuits]);
+
+  // Fetching active circuits
+  useEffect(() => {
+    fetchSchedule('lowerTank');
+    fetchSchedule('heatDistCircuit3');
+  }, [fetchActiveCircuits]);
 
   // Subscribe to real-time updates from the server using socket.io
   useSocket('heatPumpData', (heatPumpData) => {
@@ -120,4 +134,7 @@ const mapStateToProps = (state) => {
   }
 };
 
-export default connect(mapStateToProps, { fetchUserFromLocalStorage, initializeData, setData })(App);
+export default connect(
+  mapStateToProps,
+  { fetchUserFromLocalStorage, initializeData, setData, fetchActiveCircuits, fetchSchedule }
+  )(App);

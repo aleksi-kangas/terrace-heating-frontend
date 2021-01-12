@@ -1,4 +1,5 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
+import { connect } from 'react-redux';
 import HeatPumpService from '../../services/heatPump.js';
 import clsx from 'clsx';
 import {
@@ -6,6 +7,7 @@ import {
   Table, TableHead, TableBody, TableContainer, TableCell, TableRow, TextField, Typography
 } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
+import { setSchedule } from '../../reducers/scheduleReducer.js';
 
 const useStyles = makeStyles({
   container: {
@@ -24,22 +26,11 @@ const useStyles = makeStyles({
   },
 });
 
-const SchedulingPanel = ({ variable, title }) => {
-  const [registerValues, setRegisterValues] = useState(null);
+const SchedulingPanel = ({ schedule, variable, title, setSchedule }) => {
 
   const classes = useStyles();
 
   const weekDays = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
-
-  useEffect(() => {
-    if (variable === 'lowerTank' || variable === 'heatDistCircuit3') {
-      HeatPumpService
-        .getSchedule(variable)
-        .then((res) => {
-          setRegisterValues(res)
-        })
-    }
-  }, [variable]);
 
   const createRows = () => {
     const columnNames = ['start', 'end', 'delta'];
@@ -56,14 +47,14 @@ const SchedulingPanel = ({ variable, title }) => {
             <Grid container justify='flex-start'>
               <Grid container item alignItems='center' xs={1} sm={1} md={1} lg={1} xl={1} className={classes.value}>
                 <Typography>
-                  {registerValues[weekDay.toLowerCase()][columnName]}
+                  {schedule[variable][weekDay.toLowerCase()][columnName]}
                 </Typography>
               </Grid>
               <Grid item xs={8} sm={8} md={4} lg={8} xl={6}>
                 <TextField
                   variant='outlined'
                   size='small'
-                  defaultValue={registerValues[weekDay.toLowerCase()][columnName]}
+                  defaultValue={schedule[variable][weekDay.toLowerCase()][columnName]}
                 />
               </Grid>
             </Grid>
@@ -88,7 +79,7 @@ const SchedulingPanel = ({ variable, title }) => {
 
   return (
     <Grid container component={Paper} className={clsx(classes.container, classes.shadow)}>
-      {!registerValues ? <CircularProgress/> :
+      {!schedule || !schedule.lowerTank || !schedule.heatDistCircuit3 ? <CircularProgress/> :
       <form onSubmit={handleSubmit}>
         <Grid container item justify='center'>
           <Typography variant='h5'>
@@ -123,4 +114,10 @@ const SchedulingPanel = ({ variable, title }) => {
   )
 };
 
-export default SchedulingPanel;
+const mapStateToProps = (state) => {
+  return {
+    schedule: state.schedule,
+  }
+};
+
+export default connect(mapStateToProps, { setSchedule })(SchedulingPanel);
