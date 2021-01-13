@@ -17,7 +17,7 @@ import Overview from './components/overview/Overview';
 import LoginForm from './components/LoginForm';
 import { fetchUserFromLocalStorage } from './reducers/userReducer';
 import { initializeData, setData } from './reducers/dataReducer';
-import { fetchActiveCircuits } from './reducers/circuitReducer';
+import { fetchStatus, setStatus } from './reducers/statusReducer';
 import { fetchSchedule } from './reducers/scheduleReducer';
 
 const theme = createMuiTheme({
@@ -36,7 +36,7 @@ const theme = createMuiTheme({
 
 const App = (
   {
-    data, initializeData, setData, user, fetchUserFromLocalStorage, fetchActiveCircuits, fetchSchedule,
+    data, initializeData, setData, user, fetchUserFromLocalStorage, fetchStatus, setStatus, fetchSchedule,
   },
 ) => {
   /*
@@ -56,16 +56,16 @@ const App = (
     initializeData();
   }, [initializeData]);
 
-  // Fetching active circuits
+  // Fetching status of heating
   useEffect(() => {
-    fetchActiveCircuits();
-  }, [fetchActiveCircuits]);
+    fetchStatus();
+  }, [fetchStatus]);
 
-  // Fetching active circuits
+  // Fetch schedules for lower tank and circuit 3
   useEffect(() => {
     fetchSchedule('lowerTank');
     fetchSchedule('heatDistCircuit3');
-  }, [fetchActiveCircuits]);
+  }, [fetchSchedule]);
 
   // Subscribe to real-time updates from the server using socket.io
   useSocket('heatPumpData', (heatPumpData) => {
@@ -99,6 +99,10 @@ const App = (
         }
       }
     }
+  });
+
+  useSocket('status', (status) => {
+    setStatus(status);
   });
 
   return (
@@ -139,6 +143,6 @@ const mapStateToProps = (state) => ({
 export default connect(
   mapStateToProps,
   {
-    fetchUserFromLocalStorage, initializeData, setData, fetchActiveCircuits, fetchSchedule,
+    fetchUserFromLocalStorage, initializeData, setData, fetchStatus, setStatus, fetchSchedule,
   },
 )(App);

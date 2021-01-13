@@ -5,14 +5,14 @@ import userReducer from './reducers/userReducer';
 import notificationReducer from './reducers/notificationReducer';
 import dataReducer from './reducers/dataReducer';
 import scheduleReducer from './reducers/scheduleReducer';
-import circuitReducer from './reducers/circuitReducer';
+import statusReducer from './reducers/statusReducer';
 
 const reducer = combineReducers({
   data: dataReducer,
   notification: notificationReducer,
   user: userReducer,
   schedule: scheduleReducer,
-  circuits: circuitReducer,
+  status: statusReducer,
 });
 
 const store = createStore(

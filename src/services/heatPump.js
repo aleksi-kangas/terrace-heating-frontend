@@ -33,11 +33,11 @@ const getHeatPumpData = async () => {
 };
 
 /**
- * Request the number of active heat distribution circuits from the API.
+ * Request the status of the heating from the API.
  * @return { Number }
  */
-const getActiveCircuits = async () => {
-  const response = await axios.get('/api/heat-pump/circuits', getConfig());
+const getStatus = async () => {
+  const response = await axios.get('/api/heat-pump/status', getConfig());
   return response.data;
 };
 
@@ -87,7 +87,7 @@ const setSchedule = async (variable, schedule) => {
 };
 
 const HeatPumpService = {
-  getHeatPumpData, getActiveCircuits, getSchedule, setSchedule, setToken, startCircuitThree, stopCircuitThree,
+  getHeatPumpData, getStatus, getSchedule, setSchedule, setToken, startCircuitThree, stopCircuitThree,
 };
 
 export default HeatPumpService;

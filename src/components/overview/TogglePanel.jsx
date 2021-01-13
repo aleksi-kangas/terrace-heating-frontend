@@ -3,6 +3,8 @@ import { connect } from 'react-redux';
 import {
   Box,
   Button,
+  Card,
+  CardContent,
   Dialog,
   DialogActions,
   DialogContent,
@@ -14,10 +16,11 @@ import {
 import clsx from 'clsx';
 import { makeStyles } from '@material-ui/core/styles';
 import heatPumpService from '../../services/heatPump';
-import { setActiveCircuits } from '../../reducers/circuitReducer';
+import { fetchStatus, setStatus } from '../../reducers/statusReducer';
 
 const useStyles = makeStyles({
   container: {
+    marginTop: 20,
     padding: 10,
   },
   shadow: {
@@ -31,24 +34,28 @@ const useStyles = makeStyles({
     padding: 10,
   },
   card: {
-    margin: 10,
   },
   loading: {
-    borderBottom: '10px solid rgba(100, 100, 100, 0.5)',
+    background: '10px solid rgba(100, 100, 100, 0.5)',
+  },
+  boosted: {
+    borderBottom: '10px solid rgba(0, 225, 0, 0.7)',
   },
   active: {
-    borderBottom: '10px solid rgba(0, 150, 0, 0.5)',
+    borderBottom: '10px solid rgba(0, 175, 0, 0.5)',
   },
   stopped: {
-    borderBottom: '10px solid rgba(150, 0, 0, 0.5)',
+    borderBottom: '10px solid rgba(100, 100, 100, 0.5)',
   },
 });
 
 const TogglePanel = ({
-  data, circuits, fetchActiveCircuits, setActiveCircuits,
+  data, status, setStatus,
 }) => {
   const [dialogOpen, setDialogOpen] = useState(false);
   const [outsideTemp, setOutsideTemp] = useState(null);
+  const [statusHeader, setStatusHeader] = useState(null);
+  const [statusText, setStatusText] = useState(null);
   const [dialogTitle, setDialogTitle] = useState(null);
   const [dialogText, setDialogText] = useState(null);
   const [dialogQuestion, setDialogQuestion] = useState(null);
@@ -64,40 +71,61 @@ const TogglePanel = ({
         setDialogText('It is recommended to use soft-start due to cold outside temperature.');
         setDialogQuestion('Do you want to use soft-start?');
       } else if (latest.outsideTemp < 0) {
-        setDialogTitle('Start heating?');
+        setDialogTitle('Heating not recommended');
         setDialogText('Heating is NOT recommended due to cold outside temperature. Soft-start is forced on.');
         setDialogQuestion('Are you sure you want to start heating?');
       }
     }
   }, [data]);
 
+  useEffect(() => {
+    if (status === 'running' || status === 'boosting' || status === 'softStart') {
+      setStatusHeader('Heating active');
+    } else {
+      setStatusHeader('Heating off');
+      setStatusText(null);
+    }
+    if (status === 'boosting') {
+      setStatusText('Scheduled boosting');
+    } else if (status === 'softStart') {
+      setStatusText('Soft start running');
+    } else {
+      setStatusText(null);
+    }
+  }, [status]);
+
   const handleClose = () => {
     setDialogOpen(false);
   };
 
   const normalStartup = async () => {
-    await heatPumpService.startCircuitThree(false);
+    const newStatus = await heatPumpService.startCircuitThree(false);
     // await heatPumpService.enableScheduling();
-    setActiveCircuits(3);
+    setStatus(newStatus);
+    setDialogOpen(false);
   };
 
   const softStartup = async () => {
-    await heatPumpService.startCircuitThree(true);
+    const newStatus = await heatPumpService.startCircuitThree(true);
     // await heatPumpService.softStart();
-    setActiveCircuits(3);
+    setStatus(newStatus);
+    setDialogOpen(false);
   };
 
   const shutdown = async () => {
-    await heatPumpService.stopCircuitThree();
+    const newStatus = await heatPumpService.stopCircuitThree();
     // TODO Needed?
     // await heatPumpService.disableScheduling();
-    setActiveCircuits(2);
+    setStatus(newStatus);
+    setDialogOpen(false);
   };
 
+  console.log(status);
+
   const handleTerraceHeatingToggle = async () => {
-    if (circuits !== 3 && outsideTemp < 10) {
+    if (status === 'stopped' && outsideTemp < 10) {
       setDialogOpen(true);
-    } else if (circuits !== 3) {
+    } else if (status === 'stopped') {
       await normalStartup();
     } else {
       await shutdown();
@@ -109,24 +137,38 @@ const TogglePanel = ({
       await normalStartup();
     } else if (outsideTemp < 0) {
       // TODO NOTHING
+      setDialogOpen(false);
     }
   };
 
   const handleAccept = async () => {
-    if (outsideTemp > 0 && outsideTemp < 10) {
-      await softStartup();
-    } else if (outsideTemp < 0) {
-      await softStartup();
+    await softStartup();
+  };
+
+  const getColor = () => {
+    if (status === 'boosting') {
+      return (classes.boosted);
     }
+    if (status === 'running' || status === 'softStart') {
+      return (classes.active);
+    }
+    return classes.stopped;
   };
 
   return (
-    <Grid container item component={Paper} lg={4} className={clsx(classes.container, classes.shadow)}>
-      <Typography variant="h6" className={classes.text} align="center">
-        Status of circuit 3 (3 colors, soft start indicated)
-      </Typography>
+    <Grid container item component={Paper} sm={12} lg={4} className={clsx(classes.container, classes.shadow)}>
+      <Card className={clsx(classes.card, getColor())}>
+        <CardContent>
+          <Typography variant="h6" className={classes.text} align="center">
+            {statusHeader}
+          </Typography>
+          <Typography>
+            {statusText}
+          </Typography>
+        </CardContent>
+      </Card>
       <Switch
-        checked={circuits === 3}
+        checked={status === 'running' || status === 'softStart' || status === 'boosting'}
         onChange={handleTerraceHeatingToggle}
         name="terraceHeatingToggle"
       />
@@ -160,7 +202,7 @@ const TogglePanel = ({
 
 const mapStateToProps = (state) => ({
   data: state.data,
-  circuits: state.circuits,
+  status: state.status,
 });
 
-export default connect(mapStateToProps, { setActiveCircuits })(TogglePanel);
+export default connect(mapStateToProps, { fetchStatus, setStatus })(TogglePanel);
