@@ -15,9 +15,9 @@ I visioned about a simple and responsive web application which would provide my 
 This repository contains the implementation of the frontend portion of the application.
 
 ### Table of Contents
-[Features](#features)  
-[Demo](#demo)   
-[Implementation](#implementation)
+[Features](#features)   
+[Implementation](#implementation)  
+[Planned Upcoming Features](#planned-upcoming-features)
 
 ## Features
 The features of the React.js frontend include:
@@ -25,17 +25,35 @@ The features of the React.js frontend include:
 - Provides ability to control the status of the heating system with a dynamic startup process.
 - Multiple graphs for monitoring different aspects of the heat-pump.
 - Controlling the schedule for boosted heating.
-
-
-## Demo
-There's a simplified demo application hosted on Heroku.
-
-
-TODO Heroku link
-
-
+- UI created with [Material UI](https://material-ui.com/).
+    - Fully custom UI is in the works.
 
 ## Implementation
+- The Application has been created with [React.js](https://reactjs.org/)
+  framework in conjunction with [Material UI](https://material-ui.com/).
+  - Some custom styling has been used, and planning to create a fully custom UI.
+- JavaScript ES6 revision is used.
+- [Redux.js](https://redux.js.org/) is used for state management.
+    - Simple example:
+```JavaScript
+/**
+ * Handles the dispatched actions to update the heating system Redux state.
+ */
+const statusReducer = (state = null, action) => {
+  switch (action.type) {
+    case 'SET_STATUS':
+      return action.payload;
+    default:
+      return state;
+  }
+};
+```
+
+
+## Planned upcoming features
+- High priority to implement a fully custom UI
+- Conversion to TypeScript
+- Additional controlling features 
 
 
 
