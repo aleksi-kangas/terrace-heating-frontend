@@ -9,6 +9,9 @@ import { Link, Route } from 'react-router-dom';
 import { makeStyles } from '@material-ui/core/styles';
 import LineChart from './LineChart';
 
+/**
+ * Custom styling.
+ */
 const useStyles = makeStyles({
   tabs: {
     marginBottom: 10,
@@ -28,6 +31,9 @@ const useStyles = makeStyles({
   },
 });
 
+/**
+ * Predetermined variables to draw graphs for.
+ */
 const graphVariables = [
   {
     title: 'Heat Distribution Circuits',
@@ -57,6 +63,10 @@ const graphVariables = [
   },
 ];
 
+/**
+ * Represents the graphs page as a whole.
+ * Responsible for drawing three different LineCharts in separate tabs.
+ */
 const Graphs = ({ data }) => {
   const [activeTab, setActiveTab] = useState(0);
 
@@ -64,12 +74,23 @@ const Graphs = ({ data }) => {
 
   if (!data) return null;
 
+  /**
+   * Handler for changing the active tab.
+   */
   const handleChange = (event, newValue) => {
     setActiveTab(newValue);
   };
 
-  const tabCreator = () => graphVariables.map((graph, index) => <Tab key={graph.title} label={graph.title} component={Link} to={`/graphs/${index + 1}`} />);
+  /**
+   * Responsible for creating a tab for each LineChart.
+   */
+  const tabCreator = () => {
+    graphVariables.map((graph, index) => <Tab key={graph.title} label={graph.title} component={Link} to={`/graphs/${index + 1}`} />);
+  };
 
+  /**
+   * Responsible for creating a LineChart for the variables given in graphVariables.
+   */
   const graphCreator = () => {
     const xAxis = data.map((entry) => moment(entry.time));
     const graphs = graphVariables.map((graph, index) => <LineChart key={index + 1} variables={graph.variables} xAxis={xAxis} />);

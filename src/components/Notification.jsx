@@ -2,6 +2,13 @@ import React from 'react';
 import { connect } from 'react-redux';
 import MuiAlert from '@material-ui/lab/Alert';
 
+/**
+ * Represents a notification component which is rendered upon events,
+ * where user should be notified of something.
+ * @param notification
+ * @return {JSX.Element|null}
+ * @constructor
+ */
 const Notification = ({ notification }) => {
   if (!notification) {
     return null;

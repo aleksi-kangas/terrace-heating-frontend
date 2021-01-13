@@ -10,6 +10,9 @@ import { makeStyles } from '@material-ui/core/styles';
 import SchedulingPanel from './SchedulingPanel';
 import { removeNotification, setNotification } from '../../reducers/notificationReducer';
 
+/**
+ * Custom styling.
+ */
 const useStyles = makeStyles({
   container: {
     padding: 50,
@@ -23,10 +26,18 @@ const useStyles = makeStyles({
   },
 });
 
+/**
+ * Represents the control page as a whole.
+ * Responsible for rendering schedule panels for variables 'lowerTank' and 'heatDistCircuit3'.
+ */
 const Control = ({ setNotification, removeNotification }) => {
   const [scheduleActive, setScheduleActive] = useState(false);
   const classes = useStyles();
 
+  /**
+   * Handler for enabling and disabling schedules.
+   * Sends the state to the server.
+   */
   const handleScheduleToggle = () => {
     // TODO
     setScheduleActive(!scheduleActive);

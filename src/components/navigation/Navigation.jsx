@@ -5,12 +5,18 @@ import CssBaseline from '@material-ui/core/CssBaseline';
 import Header from './Header';
 import SideMenu from './SideMenu';
 
+/**
+ * Custom styling.
+ */
 const useStyles = makeStyles(() => ({
   appBar: {
     background: '#5390fe',
   },
 }));
 
+/**
+ * Responsible for rendering the Toolbar and SideMenu for navigation.
+ */
 const Navigation = () => {
   const [sideMenuOpen, setSideMenuOpen] = useState(false);
 

@@ -9,6 +9,9 @@ import TuneIcon from '@material-ui/icons/Tune';
 import { makeStyles } from '@material-ui/core/styles';
 import { blueGrey } from '@material-ui/core/colors';
 
+/**
+ * Custom styling.
+ */
 const useStyles = makeStyles((theme) => ({
   // Necessary for content to be below appbar
   toolbar: theme.mixins.toolbar,
@@ -29,6 +32,9 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+/**
+ * Represents the side-menu with navigation buttons for each page in the application.
+ */
 const SideMenu = ({ sideMenuOpen, setSideMenuOpen }) => {
   const classes = useStyles();
 

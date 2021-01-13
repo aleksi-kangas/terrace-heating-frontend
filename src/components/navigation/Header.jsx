@@ -6,6 +6,9 @@ import { makeStyles } from '@material-ui/core/styles';
 import IconButton from '@material-ui/core/IconButton';
 import { logout } from '../../reducers/userReducer';
 
+/**
+ * Custom styling.
+ */
 const useStyles = makeStyles(() => ({
   logout: {
     marginLeft: 'auto',
@@ -14,6 +17,9 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
+/**
+ * Represents the Toolbar at the top of the page.
+ */
 const Header = ({ setSideMenuOpen, user, logout }) => {
   const classes = useStyles();
 

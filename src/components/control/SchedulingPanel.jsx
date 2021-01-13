@@ -9,6 +9,9 @@ import { makeStyles } from '@material-ui/core/styles';
 import HeatPumpService from '../../services/heatPump';
 import { setSchedule } from '../../reducers/scheduleReducer';
 
+/**
+ * Custom styling.
+ */
 const useStyles = makeStyles({
   container: {
     padding: 20,
@@ -26,6 +29,11 @@ const useStyles = makeStyles({
   },
 });
 
+/**
+ * Represents a single schedule panel which contains start hour, end hour and temperature delta for each weekday.
+ * @param variable either 'lowerTank' or 'heatDistCircuit3'
+ * @param title text of the schedule panel
+ */
 const SchedulingPanel = ({
   schedule, variable, title, setSchedule,
 }) => {
@@ -65,6 +73,10 @@ const SchedulingPanel = ({
     ));
   };
 
+  /**
+   * Handler for schedule submission.
+   * Sends the inputted schedule to the server.
+   */
   const handleSubmit = async (event) => {
     event.preventDefault();
     let schedule = {};

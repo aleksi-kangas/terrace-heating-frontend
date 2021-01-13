@@ -5,6 +5,9 @@ import OutsideTempPanel from './OutsideTempPanel';
 import UsagePanel from './UsagePanel';
 import TogglePanel from './TogglePanel';
 
+/**
+ * Custom styling.
+ */
 const useStyles = makeStyles({
   container: {
     padding: 50,
@@ -15,6 +18,10 @@ const useStyles = makeStyles({
   },
 });
 
+/**
+ * Responsible for rendering the overview page of the application.
+ * Contains multiple panels which provide a simple overview of the heating system's status.
+ */
 const Overview = () => {
   const classes = useStyles();
 

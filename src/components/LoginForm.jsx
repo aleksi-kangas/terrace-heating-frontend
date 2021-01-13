@@ -6,6 +6,9 @@ import PersonIcon from '@material-ui/icons/Person';
 import { makeStyles } from '@material-ui/core/styles';
 import { login } from '../reducers/userReducer';
 
+/**
+ * Custom styling.
+ */
 const useStyles = makeStyles(() => ({
   icon: {
     padding: 10,
@@ -16,9 +19,16 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
+/**
+ * Represents the login form, where user will enter username and password to have access to the application.
+ */
 const LoginForm = ({ history, login }) => {
   const classes = useStyles();
 
+  /**
+   * Handler for login submission.
+   * Verifies the credentials at the server and redirects to overview page.
+   */
   const handleLogin = async (event) => {
     event.preventDefault();
     const credentials = {

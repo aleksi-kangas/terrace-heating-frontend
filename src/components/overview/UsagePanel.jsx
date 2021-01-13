@@ -7,6 +7,9 @@ import { Atlas6 } from 'chartjs-plugin-colorschemes/src/colorschemes/colorscheme
 import { Grid, Paper, Typography } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 
+/**
+ * Custom styling.
+ */
 const useStyles = makeStyles({
   container: {
     padding: 10,
@@ -20,12 +23,18 @@ const useStyles = makeStyles({
   },
 });
 
+/**
+ * Represents the panel which holds a graph and gauge of compressor usage.
+ * Usages are represented as percentages of running time / cycle time,
+ * where cycle is defined as compressor start -> stop -> start.
+ */
 const UsagePanel = ({ data }) => {
   const classes = useStyles();
   const [latestUsage, setLatestUsage] = useState(0);
   const [dataSets, setDataSets] = useState([]);
 
   useEffect(() => {
+    // Create a Chart.js dataset for compressor usage
     if (data) {
       const dataSet = {
         label: 'Compressor Usage',

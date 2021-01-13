@@ -13,8 +13,8 @@ const dataReducer = (state = null, action) => {
 };
 
 /**
- * Dispatcher for initializing heat-pump data,
- * i.e. used when data is received from the API at the first time.
+ * Action creator for initialing heat-pump data.
+ * Used when data is received from the API the first time.
  */
 export const initializeData = () => async (dispatch) => {
   const data = await heatPumpService.getHeatPumpData();
@@ -25,7 +25,7 @@ export const initializeData = () => async (dispatch) => {
 };
 
 /**
- * Dispatcher for updating/overwriting the heat-pump data.
+ * Action creator for updating/overwriting the heat-pump data.
  * Used when real-time updates are received from the API.
  * @param data array of heat-pump data
  */

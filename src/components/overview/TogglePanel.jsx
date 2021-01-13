@@ -18,6 +18,9 @@ import { makeStyles } from '@material-ui/core/styles';
 import heatPumpService from '../../services/heatPump';
 import { fetchStatus, setStatus } from '../../reducers/statusReducer';
 
+/**
+ * Custom styling.
+ */
 const useStyles = makeStyles({
   container: {
     marginTop: 20,
@@ -49,6 +52,9 @@ const useStyles = makeStyles({
   },
 });
 
+/**
+ * Represents the panel which holds the heating control switch and status information.
+ */
 const TogglePanel = ({
   data, status, setStatus,
 }) => {
@@ -63,6 +69,7 @@ const TogglePanel = ({
   const classes = useStyles();
 
   useEffect(() => {
+    // Conditionally determine content for the startup dialog
     if (data) {
       const latest = data[data.length - 1];
       setOutsideTemp(latest.outsideTemp);
@@ -79,6 +86,7 @@ const TogglePanel = ({
   }, [data]);
 
   useEffect(() => {
+    // Conditionally determine the status information text
     if (status === 'running' || status === 'boosting' || status === 'softStart') {
       setStatusHeader('Heating active');
     } else {
@@ -94,10 +102,17 @@ const TogglePanel = ({
     }
   }, [status]);
 
+  /**
+   * Closes the dialog.
+   */
   const handleClose = () => {
     setDialogOpen(false);
   };
 
+  /**
+   * Start the heating system normally.
+   * Normal startup means that circuit 3 is started and schedules are enabled straight away.
+   */
   const normalStartup = async () => {
     const newStatus = await heatPumpService.startCircuitThree(false);
     // await heatPumpService.enableScheduling();
@@ -105,6 +120,10 @@ const TogglePanel = ({
     setDialogOpen(false);
   };
 
+  /**
+   * Starts the heating system by using a 'soft-start' process.
+   * Soft-start means that circuit 3 is switched on and after 12 hours the schedules will be enabled.
+   */
   const softStartup = async () => {
     const newStatus = await heatPumpService.startCircuitThree(true);
     // await heatPumpService.softStart();
@@ -112,6 +131,10 @@ const TogglePanel = ({
     setDialogOpen(false);
   };
 
+  /**
+   * Shuts down the heating system.
+   * Shutting down means switching off circuit 3 and the schedules.
+   */
   const shutdown = async () => {
     const newStatus = await heatPumpService.stopCircuitThree();
     // TODO Needed?
@@ -120,8 +143,11 @@ const TogglePanel = ({
     setDialogOpen(false);
   };
 
-  console.log(status);
-
+  /**
+   * Handler for toggling the heating status.
+   * Depending on current status of the heating system and outside temperature,
+   * the heating system is either started via soft-start, normally or shut down.
+   */
   const handleTerraceHeatingToggle = async () => {
     if (status === 'stopped' && outsideTemp < 10) {
       setDialogOpen(true);
@@ -132,6 +158,10 @@ const TogglePanel = ({
     }
   };
 
+  /**
+   * Handler for decline action from the dialog.
+   * Depending on outside temperature heating is started normally or nothing happens.
+   */
   const handleDecline = async () => {
     if (outsideTemp > 0 && outsideTemp < 10) {
       await normalStartup();
@@ -141,10 +171,17 @@ const TogglePanel = ({
     }
   };
 
+  /**
+   * Handler for accept action from the dialog.
+   * Starts heating system via soft-start.
+   */
   const handleAccept = async () => {
     await softStartup();
   };
 
+  /**
+   * Helper function for selecting the correct color for the status indicator.
+   */
   const getColor = () => {
     if (status === 'boosting') {
       return (classes.boosted);

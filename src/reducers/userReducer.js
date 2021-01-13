@@ -19,7 +19,7 @@ const userReducer = (state = null, action) => {
 };
 
 /**
- * Dispatcher for logging in a user.
+ * Action creator for logging in a user.
  * @param credentials Object { username: String, password: String }
  */
 export const login = (credentials) => async (dispatch) => {
@@ -41,7 +41,7 @@ export const login = (credentials) => async (dispatch) => {
 };
 
 /**
- * Dispatcher for logging out a user.
+ * Action creator for logging out a user.
  */
 export const logout = () => (dispatch) => {
   window.localStorage.removeItem('user');
@@ -52,7 +52,7 @@ export const logout = () => (dispatch) => {
 };
 
 /**
- * Dispatcher for fetching the logged in user from local storage and updating state accordingly.
+ * Action creator for fetching user information from browser's local storage and updating state accordingly.
  */
 export const fetchUserFromLocalStorage = () => (dispatch) => {
   const loggedUser = window.localStorage.getItem('user');

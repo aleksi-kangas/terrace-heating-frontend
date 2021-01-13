@@ -12,6 +12,10 @@ const scheduleReducer = (state = null, action) => {
   }
 };
 
+/**
+ * Action creator for fetching a schedule of the given variable.
+ * @param variable either 'lowerTank' or 'heatDistCircuit3'
+ */
 export const fetchSchedule = (variable) => async (dispatch) => {
   const data = await heatPumpService.getSchedule(variable);
   dispatch({
@@ -21,6 +25,12 @@ export const fetchSchedule = (variable) => async (dispatch) => {
   });
 };
 
+/**
+ * Action creator for updating state with a schedule of the given variable.
+ * @param variable either 'lowerTank' or 'heatDistCircuit3'
+ * @param schedule object containing the schedule in format:
+ * { monday: { start: Number, end: Number, delta: Number }, ... }
+ */
 export const setSchedule = (variable, schedule) => (dispatch) => {
   dispatch({
     type: 'SET_SCHEDULE',

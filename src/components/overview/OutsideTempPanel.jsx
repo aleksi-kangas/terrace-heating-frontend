@@ -6,6 +6,9 @@ import { makeStyles } from '@material-ui/core/styles';
 import { Line } from 'react-chartjs-2';
 import { Atlas6 } from 'chartjs-plugin-colorschemes/src/colorschemes/colorschemes.office';
 
+/**
+ * Custom styling.
+ */
 const useStyles = makeStyles({
   container: {
     padding: 10,
@@ -34,12 +37,16 @@ const useStyles = makeStyles({
   },
 });
 
+/**
+ * Represents the panel which renders a LineChart of outside temperature.
+ */
 const OutsideTempPanel = ({ data }) => {
   const [dataSets, setDataSets] = useState([]);
 
   const classes = useStyles();
 
   useEffect(() => {
+    // Create a Chart.js dataset for outside temperature
     if (data) {
       const dataSet = {
         label: 'Outside Temperature',
@@ -123,7 +130,7 @@ const OutsideTempPanel = ({ data }) => {
   };
 
   return (
-    <Grid container item component={Paper} lg={7} className={clsx(classes.container, classes.shadow)} justify="space-evenly">
+    <Grid container item component={Paper} sm={12} lg={7} className={clsx(classes.container, classes.shadow)} justify="space-evenly">
       <Line data={lineData} options={options} />
     </Grid>
   );

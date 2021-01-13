@@ -12,6 +12,9 @@ const statusReducer = (state = null, action) => {
   }
 };
 
+/**
+ * Action creator for fetching the status of the heating system.
+ */
 export const fetchStatus = () => async (dispatch) => {
   const data = await heatPumpService.getStatus();
   dispatch({
@@ -20,6 +23,10 @@ export const fetchStatus = () => async (dispatch) => {
   });
 };
 
+/**
+ * Action creator for updating the state with the status of the heating system.
+ * @param status object containing status { status: 'running' || 'boosting' || 'softStart' || 'stopped' }
+ */
 export const setStatus = (status) => (dispatch) => {
   dispatch({
     type: 'SET_STATUS',

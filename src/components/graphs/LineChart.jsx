@@ -6,17 +6,24 @@ import { fi } from 'date-fns/locale';
 import { makeStyles } from '@material-ui/core/styles';
 import { Atlas6 } from 'chartjs-plugin-colorschemes/src/colorschemes/colorschemes.office';
 
+/**
+ * Custom styling.
+ */
 const useStyles = makeStyles(() => ({
   canvasContainer: {
     height: '60vh',
   },
 }));
 
+/**
+ * Represents a line chart rendered with Chart.js.
+ */
 const LineChart = ({ data, variables, xAxis }) => {
   const classes = useStyles();
 
   const dataSets = [];
 
+  // Create a Chart.js dataset for each variable
   variables.forEach((variable, index) => {
     const dataPoints = data.map((entry) => entry[variable.id]);
     const dataSet = {
