@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 import clsx from 'clsx';
+import moment from 'moment';
 import { Line } from 'react-chartjs-2';
 import GaugeChart from 'react-gauge-chart';
 import { Atlas6 } from 'chartjs-plugin-colorschemes/src/colorschemes/colorschemes.office';
@@ -35,6 +36,7 @@ const UsagePanel = ({ data }) => {
   const classes = useStyles();
   const [latestUsage, setLatestUsage] = useState(0);
   const [dataSets, setDataSets] = useState([]);
+  const [xAxis, setXAxis] = useState(null);
 
   useEffect(() => {
     // Create a Chart.js dataset for compressor usage
@@ -54,12 +56,13 @@ const UsagePanel = ({ data }) => {
         spanGaps: true,
       };
       setDataSets([dataSet]);
+      setXAxis(data.map((entry) => moment(entry.time)));
       const usages = data.filter((entry) => entry.compressorUsage != null);
       setLatestUsage(usages[usages.length - 1].compressorUsage);
     }
   }, [data]);
 
-  if (!data) {
+  if (!data || !xAxis) {
     return (
       <Grid container item component={Paper} className={clsx(classes.container, classes.shadow)} alignItems="center" justify="center">
         <Grid item>
@@ -113,11 +116,11 @@ const UsagePanel = ({ data }) => {
           enabled: true,
           mode: 'x',
           rangeMin: {
-            x: data[0].time.valueOf(),
+            x: xAxis[0].valueOf(),
             y: null,
           },
           rangeMax: {
-            x: data[data.length - 1].time.valueOf(),
+            x: xAxis[xAxis.length - 1].valueOf(),
             y: null,
           },
         },
@@ -126,10 +129,10 @@ const UsagePanel = ({ data }) => {
           drag: false,
           mode: 'x',
           rangeMin: {
-            x: data[0].time.valueOf(),
+            x: xAxis[0].valueOf(),
           },
           rangeMax: {
-            x: data[data.length - 1].time.valueOf(),
+            x: xAxis[xAxis.length - 1].valueOf(),
           },
         },
         speed: 15,

@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 import clsx from 'clsx';
+import moment from "moment";
 import { CircularProgress, Grid, Paper } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import { Line } from 'react-chartjs-2';
@@ -42,6 +43,7 @@ const useStyles = makeStyles({
  */
 const OutsideTempPanel = ({ data }) => {
   const [dataSets, setDataSets] = useState([]);
+  const [xAxis, setXAxis] = useState(null);
 
   const classes = useStyles();
 
@@ -57,10 +59,11 @@ const OutsideTempPanel = ({ data }) => {
         pointHitRadius: 5,
       };
       setDataSets([dataSet]);
+      setXAxis(data.map((entry) => moment(entry.time)));
     }
   }, [data]);
 
-  if (!data) {
+  if (!data || !xAxis) {
     return (
       <Grid container item component={Paper} sm={12} lg={7} className={clsx(classes.container, classes.shadow)} alignItems="center" justify="center">
         <Grid item>
@@ -113,11 +116,11 @@ const OutsideTempPanel = ({ data }) => {
           enabled: true,
           mode: 'x',
           rangeMin: {
-            x: data[0].time.valueOf(),
+            x: xAxis[0].valueOf(),
             y: null,
           },
           rangeMax: {
-            x: data[data.length - 1].time.valueOf(),
+            x: xAxis[xAxis.length - 1].valueOf(),
             y: null,
           },
         },
@@ -126,10 +129,10 @@ const OutsideTempPanel = ({ data }) => {
           drag: false,
           mode: 'x',
           rangeMin: {
-            x: data[0].time.valueOf(),
+            x: xAxis[0].valueOf(),
           },
           rangeMax: {
-            x: data[data.length - 1].time.valueOf(),
+            x: xAxis[xAxis.length - 1].valueOf(),
           },
         },
         speed: 15,
