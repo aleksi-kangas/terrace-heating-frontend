@@ -60,19 +60,25 @@ const App = ({
 
   // Fetch pre-existing data from the API on first mount
   useEffect(() => {
-    initializeData();
-  }, [initializeData]);
+    if (user) {
+      initializeData();
+    }
+  }, [initializeData, user]);
 
   // Fetching status of heating
   useEffect(() => {
-    fetchStatus();
-  }, [fetchStatus]);
+    if (user) {
+      fetchStatus();
+    }
+  }, [fetchStatus, user]);
 
   // Fetch schedules for lower tank and circuit 3
   useEffect(() => {
-    fetchSchedule('lowerTank');
-    fetchSchedule('heatDistCircuit3');
-  }, [fetchSchedule]);
+    if (user) {
+      fetchSchedule('lowerTank');
+      fetchSchedule('heatDistCircuit3');
+    }
+  }, [fetchSchedule, user]);
 
   // Subscribe to real-time updates from the server using socket.io
   useSocket('heatPumpData', (heatPumpData) => {
