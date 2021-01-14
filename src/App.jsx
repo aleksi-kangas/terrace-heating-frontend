@@ -80,6 +80,10 @@ const App = ({
     }
   }, [fetchSchedule, user]);
 
+  window.onbeforeunload = () => {
+    localStorage.removeItem('user');
+  };
+
   // Subscribe to real-time updates from the server using socket.io
   useSocket('heatPumpData', (heatPumpData) => {
     // Wait until pre-existing data is loaded before adding new data

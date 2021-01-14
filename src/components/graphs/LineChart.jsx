@@ -42,8 +42,6 @@ const LineChart = ({ data, variables, xAxis }) => {
     datasets: dataSets,
   };
 
-  // TODO Fix localization; adapters.date
-
   const options = {
     maintainAspectRatio: false,
     scales: {

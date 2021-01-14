@@ -54,7 +54,6 @@ const graphVariables = [
       { label: 'Inside', id: 'insideTemp' },
       { label: 'Outside', id: 'outsideTemp' },
       { label: 'Hot Gas', id: 'hotGasTemp' },
-      { label: 'Compressor Usage', id: 'compressorUsage' },
     ],
   },
   {
@@ -121,7 +120,7 @@ const Graphs = ({ data }) => {
   };
 
   return (
-    <Grid container direction="column" className={classes.container}>
+    <Grid container direction="column">
       <Grid item>
         <Tabs
           value={activeTab}
