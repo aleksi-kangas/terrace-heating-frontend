@@ -3,6 +3,7 @@ import moment from 'moment';
 import clsx from 'clsx';
 import { connect } from 'react-redux';
 import {
+  CircularProgress,
   Grid, Paper, Tab, Tabs,
 } from '@material-ui/core';
 import { Link, Route } from 'react-router-dom';
@@ -23,6 +24,10 @@ const useStyles = makeStyles({
     padding: 10,
   },
   container: {
+    padding: 50,
+  },
+  loading: {
+    margin: 20,
     padding: 50,
   },
   shadow: {
@@ -72,7 +77,15 @@ const Graphs = ({ data }) => {
 
   const classes = useStyles();
 
-  if (!data) return null;
+  if (!data) {
+    return (
+      <Grid container className={classes.container} justify="center">
+        <Grid item component={Paper} className={clsx(classes.graph, classes.shadow)}>
+          <CircularProgress />
+        </Grid>
+      </Grid>
+    );
+  }
 
   /**
    * Handler for changing the active tab.
@@ -84,9 +97,9 @@ const Graphs = ({ data }) => {
   /**
    * Responsible for creating a tab for each LineChart.
    */
-  const tabCreator = () => {
-    graphVariables.map((graph, index) => <Tab key={graph.title} label={graph.title} component={Link} to={`/graphs/${index + 1}`} />);
-  };
+  const tabCreator = () => (
+    graphVariables.map((graph, index) => <Tab key={graph.title} label={graph.title} component={Link} to={`/graphs/${index + 1}`} />)
+  );
 
   /**
    * Responsible for creating a LineChart for the variables given in graphVariables.

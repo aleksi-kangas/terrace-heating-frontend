@@ -23,7 +23,6 @@ import { fetchStatus, setStatus } from '../../reducers/statusReducer';
  */
 const useStyles = makeStyles({
   container: {
-    marginTop: 20,
     padding: 10,
   },
   shadow: {
@@ -37,6 +36,7 @@ const useStyles = makeStyles({
     padding: 10,
   },
   card: {
+    margin: 10,
   },
   loading: {
     background: '10px solid rgba(100, 100, 100, 0.5)',
@@ -193,7 +193,7 @@ const TogglePanel = ({
   };
 
   return (
-    <Grid container item component={Paper} sm={12} lg={4} className={clsx(classes.container, classes.shadow)}>
+    <Grid container item component={Paper} sm={12} lg={4} className={clsx(classes.container, classes.shadow)} justify="space-evenly" alignItems="center">
       <Card className={clsx(classes.card, getColor())}>
         <CardContent>
           <Typography variant="h6" className={classes.text} align="center">

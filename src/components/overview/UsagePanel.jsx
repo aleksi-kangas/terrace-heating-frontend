@@ -4,7 +4,10 @@ import clsx from 'clsx';
 import { Line } from 'react-chartjs-2';
 import GaugeChart from 'react-gauge-chart';
 import { Atlas6 } from 'chartjs-plugin-colorschemes/src/colorschemes/colorschemes.office';
-import { Grid, Paper, Typography } from '@material-ui/core';
+import {
+  CircularProgress,
+  Grid, Paper, Typography,
+} from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 
 /**
@@ -56,7 +59,15 @@ const UsagePanel = ({ data }) => {
     }
   }, [data]);
 
-  if (!data) return null;
+  if (!data) {
+    return (
+      <Grid container item component={Paper} className={clsx(classes.container, classes.shadow)} alignItems='center' justify='center'>
+        <Grid item>
+          <CircularProgress />
+        </Grid>
+      </Grid>
+    );
+  }
 
   const lineData = {
     labels: data.map((entry) => entry.time),

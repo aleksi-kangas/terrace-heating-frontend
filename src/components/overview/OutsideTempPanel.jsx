@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 import clsx from 'clsx';
-import { Grid, Paper } from '@material-ui/core';
+import { CircularProgress, Grid, Paper } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import { Line } from 'react-chartjs-2';
 import { Atlas6 } from 'chartjs-plugin-colorschemes/src/colorschemes/colorschemes.office';
@@ -60,7 +60,15 @@ const OutsideTempPanel = ({ data }) => {
     }
   }, [data]);
 
-  if (!data) return null;
+  if (!data) {
+    return (
+      <Grid container item component={Paper} sm={12} lg={7} className={clsx(classes.container, classes.shadow)} alignItems='center' justify='center'>
+        <Grid item>
+          <CircularProgress />
+        </Grid>
+      </Grid>
+    );
+  }
 
   const lineData = {
     labels: data.map((entry) => entry.time),

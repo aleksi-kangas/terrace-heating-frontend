@@ -95,7 +95,11 @@ const SchedulingPanel = ({
 
   return (
     <Grid container component={Paper} className={clsx(classes.container, classes.shadow)}>
-      {!schedule || !schedule.lowerTank || !schedule.heatDistCircuit3 ? <CircularProgress />
+      {!schedule || !schedule.lowerTank || !schedule.heatDistCircuit3 ? (
+        <Grid container item justify="center">
+          <CircularProgress />
+        </Grid>
+      )
         : (
           <form onSubmit={handleSubmit}>
             <Grid container item justify="center">
