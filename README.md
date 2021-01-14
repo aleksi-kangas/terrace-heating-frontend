@@ -17,14 +17,19 @@ This repository contains the implementation of the frontend portion of the appli
 ### Table of Contents
 [Features](#features)   
 [Implementation](#implementation)  
+[Requirements](#requirements)  
 [Planned Upcoming Features](#planned-upcoming-features)
 
 ## Features
 The features of the React.js frontend include:
 - A simple overview of the status of the heating system.
-- Provides ability to control the status of the heating system with a dynamic startup process.
+  - Includes information about compressor usage, outside temperature and the current status of the terrace heating system.
+  - Provides ability to control the status of the heating system with a dynamic startup process (normal vs soft-start).
 - Multiple graphs for monitoring different aspects of the heat-pump.
+  ![Graphs Example](/images/graphs.png)
 - Controlling the schedule for boosted heating.
+  - Allows the user to change schedule timing and temperature delta for boosting.
+  ![Schedule Example](/images/schedule.png)
 - UI created with [Material UI](https://material-ui.com/).
     - Fully custom UI is in the works.
 
@@ -49,17 +54,15 @@ const statusReducer = (state = null, action) => {
 };
 ```
 
-
-## Planned upcoming features
-- High priority to implement a fully custom UI
-- Conversion to TypeScript
-- Additional controlling features 
-
-
 ## Requirements
 - [modbus-serial](https://github.com/yaacov/node-modbus-serial#readme) installation requires some extra steps:
   - Install Windows Build Tools with ```npm install --global windows-build-tools```
   - Install modbus-serial with ```npm install modbus-serial```
     - If the installation fails, try the following command ```npm install modbus-serial --unsafe-perm --build-from-source```
 - Run ```npm install``` as usual
+
+## Planned upcoming features
+- High priority to implement a fully custom UI
+- Conversion to TypeScript
+- Additional controlling and monitoring features 
 
