@@ -25,7 +25,7 @@ export const fetchStatus = () => async (dispatch) => {
 
 /**
  * Action creator for updating the state with the status of the heating system.
- * @param status object containing status { status: 'running' || 'boosting' || 'softStart' || 'stopped' }
+ * @param status Object { status: 'running' || 'boosting' || 'softStart' || 'stopped' }
  */
 export const setStatus = (status) => (dispatch) => {
   dispatch({

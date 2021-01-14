@@ -30,12 +30,13 @@ const useStyles = makeStyles({
 });
 
 /**
- * Represents a single schedule panel which contains start hour, end hour and temperature delta for each weekday.
+ * Represents a single schedule panel which contains properties:
+ * start hour, end hour and temperature delta for each weekday.
  * @param variable either 'lowerTank' or 'heatDistCircuit3'
  * @param title text of the schedule panel
  */
 const SchedulingPanel = ({
-  schedule, variable, title, setSchedule,
+  schedule, variable, title,
 }) => {
   const classes = useStyles();
 

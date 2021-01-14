@@ -20,7 +20,8 @@ const useStyles = makeStyles(() => ({
 }));
 
 /**
- * Represents the login form, where user will enter username and password to have access to the application.
+ * Represents the login form,
+ * where user will enter username and password to have access to the application.
  */
 const LoginForm = ({ history, login }) => {
   const classes = useStyles();

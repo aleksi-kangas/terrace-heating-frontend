@@ -122,7 +122,8 @@ const TogglePanel = ({
 
   /**
    * Starts the heating system by using a 'soft-start' process.
-   * Soft-start means that circuit 3 is switched on and after 12 hours the schedules will be enabled.
+   * Soft-start means that circuit 3 is switched on,
+   * and after 12 hours the schedules will be enabled.
    */
   const softStartup = async () => {
     const newStatus = await heatPumpService.startCircuitThree(true);

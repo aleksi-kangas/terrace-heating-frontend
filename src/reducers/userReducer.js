@@ -52,7 +52,8 @@ export const logout = () => (dispatch) => {
 };
 
 /**
- * Action creator for fetching user information from browser's local storage and updating state accordingly.
+ * Action creator for fetching user information from browser's local storage,
+ * and updating state accordingly.
  */
 export const fetchUserFromLocalStorage = () => (dispatch) => {
   const loggedUser = window.localStorage.getItem('user');

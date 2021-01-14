@@ -62,7 +62,7 @@ const OutsideTempPanel = ({ data }) => {
 
   if (!data) {
     return (
-      <Grid container item component={Paper} sm={12} lg={7} className={clsx(classes.container, classes.shadow)} alignItems='center' justify='center'>
+      <Grid container item component={Paper} sm={12} lg={7} className={clsx(classes.container, classes.shadow)} alignItems="center" justify="center">
         <Grid item>
           <CircularProgress />
         </Grid>

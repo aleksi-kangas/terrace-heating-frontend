@@ -98,7 +98,10 @@ const Graphs = ({ data }) => {
    * Responsible for creating a tab for each LineChart.
    */
   const tabCreator = () => (
-    graphVariables.map((graph, index) => <Tab key={graph.title} label={graph.title} component={Link} to={`/graphs/${index + 1}`} />)
+    // eslint-disable-next-line arrow-body-style
+    graphVariables.map((graph, index) => {
+      return <Tab key={graph.title} label={graph.title} component={Link} to={`/graphs/${index + 1}`} />;
+    })
   );
 
   /**
@@ -106,7 +109,11 @@ const Graphs = ({ data }) => {
    */
   const graphCreator = () => {
     const xAxis = data.map((entry) => moment(entry.time));
-    const graphs = graphVariables.map((graph, index) => <LineChart key={index + 1} variables={graph.variables} xAxis={xAxis} />);
+    // eslint-disable-next-line arrow-body-style
+    const graphs = graphVariables.map((graph, index) => {
+      // eslint-disable-next-line react/no-array-index-key
+      return <LineChart key={index + 1} variables={graph.variables} xAxis={xAxis} />;
+    });
 
     return (
       graphs.map((graph) => <Route key={graph.key} path={`/graphs/${graph.key}`} render={() => graph} />)

@@ -34,11 +34,10 @@ const theme = createMuiTheme({
   },
 });
 
-const App = (
-  {
-    data, initializeData, setData, user, fetchUserFromLocalStorage, fetchStatus, setStatus, fetchSchedule,
-  },
-) => {
+const App = ({
+  data, initializeData, setData, user,
+  fetchUserFromLocalStorage, fetchStatus, setStatus, fetchSchedule,
+}) => {
   /*
    Data covers on month period to reduce data transfer and increase performance,
    since older data is not needed for monitoring general trends.

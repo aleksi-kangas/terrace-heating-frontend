@@ -87,7 +87,13 @@ const setSchedule = async (variable, schedule) => {
 };
 
 const HeatPumpService = {
-  getHeatPumpData, getStatus, getSchedule, setSchedule, setToken, startCircuitThree, stopCircuitThree,
+  getHeatPumpData,
+  getStatus,
+  getSchedule,
+  setSchedule,
+  setToken,
+  startCircuitThree,
+  stopCircuitThree,
 };
 
 export default HeatPumpService;
