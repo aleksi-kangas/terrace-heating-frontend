@@ -64,6 +64,7 @@ const statusReducer = (state = null, action) => {
   - Install modbus-serial with ```npm install modbus-serial```
     - If the installation fails, try the following command ```npm install modbus-serial --unsafe-perm --build-from-source```
 - Run ```npm install``` as usual
+- Environment variable: ```SOCKET_IO_URL='ws://localhost:3003'```
 
 ## Planned upcoming features
 - High priority for implementing a fully custom UI.
