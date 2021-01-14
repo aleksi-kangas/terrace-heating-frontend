@@ -33,7 +33,7 @@ The features of the React.js frontend include:
 - Controlling the schedule for boosted heating.
   - Allows the user to change schedule timing and temperature delta for boosting.
   
-![Schedule Example](/images/schedule.png)
+![Schedule Example](/images/schedules.png)
 - UI created with [Material UI](https://material-ui.com/).
     - Fully custom UI is in the works.
 
