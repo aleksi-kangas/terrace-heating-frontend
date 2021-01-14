@@ -4,7 +4,7 @@ import {
   Box,
   Button,
   Card,
-  CardContent,
+  CardContent, CircularProgress,
   Dialog,
   DialogActions,
   DialogContent,
@@ -37,6 +37,7 @@ const useStyles = makeStyles({
   },
   card: {
     margin: 10,
+    height: '150px',
   },
   loading: {
     background: '10px solid rgba(100, 100, 100, 0.5)',
@@ -98,9 +99,17 @@ const TogglePanel = ({
     } else if (status === 'softStart') {
       setStatusText('Soft start running');
     } else {
-      setStatusText(null);
+      setStatusText('To start heating click the switch');
     }
   }, [status]);
+
+  if (!data) {
+    return (
+      <Grid container item component={Paper} sm={12} lg={4} className={clsx(classes.container, classes.shadow)} justify="center" alignItems="center">
+        <CircularProgress />
+      </Grid>
+    );
+  }
 
   /**
    * Closes the dialog.
@@ -194,22 +203,26 @@ const TogglePanel = ({
   };
 
   return (
-    <Grid container item component={Paper} sm={12} lg={4} className={clsx(classes.container, classes.shadow)} justify="space-evenly" alignItems="center">
-      <Card className={clsx(classes.card, getColor())}>
-        <CardContent>
-          <Typography variant="h6" className={classes.text} align="center">
-            {statusHeader}
-          </Typography>
-          <Typography>
-            {statusText}
-          </Typography>
-        </CardContent>
-      </Card>
-      <Switch
-        checked={status === 'running' || status === 'softStart' || status === 'boosting'}
-        onChange={handleTerraceHeatingToggle}
-        name="terraceHeatingToggle"
-      />
+    <Grid container item component={Paper} sm={12} lg={4} className={clsx(classes.container, classes.shadow)} justify="center" alignItems="center">
+      <Grid item lg={7}>
+        <Card className={clsx(classes.card, getColor())}>
+          <CardContent>
+            <Typography variant="h6" className={classes.text} align="center">
+              {statusHeader}
+            </Typography>
+            <Typography align="center">
+              {statusText}
+            </Typography>
+          </CardContent>
+        </Card>
+      </Grid>
+      <Grid container item lg={4} justify="center">
+        <Switch
+          checked={status === 'running' || status === 'softStart' || status === 'boosting'}
+          onChange={handleTerraceHeatingToggle}
+          name="terraceHeatingToggle"
+        />
+      </Grid>
       <Dialog
         open={dialogOpen}
         onClose={handleClose}
