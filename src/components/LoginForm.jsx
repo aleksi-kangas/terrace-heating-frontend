@@ -1,6 +1,8 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { Button, Grid, TextField } from '@material-ui/core';
+import {
+  Button, Grid, Paper, TextField,
+} from '@material-ui/core';
 import LockIcon from '@material-ui/icons/Lock';
 import PersonIcon from '@material-ui/icons/Person';
 import { makeStyles } from '@material-ui/core/styles';
@@ -14,8 +16,11 @@ const useStyles = makeStyles(() => ({
     padding: 10,
   },
   button: {
-    padding: 20,
-    color: '#5390fe',
+    paddingTop: 50,
+    color: '#2F4050',
+  },
+  form: {
+    padding: 50,
   },
 }));
 
@@ -47,13 +52,13 @@ const LoginForm = ({ history, login }) => {
       direction="column"
       alignItems="center"
     >
-      <Grid item>
+      <Grid item component={Paper} className={classes.form}>
         <form onSubmit={handleLogin}>
           <Grid
             container
             direction="column"
             alignItems="center"
-            justify="center"
+            justify="space-evenly"
           >
             <Grid item className={classes.icon}>
               <PersonIcon fontSize="large" />

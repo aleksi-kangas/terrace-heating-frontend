@@ -10,6 +10,7 @@ import {
   DialogContent,
   DialogContentText,
   DialogTitle,
+  FormControlLabel,
   Grid, Paper,
   Switch, Typography,
 } from '@material-ui/core';
@@ -23,6 +24,8 @@ import { fetchStatus, setStatus } from '../../reducers/statusReducer';
  */
 const useStyles = makeStyles({
   container: {
+    marginBottom: 40,
+    height: '250px',
     padding: 10,
   },
   shadow: {
@@ -49,7 +52,7 @@ const useStyles = makeStyles({
     borderBottom: '10px solid rgba(0, 175, 0, 0.5)',
   },
   stopped: {
-    borderBottom: '10px solid rgba(100, 100, 100, 0.5)',
+    borderBottom: '10px solid rgba(47, 64, 80, 0.65)',
   },
 });
 
@@ -89,9 +92,9 @@ const TogglePanel = ({
   useEffect(() => {
     // Conditionally determine the status information text
     if (status === 'running' || status === 'boosting' || status === 'softStart') {
-      setStatusHeader('Heating active');
+      setStatusHeader('Heating Enabled');
     } else {
-      setStatusHeader('Heating off');
+      setStatusHeader('Heating Disabled');
       setStatusText(null);
     }
     if (status === 'boosting') {
@@ -99,7 +102,7 @@ const TogglePanel = ({
     } else if (status === 'softStart') {
       setStatusText('Soft start running');
     } else {
-      setStatusText('To start heating click the switch');
+      setStatusText(null);
     }
   }, [status]);
 
@@ -203,9 +206,9 @@ const TogglePanel = ({
   };
 
   return (
-    <Grid container item component={Paper} sm={12} lg={4} className={clsx(classes.container, classes.shadow)} justify="center" alignItems="center">
+    <Grid container item component={Paper} sm={12} md={3} lg={4} className={clsx(classes.container, classes.shadow)} justify="center" alignItems="center">
       <Grid item lg={7}>
-        <Card className={clsx(classes.card, getColor())}>
+        <Card className={clsx(classes.card, classes.shadow, getColor())}>
           <CardContent>
             <Typography variant="h6" className={classes.text} align="center">
               {statusHeader}
@@ -217,11 +220,18 @@ const TogglePanel = ({
         </Card>
       </Grid>
       <Grid container item lg={4} justify="center">
-        <Switch
-          checked={status === 'running' || status === 'softStart' || status === 'boosting'}
-          onChange={handleTerraceHeatingToggle}
-          name="terraceHeatingToggle"
+        <FormControlLabel
+          control={(
+            <Switch
+              checked={status === 'running' || status === 'softStart' || status === 'boosting'}
+              onChange={handleTerraceHeatingToggle}
+              name="terraceHeatingToggle"
+            />
+          )}
+          label={status === 'stopped' ? 'Off' : 'On'}
+          labelPlacement="start"
         />
+
       </Grid>
       <Dialog
         open={dialogOpen}

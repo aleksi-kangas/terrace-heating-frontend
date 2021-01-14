@@ -12,20 +12,16 @@ import { Atlas6 } from 'chartjs-plugin-colorschemes/src/colorschemes/colorscheme
  */
 const useStyles = makeStyles({
   container: {
-    padding: 10,
+    marginBottom: 40,
+    height: '250px',
+    padding: 15,
   },
   shadow: {
     borderRadius: 4,
     boxShadow: '0px 3px 11px 0px #c0c4e0',
   },
-  text: {
-    color: '#131313',
-  },
-  column: {
-    padding: 10,
-  },
   card: {
-    margin: 10,
+    margin: 5,
   },
   loading: {
     borderBottom: '10px solid rgba(100, 100, 100, 0.5)',
@@ -141,7 +137,15 @@ const OutsideTempPanel = ({ data }) => {
   };
 
   return (
-    <Grid container item component={Paper} sm={12} lg={7} className={clsx(classes.container, classes.shadow)} justify="space-evenly">
+    <Grid
+      container
+      item
+      component={Paper}
+      sm={12}
+      md={8}
+      lg={7}
+      className={clsx(classes.container, classes.shadow)}
+    >
       <Line data={lineData} options={options} />
     </Grid>
   );

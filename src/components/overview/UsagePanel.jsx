@@ -16,6 +16,8 @@ import { makeStyles } from '@material-ui/core/styles';
  */
 const useStyles = makeStyles({
   container: {
+    marginBottom: 40,
+    height: '300px',
     padding: 10,
   },
   shadow: {
@@ -142,7 +144,7 @@ const UsagePanel = ({ data }) => {
 
   return (
     <Grid container item component={Paper} className={clsx(classes.container, classes.shadow)} justify="space-evenly">
-      <Grid container item sm={4} lg={3} justify="center" direction="column">
+      <Grid container item sm={4} lg={3} justify="center" direction="column" className={classes.gauge}>
         <GaugeChart
           id="1"
           animate={false}

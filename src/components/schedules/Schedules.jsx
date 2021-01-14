@@ -30,7 +30,7 @@ const useStyles = makeStyles({
  * Represents the control page as a whole.
  * Responsible for rendering schedule panels for variables 'lowerTank' and 'heatDistCircuit3'.
  */
-const Control = ({ setNotification, removeNotification }) => {
+const Schedules = ({ setNotification, removeNotification }) => {
   const [scheduleActive, setScheduleActive] = useState(false);
   const classes = useStyles();
 
@@ -82,4 +82,4 @@ const Control = ({ setNotification, removeNotification }) => {
   );
 };
 
-export default connect(null, { setNotification, removeNotification })(Control);
+export default connect(null, { setNotification, removeNotification })(Schedules);

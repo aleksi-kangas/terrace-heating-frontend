@@ -1,6 +1,8 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { Button, Toolbar, Typography } from '@material-ui/core';
+import {
+  AppBar, Button, Toolbar, Typography,
+} from '@material-ui/core';
 import MenuIcon from '@material-ui/icons/Menu';
 import { makeStyles } from '@material-ui/core/styles';
 import IconButton from '@material-ui/core/IconButton';
@@ -15,40 +17,47 @@ const useStyles = makeStyles(() => ({
     padding: 20,
     color: 'white',
   },
+  toolBar: {
+    backgroundColor: '#2F4050',
+    color: 'white',
+  },
+  text: {
+    marginLeft: 20,
+  },
 }));
 
 /**
  * Represents the Toolbar at the top of the page.
  */
-const Header = ({ setSideMenuOpen, user, logout }) => {
+const Header = ({ setSideBarOpen, user, logout }) => {
   const classes = useStyles();
 
-  if (!user) {
-    return (
-      <Toolbar>
-        <Typography variant="h6">
-          Terrace Heating Control
-        </Typography>
-      </Toolbar>
-    );
-  }
-
   return (
-    <Toolbar>
-      <IconButton
-        color="inherit"
-        edge="start"
-        onClick={() => setSideMenuOpen(true)}
-      >
-        <MenuIcon />
-      </IconButton>
-      <Typography variant="h6" noWrap>
-        Terrace Heating Control
-      </Typography>
-      <Button onClick={logout} className={classes.logout}>
-        Logout
-      </Button>
-    </Toolbar>
+    <AppBar>
+      <Toolbar className={classes.toolBar}>
+        {user
+          ? (
+            <IconButton
+              color="inherit"
+              edge="start"
+              onClick={() => setSideBarOpen(true)}
+            >
+              <MenuIcon />
+            </IconButton>
+          )
+          : null}
+
+        <Typography variant="h6" noWrap className={classes.text}>
+          Terrace Heating
+        </Typography>
+        {user
+          ? (
+            <Button onClick={logout} className={classes.logout}>
+              Logout
+            </Button>
+          ) : null}
+      </Toolbar>
+    </AppBar>
   );
 };
 

@@ -5,14 +5,14 @@ import {
 } from 'react-router-dom';
 import moment from 'moment';
 import { useSocket } from 'use-socketio';
-import { MuiThemeProvider } from '@material-ui/core/styles';
-import { createMuiTheme } from '@material-ui/core';
+import { makeStyles, MuiThemeProvider } from '@material-ui/core/styles';
+import { Grid, createMuiTheme } from '@material-ui/core';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import { blueGrey } from '@material-ui/core/colors';
 import Navigation from './components/navigation/Navigation';
 import Notification from './components/Notification';
 import Graphs from './components/graphs/Graphs';
-import Control from './components/control/Control';
+import Schedules from './components/schedules/Schedules';
 import Overview from './components/overview/Overview';
 import LoginForm from './components/LoginForm';
 import { fetchUserFromLocalStorage } from './reducers/userReducer';
@@ -34,6 +34,13 @@ const theme = createMuiTheme({
   },
 });
 
+const useStyles = makeStyles(() => ({
+  toolBar: theme.mixins.toolbar,
+  container: {
+    padding: 50,
+  },
+}));
+
 const App = ({
   data, initializeData, setData, user,
   fetchUserFromLocalStorage, fetchStatus, setStatus, fetchSchedule,
@@ -44,6 +51,7 @@ const App = ({
    */
   const dataCoverTimePeriodHours = 24 * 31; // One month
   const history = useHistory();
+  const classes = useStyles();
 
   // Fetch user that's logged in from local storage
   useEffect(() => {
@@ -107,8 +115,9 @@ const App = ({
   return (
     <MuiThemeProvider theme={theme}>
       <CssBaseline />
-      <div>
-        <Navigation />
+      <Navigation />
+      <div className={classes.toolBar} />
+      <Grid container className={classes.container}>
         <Notification />
         <Switch>
           <Route
@@ -116,8 +125,8 @@ const App = ({
             render={() => (user ? <Graphs /> : <Redirect to="/login" />)}
           />
           <Route
-            path="/control"
-            render={() => (user ? <Control /> : <Redirect to="/login" />)}
+            path="/schedules"
+            render={() => (user ? <Schedules /> : <Redirect to="/login" />)}
           />
           <Route
             path="/login"
@@ -128,7 +137,7 @@ const App = ({
             render={() => (user ? <Overview /> : <Redirect to="/login" />)}
           />
         </Switch>
-      </div>
+      </Grid>
     </MuiThemeProvider>
 
   );

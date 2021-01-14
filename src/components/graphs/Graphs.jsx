@@ -17,7 +17,7 @@ const useStyles = makeStyles({
   tabs: {
     marginBottom: 10,
     borderRadius: 10,
-    background: '#5796f5',
+    background: '#2F4050',
     color: 'white',
   },
   graph: {
