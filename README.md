@@ -25,11 +25,15 @@ The features of the React.js frontend include:
 - A simple overview of the status of the heating system.
   - Includes information about compressor usage, outside temperature and the current status of the terrace heating system.
   - Provides ability to control the status of the heating system with a dynamic startup process (normal vs soft-start).
+
+![Overview Example](/images/overview.png)
 - Multiple graphs for monitoring different aspects of the heat-pump.
-  ![Graphs Example](/images/graphs.png)
+
+![Graphs Example](/images/graphs.png)
 - Controlling the schedule for boosted heating.
   - Allows the user to change schedule timing and temperature delta for boosting.
-  ![Schedule Example](/images/schedule.png)
+  
+![Schedule Example](/images/schedule.png)
 - UI created with [Material UI](https://material-ui.com/).
     - Fully custom UI is in the works.
 
