@@ -7,7 +7,7 @@ import {
 } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import HeatPumpService from '../../services/heatPump';
-import { setSchedule } from '../../reducers/scheduleReducer';
+import { updateSchedule } from '../../reducers/scheduleReducer';
 
 /**
  * Custom styling.
@@ -36,7 +36,7 @@ const useStyles = makeStyles({
  * @param title text of the schedule panel
  */
 const SchedulingPanel = ({
-  schedule, variable, title,
+  schedule, variable, title, updateSchedule,
 }) => {
   const classes = useStyles();
 
@@ -62,6 +62,7 @@ const SchedulingPanel = ({
               </Grid>
               <Grid item xs={8} sm={8} md={4} lg={8} xl={6}>
                 <TextField
+                  name={`${weekDay.toLowerCase()}_${columnName}`}
                   variant="outlined"
                   size="small"
                   defaultValue={schedule[variable][weekDay.toLowerCase()][columnName]}
@@ -85,13 +86,14 @@ const SchedulingPanel = ({
       schedule = {
         ...schedule,
         [weekDay.toLowerCase()]: {
-          start: event.target[`${weekDay}_start`].value,
-          end: event.target[`${weekDay}_end`].value,
-          delta: event.target[`${weekDay}_delta`].value,
+          start: Number(event.target[`${weekDay.toLowerCase()}_start`].value),
+          end: Number(event.target[`${weekDay.toLowerCase()}_end`].value),
+          delta: Number(event.target[`${weekDay.toLowerCase()}_delta`].value),
         },
       };
     });
     await HeatPumpService.setSchedule(variable, schedule);
+    updateSchedule(variable, schedule);
   };
 
   return (
@@ -140,4 +142,4 @@ const mapStateToProps = (state) => ({
   schedule: state.schedule,
 });
 
-export default connect(mapStateToProps, { setSchedule })(SchedulingPanel);
+export default connect(mapStateToProps, { updateSchedule })(SchedulingPanel);

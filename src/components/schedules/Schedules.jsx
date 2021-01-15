@@ -1,14 +1,16 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { connect } from 'react-redux';
 import clsx from 'clsx';
 import {
-  Card, CardActions, CardContent, Grid, Switch, Typography,
+  Card, CardActions, CardContent, CircularProgress, Grid, Switch, Typography,
 } from '@material-ui/core';
 import CheckCircleOutlineIcon from '@material-ui/icons/CheckCircleOutline';
 import CloseIcon from '@material-ui/icons/Close';
 import { makeStyles } from '@material-ui/core/styles';
 import SchedulingPanel from './SchedulingPanel';
 import { removeNotification, setNotification } from '../../reducers/notificationReducer';
+import HeatPumpService from '../../services/heatPump';
+import { updateScheduling } from '../../reducers/scheduleReducer';
 
 /**
  * Custom styling.
@@ -30,19 +32,20 @@ const useStyles = makeStyles({
  * Represents the control page as a whole.
  * Responsible for rendering schedule panels for variables 'lowerTank' and 'heatDistCircuit3'.
  */
-const Schedules = ({ setNotification, removeNotification }) => {
-  const [scheduleActive, setScheduleActive] = useState(false);
+const Schedules = ({
+  setNotification, removeNotification, schedule, updateScheduling,
+}) => {
   const classes = useStyles();
 
   /**
    * Handler for enabling and disabling schedules.
    * Sends the state to the server.
    */
-  const handleScheduleToggle = () => {
-    // TODO
-    setScheduleActive(!scheduleActive);
-    const message = scheduleActive ? 'Scheduling disabled' : 'Scheduling enabled';
-    const type = scheduleActive ? 'info' : 'success';
+  const handleScheduleToggle = async () => {
+    await HeatPumpService.setScheduling(!schedule.scheduling);
+    updateScheduling(!schedule.scheduling);
+    const message = schedule.scheduling ? 'Scheduling disabled' : 'Scheduling enabled';
+    const type = schedule.scheduling ? 'info' : 'success';
     setNotification(message, type);
     setTimeout(() => {
       removeNotification();
@@ -59,14 +62,22 @@ const Schedules = ({ setNotification, removeNotification }) => {
         </CardContent>
         <CardActions>
           <Grid container item justify="center" alignItems="center">
-            <Switch
-              className={classes.switchButton}
-              color="primary"
-              checked={scheduleActive}
-              onChange={handleScheduleToggle}
-              name="scheduleActiveToggle"
-            />
-            {scheduleActive ? <CheckCircleOutlineIcon color="primary" /> : <CloseIcon />}
+            {schedule
+              ? (
+                <Grid container item justify="center" alignItems="center">
+                  <Switch
+                    className={classes.switchButton}
+                    color="primary"
+                    checked={schedule.scheduling}
+                    onChange={handleScheduleToggle}
+                    name="scheduleActiveToggle"
+                  />
+                  {schedule.scheduling
+                    ? <CheckCircleOutlineIcon color="primary" />
+                    : <CloseIcon />}
+                </Grid>
+              )
+              : <CircularProgress />}
           </Grid>
         </CardActions>
       </Card>
@@ -82,4 +93,9 @@ const Schedules = ({ setNotification, removeNotification }) => {
   );
 };
 
-export default connect(null, { setNotification, removeNotification })(Schedules);
+const mapStateToProps = (state) => ({
+  schedule: state.schedule,
+});
+
+export default connect(mapStateToProps,
+  { setNotification, removeNotification, updateScheduling })(Schedules);

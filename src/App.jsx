@@ -17,8 +17,8 @@ import Overview from './components/overview/Overview';
 import LoginForm from './components/LoginForm';
 import { fetchUserFromLocalStorage } from './reducers/userReducer';
 import { initializeData, setData } from './reducers/dataReducer';
-import { fetchStatus, setStatus } from './reducers/statusReducer';
-import { fetchSchedule } from './reducers/scheduleReducer';
+import { fetchStatus } from './reducers/statusReducer';
+import { initializeSchedules } from './reducers/scheduleReducer';
 
 const theme = createMuiTheme({
   palette: {
@@ -43,7 +43,7 @@ const useStyles = makeStyles(() => ({
 
 const App = ({
   data, initializeData, setData, user,
-  fetchUserFromLocalStorage, fetchStatus, setStatus, fetchSchedule,
+  fetchUserFromLocalStorage, fetchStatus, initializeSchedules,
 }) => {
   /*
    Data covers on month period to reduce data transfer and increase performance,
@@ -72,13 +72,12 @@ const App = ({
     }
   }, [fetchStatus, user]);
 
-  // Fetch schedules for lower tank and circuit 3
+  // Fetch scheduling status and schedules for 'lowerTank' and 'heatDistCircuit3'
   useEffect(() => {
     if (user) {
-      fetchSchedule('lowerTank');
-      fetchSchedule('heatDistCircuit3');
+      initializeSchedules();
     }
-  }, [fetchSchedule, user]);
+  }, [initializeSchedules, user]);
 
   window.onbeforeunload = () => {
     localStorage.removeItem('user');
@@ -116,10 +115,6 @@ const App = ({
         }
       }
     }
-  });
-
-  useSocket('status', (status) => {
-    setStatus(status);
   });
 
   return (
@@ -161,6 +156,10 @@ const mapStateToProps = (state) => ({
 export default connect(
   mapStateToProps,
   {
-    fetchUserFromLocalStorage, initializeData, setData, fetchStatus, setStatus, fetchSchedule,
+    fetchUserFromLocalStorage,
+    initializeSchedules,
+    initializeData,
+    setData,
+    fetchStatus,
   },
 )(App);

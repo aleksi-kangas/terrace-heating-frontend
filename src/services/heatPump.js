@@ -79,10 +79,29 @@ const getSchedule = async (variable) => {
  */
 const setSchedule = async (variable, schedule) => {
   const data = {
-    variable,
     schedule,
   };
-  const response = await axios.post('/api/heat-pump/schedules', data, getConfig());
+  const response = await axios.post(`/api/heat-pump/schedules/${variable}`, data, getConfig());
+  return response.data;
+};
+
+/**
+ * Enable or disable scheduling via API.
+ * @param schedulingEnable Boolean shall scheduling be enabled or not
+ */
+const setScheduling = async (schedulingEnable) => {
+  const data = { scheduling: schedulingEnable };
+  const response = await axios.post('/api/heat-pump/scheduling', data, getConfig());
+  return response.data;
+};
+
+/**
+ * Request the status of scheduling,
+ * and current schedules for 'lowerTank' and 'heatDistCircuit3' from the API.
+ * @return {Object} { scheduling: Boolean, lowerTank: {Object}, heatDistCircuit3: {Object} }
+ */
+const getScheduling = async () => {
+  const response = await axios.get('/api/heat-pump/scheduling', getConfig());
   return response.data;
 };
 
@@ -94,6 +113,8 @@ const HeatPumpService = {
   setToken,
   startCircuitThree,
   stopCircuitThree,
+  setScheduling,
+  getScheduling,
 };
 
 export default HeatPumpService;

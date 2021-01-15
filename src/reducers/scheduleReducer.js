@@ -5,37 +5,49 @@ import heatPumpService from '../services/heatPump';
  */
 const scheduleReducer = (state = null, action) => {
   switch (action.type) {
-    case 'SET_SCHEDULE':
-      return { [action.variable]: action.payload, ...state };
+    case 'INIT_SCHEDULE':
+      return action.payload;
+    case 'UPDATE_SCHEDULING':
+      return { state, ...action.payload };
+    case 'UPDATE_SCHEDULE':
+      return { ...state, ...action.payload };
     default:
       return state;
   }
 };
 
 /**
- * Action creator for fetching a schedule of the given variable.
- * @param variable either 'lowerTank' or 'heatDistCircuit3'
+ * Action creator for initializing scheduling and schedules for 'lowerTank' and 'heatDistCircuit3'.
  */
-export const fetchSchedule = (variable) => async (dispatch) => {
-  const data = await heatPumpService.getSchedule(variable);
+export const initializeSchedules = () => async (dispatch) => {
+  const schedules = await heatPumpService.getScheduling();
   dispatch({
-    type: 'SET_SCHEDULE',
-    variable,
-    payload: data,
+    type: 'INIT_SCHEDULE',
+    payload: schedules,
   });
 };
 
 /**
- * Action creator for updating state with a schedule of the given variable.
- * @param variable either 'lowerTank' or 'heatDistCircuit3'
- * @param schedule object containing the schedule in format:
- * { monday: { start: Number, end: Number, delta: Number }, ... }
+ * Action creator for updating active scheduling to the Redux state.
+ * @param scheduling Boolean
  */
-export const setSchedule = (variable, schedule) => (dispatch) => {
+export const updateScheduling = (scheduling) => (dispatch) => {
   dispatch({
-    type: 'SET_SCHEDULE',
-    variable,
-    payload: schedule,
+    type: 'UPDATE_SCHEDULING',
+    payload: { scheduling },
+  });
+};
+
+/**
+ * Action creator for updating the schedule of either 'lowerTank' or 'heatDistCircuit3'
+ * to the Redux state.
+ * @param variable either 'lowerTank' or 'heatDistCircuit3'
+ * @param schedule Object containing schedule
+ */
+export const updateSchedule = (variable, schedule) => (dispatch) => {
+  dispatch({
+    type: 'UPDATE_SCHEDULE',
+    payload: { [variable]: schedule },
   });
 };
 
