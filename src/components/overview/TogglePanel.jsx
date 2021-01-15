@@ -18,6 +18,7 @@ import clsx from 'clsx';
 import { makeStyles } from '@material-ui/core/styles';
 import heatPumpService from '../../services/heatPump';
 import { fetchStatus, setStatus } from '../../reducers/statusReducer';
+import { updateScheduling } from '../../reducers/scheduleReducer';
 
 /**
  * Custom styling.
@@ -60,7 +61,7 @@ const useStyles = makeStyles({
  * Represents the panel which holds the heating control switch and status information.
  */
 const TogglePanel = ({
-  data, status, setStatus,
+  data, status, setStatus, updateScheduling,
 }) => {
   const [dialogOpen, setDialogOpen] = useState(false);
   const [outsideTemp, setOutsideTemp] = useState(null);
@@ -127,8 +128,8 @@ const TogglePanel = ({
    */
   const normalStartup = async () => {
     const newStatus = await heatPumpService.startCircuitThree(false);
-    // await heatPumpService.enableScheduling();
     setStatus(newStatus);
+    updateScheduling(true);
     setDialogOpen(false);
   };
 
@@ -139,7 +140,6 @@ const TogglePanel = ({
    */
   const softStartup = async () => {
     const newStatus = await heatPumpService.startCircuitThree(true);
-    // await heatPumpService.softStart();
     setStatus(newStatus);
     setDialogOpen(false);
   };
@@ -150,9 +150,8 @@ const TogglePanel = ({
    */
   const shutdown = async () => {
     const newStatus = await heatPumpService.stopCircuitThree();
-    // TODO Needed?
-    // await heatPumpService.disableScheduling();
     setStatus(newStatus);
+    updateScheduling(false);
     setDialogOpen(false);
   };
 
@@ -266,4 +265,4 @@ const mapStateToProps = (state) => ({
   status: state.status,
 });
 
-export default connect(mapStateToProps, { fetchStatus, setStatus })(TogglePanel);
+export default connect(mapStateToProps, { fetchStatus, setStatus, updateScheduling })(TogglePanel);

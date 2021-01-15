@@ -8,7 +8,7 @@ const scheduleReducer = (state = null, action) => {
     case 'INIT_SCHEDULE':
       return action.payload;
     case 'UPDATE_SCHEDULING':
-      return { state, ...action.payload };
+      return { ...state, ...action.payload };
     case 'UPDATE_SCHEDULE':
       return { ...state, ...action.payload };
     default:

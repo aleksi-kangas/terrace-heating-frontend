@@ -11,6 +11,7 @@ import SchedulingPanel from './SchedulingPanel';
 import { removeNotification, setNotification } from '../../reducers/notificationReducer';
 import HeatPumpService from '../../services/heatPump';
 import { updateScheduling } from '../../reducers/scheduleReducer';
+import { setStatus } from '../../reducers/statusReducer';
 
 /**
  * Custom styling.
@@ -33,7 +34,7 @@ const useStyles = makeStyles({
  * Responsible for rendering schedule panels for variables 'lowerTank' and 'heatDistCircuit3'.
  */
 const Schedules = ({
-  setNotification, removeNotification, schedule, updateScheduling,
+  setNotification, removeNotification, schedule, updateScheduling, setStatus,
 }) => {
   const classes = useStyles();
 
@@ -42,8 +43,9 @@ const Schedules = ({
    * Sends the state to the server.
    */
   const handleScheduleToggle = async () => {
-    await HeatPumpService.setScheduling(!schedule.scheduling);
     updateScheduling(!schedule.scheduling);
+    const newStatus = await HeatPumpService.setScheduling(!schedule.scheduling);
+    setStatus(newStatus);
     const message = schedule.scheduling ? 'Scheduling disabled' : 'Scheduling enabled';
     const type = schedule.scheduling ? 'info' : 'success';
     setNotification(message, type);
@@ -98,4 +100,6 @@ const mapStateToProps = (state) => ({
 });
 
 export default connect(mapStateToProps,
-  { setNotification, removeNotification, updateScheduling })(Schedules);
+  {
+    setNotification, removeNotification, updateScheduling, setStatus,
+  })(Schedules);
