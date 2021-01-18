@@ -15,7 +15,6 @@ import Graphs from './components/graphs/Graphs';
 import Schedules from './components/schedules/Schedules';
 import Overview from './components/overview/Overview';
 import LoginForm from './components/LoginForm';
-import { fetchUserFromLocalStorage } from './reducers/userReducer';
 import { initializeData, setData } from './reducers/dataReducer';
 import { fetchStatus } from './reducers/statusReducer';
 import { initializeSchedules } from './reducers/scheduleReducer';
@@ -42,8 +41,7 @@ const useStyles = makeStyles(() => ({
 }));
 
 const App = ({
-  data, initializeData, setData, user,
-  fetchUserFromLocalStorage, fetchStatus, initializeSchedules,
+  data, initializeData, setData, user, fetchStatus, initializeSchedules,
 }) => {
   /*
    Data covers on month period to reduce data transfer and increase performance,
@@ -52,11 +50,6 @@ const App = ({
   const dataCoverTimePeriodHours = 24 * 31; // One month
   const history = useHistory();
   const classes = useStyles();
-
-  // Fetch user that's logged in from local storage
-  useEffect(() => {
-    fetchUserFromLocalStorage();
-  }, [fetchUserFromLocalStorage]);
 
   // Fetch pre-existing data from the API on first mount
   useEffect(() => {
@@ -78,10 +71,6 @@ const App = ({
       initializeSchedules();
     }
   }, [initializeSchedules, user]);
-
-  window.onbeforeunload = () => {
-    localStorage.removeItem('user');
-  };
 
   // Subscribe to real-time updates from the server using socket.io
   useSocket('heatPumpData', (heatPumpData) => {
@@ -156,7 +145,6 @@ const mapStateToProps = (state) => ({
 export default connect(
   mapStateToProps,
   {
-    fetchUserFromLocalStorage,
     initializeSchedules,
     initializeData,
     setData,

@@ -1,6 +1,5 @@
 import loginService from '../services/login';
 import { setNotification, removeNotification } from './notificationReducer';
-import heatPumpService from '../services/heatPump';
 
 /**
  * Handles the dispatched actions to update the user status to the Redux state.
@@ -25,9 +24,6 @@ const userReducer = (state = null, action) => {
 export const login = (credentials) => async (dispatch) => {
   try {
     const user = await loginService.login(credentials);
-    // Set user information to browser's local storage
-    window.localStorage.setItem('user', JSON.stringify(user));
-    heatPumpService.setToken(user.token);
     dispatch({
       type: 'LOGIN',
       payload: user,
@@ -44,26 +40,8 @@ export const login = (credentials) => async (dispatch) => {
  * Action creator for logging out a user.
  */
 export const logout = () => (dispatch) => {
-  window.localStorage.removeItem('user');
-  heatPumpService.setToken(null);
   dispatch({
     type: 'LOGOUT',
-  });
-};
-
-/**
- * Action creator for fetching user information from browser's local storage,
- * and updating state accordingly.
- */
-export const fetchUserFromLocalStorage = () => (dispatch) => {
-  const loggedUser = window.localStorage.getItem('user');
-  if (loggedUser) {
-    const parsedUser = JSON.parse(loggedUser);
-    heatPumpService.setToken(parsedUser.token);
-  }
-  dispatch({
-    type: 'FETCH_USER',
-    payload: JSON.parse(loggedUser),
   });
 };
 
