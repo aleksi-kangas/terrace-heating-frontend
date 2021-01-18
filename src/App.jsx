@@ -3,8 +3,8 @@ import { connect } from 'react-redux';
 import {
   Route, Redirect, Switch, useHistory,
 } from 'react-router-dom';
+import { useWebsocket } from 'use-websockets';
 import moment from 'moment';
-import { useSocket } from 'use-socketio';
 import { makeStyles, MuiThemeProvider } from '@material-ui/core/styles';
 import { Grid, createMuiTheme } from '@material-ui/core';
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -72,8 +72,7 @@ const App = ({
     }
   }, [initializeSchedules, user]);
 
-  // Subscribe to real-time updates from the server using socket.io
-  useSocket('heatPumpData', (heatPumpData) => {
+  useWebsocket((heatPumpData) => {
     // Wait until pre-existing data is loaded before adding new data
     if (data) {
       if (data.length === 0) {
@@ -133,7 +132,6 @@ const App = ({
         </Switch>
       </Grid>
     </MuiThemeProvider>
-
   );
 };
 
