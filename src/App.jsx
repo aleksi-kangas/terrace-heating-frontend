@@ -3,7 +3,6 @@ import { connect } from 'react-redux';
 import {
   Route, Redirect, Switch, useHistory,
 } from 'react-router-dom';
-import { useWebsocket } from 'use-websockets';
 import moment from 'moment';
 import { makeStyles, MuiThemeProvider } from '@material-ui/core/styles';
 import { Grid, createMuiTheme } from '@material-ui/core';
@@ -18,6 +17,8 @@ import LoginForm from './components/LoginForm';
 import { initializeData, setData } from './reducers/dataReducer';
 import { fetchStatus } from './reducers/statusReducer';
 import { initializeSchedules } from './reducers/scheduleReducer';
+import { socket, socketAuth } from './utils/socket';
+import { setUser } from './reducers/userReducer';
 
 const theme = createMuiTheme({
   palette: {
@@ -41,7 +42,7 @@ const useStyles = makeStyles(() => ({
 }));
 
 const App = ({
-  data, initializeData, setData, user, fetchStatus, initializeSchedules,
+  data, initializeData, setData, user, setUser, fetchStatus, initializeSchedules,
 }) => {
   /*
    Data covers on month period to reduce data transfer and increase performance,
@@ -51,12 +52,22 @@ const App = ({
   const history = useHistory();
   const classes = useStyles();
 
+  socket.on('auth', (user) => {
+    setUser(user);
+  });
+
   // Fetch pre-existing data from the API on first mount
   useEffect(() => {
     if (user) {
       initializeData();
     }
   }, [initializeData, user]);
+
+  useEffect(() => {
+    if (!user) {
+      socketAuth();
+    }
+  }, []);
 
   // Fetching status of heating
   useEffect(() => {
@@ -72,7 +83,7 @@ const App = ({
     }
   }, [initializeSchedules, user]);
 
-  useWebsocket((heatPumpData) => {
+  socket.on('heatPumpData', (heatPumpData) => {
     // Wait until pre-existing data is loaded before adding new data
     if (data) {
       if (data.length === 0) {
@@ -81,13 +92,13 @@ const App = ({
         newData.push(heatPumpData);
         setData(newData);
       } else {
-        /*
-        Heat-pump data is stored in a 'ring buffer' and therefore,
-        some calculations are needed.
-        Calculate the time period which is covered by the data.
-        If the period exceeds the length of dataCoverTimePeriodHours,
-        remove the oldest entry to accommodate the new entry.
-         */
+      /*
+      Heat-pump data is stored in a 'ring buffer' and therefore,
+      some calculations are needed.
+      Calculate the time period which is covered by the data.
+      If the period exceeds the length of dataCoverTimePeriodHours,
+      remove the oldest entry to accommodate the new entry.
+      */
         const startTime = moment(data[0].time);
         const endTime = moment(data[data.length - 1].time);
         const duration = moment.duration(endTime.diff(startTime));
@@ -146,6 +157,7 @@ export default connect(
     initializeSchedules,
     initializeData,
     setData,
+    setUser,
     fetchStatus,
   },
 )(App);

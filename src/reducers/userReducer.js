@@ -1,4 +1,5 @@
 import loginService from '../services/login';
+import logoutService from '../services/logout';
 import { setNotification, removeNotification } from './notificationReducer';
 
 /**
@@ -10,7 +11,7 @@ const userReducer = (state = null, action) => {
       return action.payload;
     case 'LOGOUT':
       return null;
-    case 'FETCH_USER':
+    case 'SET_USER':
       return action.payload;
     default:
       return state;
@@ -39,9 +40,17 @@ export const login = (credentials) => async (dispatch) => {
 /**
  * Action creator for logging out a user.
  */
-export const logout = () => (dispatch) => {
+export const logout = () => async (dispatch) => {
+  await logoutService.logout();
   dispatch({
     type: 'LOGOUT',
+  });
+};
+
+export const setUser = (user) => (dispatch) => {
+  dispatch({
+    type: 'SET_USER',
+    payload: user,
   });
 };
 

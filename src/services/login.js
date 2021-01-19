@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { socketAuth } from '../utils/socket';
 
 const baseUrl = '/api/login';
 
@@ -9,6 +10,9 @@ const baseUrl = '/api/login';
  */
 const login = async (userCredentials) => {
   const response = await axios.post(baseUrl, userCredentials);
+  if (response.status === 200) {
+    socketAuth();
+  }
   return response.data;
 };
 

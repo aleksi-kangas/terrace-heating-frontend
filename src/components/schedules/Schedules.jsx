@@ -43,15 +43,17 @@ const Schedules = ({
    * Sends the state to the server.
    */
   const handleScheduleToggle = async () => {
-    updateScheduling(!schedule.scheduling);
     const newStatus = await HeatPumpService.setScheduling(!schedule.scheduling);
-    setStatus(newStatus);
-    const message = schedule.scheduling ? 'Scheduling disabled' : 'Scheduling enabled';
-    const type = schedule.scheduling ? 'info' : 'success';
-    setNotification(message, type);
-    setTimeout(() => {
-      removeNotification();
-    }, 5000);
+    if (newStatus) {
+      updateScheduling(!schedule.scheduling);
+      setStatus(newStatus);
+      const message = schedule.scheduling ? 'Scheduling disabled' : 'Scheduling enabled';
+      const type = schedule.scheduling ? 'info' : 'success';
+      setNotification(message, type);
+      setTimeout(() => {
+        removeNotification();
+      }, 5000);
+    }
   };
 
   return (
