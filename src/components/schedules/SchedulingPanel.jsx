@@ -24,7 +24,7 @@ const useStyles = makeStyles({
   value: {
     marginRight: 20,
   },
-  switchButton: {
+  button: {
     marginTop: 20,
   },
 });
@@ -127,8 +127,8 @@ const SchedulingPanel = ({
                 </Table>
               </TableContainer>
             </Grid>
-            <Grid container item justify="space-evenly">
-              <Button type="submit" variant="contained" color="primary" className={classes.switchButton}>
+            <Grid container item justify="space-evenly" className={classes.button}>
+              <Button type="submit" variant="contained" color="secondary">
                 Save
               </Button>
             </Grid>

@@ -1,8 +1,9 @@
 import React from 'react';
 import { Grid } from '@material-ui/core';
 import OutsideTempPanel from './OutsideTempPanel';
-import UsagePanel from './UsagePanel';
+import CompressorUsageGauge from './CompressorUsageGauge';
 import TogglePanel from './TogglePanel';
+import CompressorUsageChart from './CompressorUsageChart';
 
 /**
  * Responsible for rendering the overview page of the application.
@@ -13,7 +14,8 @@ const Overview = () => (
     <Grid container item justify="space-between">
       <OutsideTempPanel />
       <TogglePanel />
-      <UsagePanel />
+      <CompressorUsageGauge />
+      <CompressorUsageChart />
     </Grid>
   </Grid>
 );

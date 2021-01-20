@@ -3,8 +3,7 @@ import { connect } from 'react-redux';
 import {
   Box,
   Button,
-  Card,
-  CardContent, CircularProgress,
+  CircularProgress,
   Dialog,
   DialogActions,
   DialogContent,
@@ -35,25 +34,19 @@ const useStyles = makeStyles({
   },
   text: {
     color: '#131313',
-  },
-  column: {
-    padding: 10,
-  },
-  card: {
     margin: 10,
-    height: '150px',
   },
-  loading: {
-    background: '10px solid rgba(100, 100, 100, 0.5)',
+  switchBox: {
+    borderRadius: 10,
+    borderColor: '#2f4050',
+    borderWidth: 2,
+    borderStyle: 'solid',
+    padding: 10,
+    paddingLeft: 15,
+    marginLeft: 0,
   },
-  boosted: {
-    borderBottom: '10px solid rgba(0, 225, 0, 0.7)',
-  },
-  active: {
-    borderBottom: '10px solid rgba(0, 175, 0, 0.5)',
-  },
-  stopped: {
-    borderBottom: '10px solid rgba(47, 64, 80, 0.65)',
+  button: {
+    margin: 10,
   },
 });
 
@@ -101,7 +94,9 @@ const TogglePanel = ({
     if (status === 'boosting') {
       setStatusText('Scheduled boosting');
     } else if (status === 'softStart') {
-      setStatusText('Soft start running');
+      setStatusText('Soft-starting');
+    } else if (status === 'running') {
+      setDialogText('Upkeep period');
     } else {
       setStatusText(null);
     }
@@ -178,7 +173,6 @@ const TogglePanel = ({
     if (outsideTemp > 0 && outsideTemp < 10) {
       await normalStartup();
     } else if (outsideTemp < 0) {
-      // TODO NOTHING
       setDialogOpen(false);
     }
   };
@@ -191,34 +185,28 @@ const TogglePanel = ({
     await softStartup();
   };
 
-  /**
-   * Helper function for selecting the correct color for the status indicator.
-   */
-  const getColor = () => {
-    if (status === 'boosting') {
-      return (classes.boosted);
-    }
-    if (status === 'running' || status === 'softStart') {
-      return (classes.active);
-    }
-    return classes.stopped;
-  };
-
   return (
-    <Grid container item component={Paper} sm={12} md={3} lg={4} className={clsx(classes.container, classes.shadow)} justify="center" alignItems="center">
-      <Grid item lg={7}>
-        <Card className={clsx(classes.card, classes.shadow, getColor())}>
-          <CardContent>
-            <Typography variant="h6" className={classes.text} align="center">
-              {statusHeader}
-            </Typography>
-            <Typography align="center">
-              {statusText}
-            </Typography>
-          </CardContent>
-        </Card>
+    <Grid
+      container
+      item
+      direction="column"
+      component={Paper}
+      sm={12}
+      md={3}
+      lg={4}
+      className={clsx(classes.container, classes.shadow)}
+      justify="space-evenly"
+      alignItems="center"
+    >
+      <Grid item>
+        <Typography variant="h6" className={classes.text} align="center">
+          {statusHeader}
+        </Typography>
+        <Typography align="center">
+          {statusText}
+        </Typography>
       </Grid>
-      <Grid container item lg={4} justify="center">
+      <Grid item>
         <FormControlLabel
           control={(
             <Switch
@@ -229,8 +217,8 @@ const TogglePanel = ({
           )}
           label={status === 'stopped' ? 'Off' : 'On'}
           labelPlacement="start"
+          className={classes.switchBox}
         />
-
       </Grid>
       <Dialog
         open={dialogOpen}
@@ -248,10 +236,10 @@ const TogglePanel = ({
           </DialogContentText>
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleDecline} color="primary">
+          <Button onClick={handleDecline} color="secondary" variant="contained" className={classes.button}>
             No
           </Button>
-          <Button onClick={handleAccept} color="primary" autoFocus={outsideTemp < 0}>
+          <Button onClick={handleAccept} color="secondary" variant="contained" className={classes.button}>
             Yes
           </Button>
         </DialogActions>

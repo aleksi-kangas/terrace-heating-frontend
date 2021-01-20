@@ -17,8 +17,10 @@ const useStyles = makeStyles({
   tabs: {
     marginBottom: 10,
     borderRadius: 10,
-    background: '#2F4050',
-    color: 'white',
+    background: '#2f4050',
+  },
+  tab: {
+    color: '#bfbfbf',
   },
   graph: {
     padding: 10,
@@ -99,7 +101,7 @@ const Graphs = ({ data }) => {
   const tabCreator = () => (
     // eslint-disable-next-line arrow-body-style
     graphVariables.map((graph, index) => {
-      return <Tab key={graph.title} label={graph.title} component={Link} to={`/graphs/${index + 1}`} />;
+      return <Tab key={graph.title} label={graph.title} component={Link} to={`/graphs/${index + 1}`} className={classes.tab} />;
     })
   );
 
@@ -125,6 +127,8 @@ const Graphs = ({ data }) => {
         <Tabs
           value={activeTab}
           onChange={handleChange}
+          indicatorColor="primary"
+          textColor="primary"
           centered
           variant="fullWidth"
           className={clsx(classes.tabs, classes.shadow)}

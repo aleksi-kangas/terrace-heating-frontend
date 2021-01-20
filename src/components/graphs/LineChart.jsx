@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { Line } from 'react-chartjs-2';
 import { fi } from 'date-fns/locale';
 import { makeStyles } from '@material-ui/core/styles';
-import { Atlas6 } from 'chartjs-plugin-colorschemes/src/colorschemes/colorschemes.office';
+import { Office6 } from 'chartjs-plugin-colorschemes/src/colorschemes/colorschemes.office';
 
 /**
  * Custom styling.
@@ -29,7 +29,7 @@ const LineChart = ({ data, variables, xAxis }) => {
     const dataSet = {
       label: variable.label,
       data: dataPoints,
-      borderColor: Atlas6[index],
+      borderColor: Office6[index],
       fill: false,
       pointRadius: 0,
       pointHitRadius: 5,

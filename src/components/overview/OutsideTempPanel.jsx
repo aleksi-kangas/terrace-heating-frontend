@@ -5,7 +5,7 @@ import moment from 'moment';
 import { CircularProgress, Grid, Paper } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import { Line } from 'react-chartjs-2';
-import { Atlas6 } from 'chartjs-plugin-colorschemes/src/colorschemes/colorschemes.office';
+import { Technic6 } from 'chartjs-plugin-colorschemes/src/colorschemes/colorschemes.office';
 
 /**
  * Custom styling.
@@ -49,7 +49,7 @@ const OutsideTempPanel = ({ data }) => {
       const dataSet = {
         label: 'Outside Temperature',
         data: data.map((entry) => entry.outsideTemp),
-        borderColor: Atlas6[2],
+        borderColor: Technic6[0],
         fill: false,
         pointRadius: 0,
         pointHitRadius: 5,

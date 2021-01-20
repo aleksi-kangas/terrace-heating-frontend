@@ -7,7 +7,6 @@ import moment from 'moment';
 import { makeStyles, MuiThemeProvider } from '@material-ui/core/styles';
 import { Grid, createMuiTheme } from '@material-ui/core';
 import CssBaseline from '@material-ui/core/CssBaseline';
-import { blueGrey } from '@material-ui/core/colors';
 import io from 'socket.io-client';
 import Navigation from './components/navigation/Navigation';
 import Notification from './components/Notification';
@@ -24,10 +23,10 @@ import LoginService from './services/login';
 const theme = createMuiTheme({
   palette: {
     primary: {
-      main: '#5390fe',
+      main: '#FFFFFF',
     },
     secondary: {
-      main: blueGrey[900],
+      main: '#2F4050',
     },
     background: {
       default: '#F6F7FF',
