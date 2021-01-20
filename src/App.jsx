@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { connect } from 'react-redux';
 import {
   Route, Redirect, Switch, useHistory,
@@ -52,6 +52,8 @@ const App = ({
   const dataCoverTimePeriodHours = 24 * 14; // Two weeks
   const history = useHistory();
   const classes = useStyles();
+  // Create a reference to data, since WebSocket event handler needs one
+  const dataRef = useRef(data);
 
   // Fetch user session from the API.
   useEffect(() => {
@@ -69,36 +71,42 @@ const App = ({
     }
   }, [user]);
 
+  // Update dataRef which is used in WebSocket connection
+  useEffect(() => {
+    dataRef.current = data;
+  });
+
   useEffect(() => {
     /*
     Open WebSocket connection if user has been authorized via HTTP connection.
     Subscribe to real-time heat-pump updates.
      */
-    if (user) {
-      const socket = io('ws://localhost:3003', { transports: ['websocket'] });
-      socket.emit('login');
+    const socket = io('ws://localhost:3003', { transports: ['websocket'] });
+    socket.emit('login');
 
-      socket.on('heatPumpData', (heatPumpData) => {
-        // Wait until pre-existing data is loaded before adding new data
-        if (data) {
-          const startTimeThreshold = moment(heatPumpData.time).subtract(dataCoverTimePeriodHours, 'hours');
-          let newData;
-          if (data.length !== 0 && startTimeThreshold.isAfter(data[0].time)) {
-            /*
-            Need to drop the oldest entry to accommodate the new entry.
-            Frontend holds dataCoverTimePeriodHours amount of data as in a ring buffer.
-             */
-            newData = [...data].slice(1);
-            newData.push(heatPumpData);
-            setData(newData);
-          } else {
-            newData = [...data];
-            newData.push(heatPumpData);
-            setData(newData);
-          }
+    socket.on('heatPumpData', (heatPumpData) => {
+      // Wait until pre-existing data is loaded before adding new data
+      if (dataRef.current) {
+        const startTimeThreshold = moment(heatPumpData.time).subtract(dataCoverTimePeriodHours, 'hours');
+        let newData;
+        if (dataRef.current.length !== 0 && startTimeThreshold.isAfter(dataRef.current[0].time)) {
+          /*
+          Need to drop the oldest entry to accommodate the new entry.
+          Frontend holds dataCoverTimePeriodHours amount of data as in a ring buffer.
+           */
+          newData = [...dataRef.current].slice(1);
+          newData.push(heatPumpData);
+          setData(newData);
+        } else {
+          newData = [...dataRef.current];
+          newData.push(heatPumpData);
+          setData(newData);
         }
-      });
-    }
+      }
+    });
+    return () => {
+      socket.off('heatPumpData');
+    };
   }, [user]);
 
   return (
