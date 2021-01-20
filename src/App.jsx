@@ -8,6 +8,7 @@ import { makeStyles, MuiThemeProvider } from '@material-ui/core/styles';
 import { Grid, createMuiTheme } from '@material-ui/core';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import { blueGrey } from '@material-ui/core/colors';
+import io from 'socket.io-client';
 import Navigation from './components/navigation/Navigation';
 import Notification from './components/Notification';
 import Graphs from './components/graphs/Graphs';
@@ -17,8 +18,8 @@ import LoginForm from './components/LoginForm';
 import { initializeData, setData } from './reducers/dataReducer';
 import { fetchStatus } from './reducers/statusReducer';
 import { initializeSchedules } from './reducers/scheduleReducer';
-import { socket, socketAuth } from './utils/socket';
 import { setUser } from './reducers/userReducer';
+import LoginService from './services/login';
 
 const theme = createMuiTheme({
   palette: {
@@ -52,69 +53,65 @@ const App = ({
   const history = useHistory();
   const classes = useStyles();
 
-  socket.on('auth', (user) => {
-    setUser(user);
-  });
+  useEffect(() => {
+    // Fetch user session from the API.
+    LoginService
+      .fetchSession()
+      .then((user) => setUser(user));
+  }, []);
 
-  // Fetch pre-existing data from the API on first mount
+  // Fetch pre-existing data, status of heating, and schedules from the API on first mount
   useEffect(() => {
     if (user) {
       initializeData();
+      fetchStatus();
+      initializeSchedules();
     }
   }, [initializeData, user]);
 
   useEffect(() => {
-    if (!user) {
-      socketAuth();
-    }
-  }, []);
-
-  // Fetching status of heating
-  useEffect(() => {
+    /*
+    Open WebSocket connection if user has been authorized via HTTP connection.
+    Subscribe to real-time heat-pump updates.
+     */
     if (user) {
-      fetchStatus();
-    }
-  }, [fetchStatus, user]);
+      const socket = io('ws://localhost:3003', { transports: ['websocket'] });
+      socket.emit('login');
 
-  // Fetch scheduling status and schedules for 'lowerTank' and 'heatDistCircuit3'
-  useEffect(() => {
-    if (user) {
-      initializeSchedules();
-    }
-  }, [initializeSchedules, user]);
-
-  socket.on('heatPumpData', (heatPumpData) => {
-    // Wait until pre-existing data is loaded before adding new data
-    if (data) {
-      if (data.length === 0) {
-        // The database is empty
-        const newData = [];
-        newData.push(heatPumpData);
-        setData(newData);
-      } else {
-      /*
-      Heat-pump data is stored in a 'ring buffer' and therefore,
-      some calculations are needed.
-      Calculate the time period which is covered by the data.
-      If the period exceeds the length of dataCoverTimePeriodHours,
-      remove the oldest entry to accommodate the new entry.
-      */
-        const startTime = moment(data[0].time);
-        const endTime = moment(data[data.length - 1].time);
-        const duration = moment.duration(endTime.diff(startTime));
-        const hours = duration.asHours();
-        if (hours < dataCoverTimePeriodHours) {
-          const newData = [...data];
-          newData.push(heatPumpData);
-          setData(newData);
-        } else if (hours >= dataCoverTimePeriodHours) {
-          const newData = [...data].slice(1);
-          newData.push(heatPumpData);
-          setData(newData);
+      socket.on('heatPumpData', (heatPumpData) => {
+        // Wait until pre-existing data is loaded before adding new data
+        if (data) {
+          if (data.length === 0) {
+            // The database is empty
+            const newData = [];
+            newData.push(heatPumpData);
+            setData(newData);
+          } else {
+            /*
+            Heat-pump data is stored in a 'ring buffer' and therefore,
+            some calculations are needed.
+            Calculate the time period which is covered by the data.
+            If the period exceeds the length of dataCoverTimePeriodHours,
+            remove the oldest entry to accommodate the new entry.
+            */
+            const startTime = moment(data[0].time);
+            const endTime = moment(data[data.length - 1].time);
+            const duration = moment.duration(endTime.diff(startTime));
+            const hours = duration.asHours();
+            if (hours < dataCoverTimePeriodHours) {
+              const newData = [...data];
+              newData.push(heatPumpData);
+              setData(newData);
+            } else if (hours >= dataCoverTimePeriodHours) {
+              const newData = [...data].slice(1);
+              newData.push(heatPumpData);
+              setData(newData);
+            }
+          }
         }
-      }
+      });
     }
-  });
+  }, [user]);
 
   return (
     <MuiThemeProvider theme={theme}>

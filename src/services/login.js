@@ -1,5 +1,4 @@
 import axios from 'axios';
-import { socketAuth } from '../utils/socket';
 
 const baseUrl = '/api/login';
 
@@ -10,12 +9,14 @@ const baseUrl = '/api/login';
  */
 const login = async (userCredentials) => {
   const response = await axios.post(baseUrl, userCredentials);
-  if (response.status === 200) {
-    socketAuth();
-  }
   return response.data;
 };
 
-const LoginService = { login };
+const fetchSession = async () => {
+  const response = await axios.get('/api/session');
+  return response.data;
+};
+
+const LoginService = { login, fetchSession };
 
 export default LoginService;
