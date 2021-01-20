@@ -46,28 +46,28 @@ const App = ({
   data, initializeData, setData, user, setUser, fetchStatus, initializeSchedules,
 }) => {
   /*
-   Data covers on month period to reduce data transfer and increase performance,
+   Data covers two week period to reduce data transfer and increase performance,
    since older data is not needed for monitoring general trends.
    */
-  const dataCoverTimePeriodHours = 24 * 31; // One month
+  const dataCoverTimePeriodHours = 24 * 14; // Two weeks
   const history = useHistory();
   const classes = useStyles();
 
+  // Fetch user session from the API.
   useEffect(() => {
-    // Fetch user session from the API.
     LoginService
       .fetchSession()
       .then((user) => setUser(user));
   }, []);
 
-  // Fetch pre-existing data, status of heating, and schedules from the API on first mount
+  // Fetch pre-existing data, status of heating, and schedules from the API
   useEffect(() => {
     if (user) {
       initializeData();
       fetchStatus();
       initializeSchedules();
     }
-  }, [initializeData, user]);
+  }, [user]);
 
   useEffect(() => {
     /*
@@ -81,32 +81,20 @@ const App = ({
       socket.on('heatPumpData', (heatPumpData) => {
         // Wait until pre-existing data is loaded before adding new data
         if (data) {
-          if (data.length === 0) {
-            // The database is empty
-            const newData = [];
+          const startTimeThreshold = moment(heatPumpData.time).subtract(dataCoverTimePeriodHours, 'hours');
+          let newData;
+          if (data.length !== 0 && startTimeThreshold.isAfter(data[0].time)) {
+            /*
+            Need to drop the oldest entry to accommodate the new entry.
+            Frontend holds dataCoverTimePeriodHours amount of data as in a ring buffer.
+             */
+            newData = [...data].slice(1);
             newData.push(heatPumpData);
             setData(newData);
           } else {
-            /*
-            Heat-pump data is stored in a 'ring buffer' and therefore,
-            some calculations are needed.
-            Calculate the time period which is covered by the data.
-            If the period exceeds the length of dataCoverTimePeriodHours,
-            remove the oldest entry to accommodate the new entry.
-            */
-            const startTime = moment(data[0].time);
-            const endTime = moment(data[data.length - 1].time);
-            const duration = moment.duration(endTime.diff(startTime));
-            const hours = duration.asHours();
-            if (hours < dataCoverTimePeriodHours) {
-              const newData = [...data];
-              newData.push(heatPumpData);
-              setData(newData);
-            } else if (hours >= dataCoverTimePeriodHours) {
-              const newData = [...data].slice(1);
-              newData.push(heatPumpData);
-              setData(newData);
-            }
+            newData = [...data];
+            newData.push(heatPumpData);
+            setData(newData);
           }
         }
       });

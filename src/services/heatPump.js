@@ -10,7 +10,7 @@ const baseUrl = '/api/heat-pump';
  */
 const getHeatPumpData = async () => {
   const date = moment();
-  date.subtract(1, 'week');
+  date.subtract(2, 'weeks');
   const dateParts = date.format('YYYY-MM-DD').split('-');
   const response = await axios
     .get(`${baseUrl}/?year=${dateParts[0]}&month=${dateParts[1]}&day=${dateParts[2]}`, {
