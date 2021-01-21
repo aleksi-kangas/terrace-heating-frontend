@@ -1,7 +1,7 @@
 import React, { useEffect, useRef } from 'react';
 import { connect } from 'react-redux';
 import {
-  Route, Redirect, Switch, useHistory,
+  Route, Switch, useLocation,
 } from 'react-router-dom';
 import moment from 'moment';
 import { makeStyles, MuiThemeProvider } from '@material-ui/core/styles';
@@ -14,16 +14,16 @@ import Graphs from './components/graphs/Graphs';
 import Schedules from './components/schedules/Schedules';
 import Overview from './components/overview/Overview';
 import LoginForm from './components/LoginForm';
+import PrivateRoute from './utils/PrivateRoute';
 import { initializeData, setData } from './reducers/dataReducer';
 import { fetchStatus } from './reducers/statusReducer';
 import { initializeSchedules } from './reducers/scheduleReducer';
-import { setUser } from './reducers/userReducer';
-import LoginService from './services/login';
+import { useAuth } from './contexts/AuthContext';
 
 const theme = createMuiTheme({
   palette: {
     primary: {
-      main: '#FFFFFF',
+      main: '#2F4050',
     },
     secondary: {
       main: '#2F4050',
@@ -42,33 +42,42 @@ const useStyles = makeStyles(() => ({
 }));
 
 const App = ({
-  data, initializeData, setData, user, setUser, fetchStatus, initializeSchedules,
+  data, initializeData, setData, fetchStatus, initializeSchedules,
 }) => {
   /*
    Data covers two week period to reduce data transfer and increase performance,
    since older data is not needed for monitoring general trends.
    */
   const dataCoverTimePeriodHours = 24 * 14; // Two weeks
-  const history = useHistory();
+  const location = useLocation();
+  const { isAuthenticated } = useAuth();
   const classes = useStyles();
   // Create a reference to data, since WebSocket event handler needs one
   const dataRef = useRef(data);
 
+  /*
   // Fetch user session from the API.
   useEffect(() => {
     LoginService
       .fetchSession()
-      .then((user) => setUser(user));
+      .then((user) => {
+        console.log(user);
+        const { setAuthStatus } = useAuth();
+        setAuthStatus({ loading: false, loggedIn: !!user });
+        //setUser(user)
+      });
   }, []);
+
+   */
 
   // Fetch pre-existing data, status of heating, and schedules from the API
   useEffect(() => {
-    if (user) {
+    if (isAuthenticated) {
       initializeData();
       fetchStatus();
       initializeSchedules();
     }
-  }, [user]);
+  }, [isAuthenticated]);
 
   // Update dataRef which is used in WebSocket connection
   useEffect(() => {
@@ -106,7 +115,7 @@ const App = ({
     return () => {
       socket.off('heatPumpData');
     };
-  }, [user]);
+  }, [isAuthenticated]);
 
   return (
     <MuiThemeProvider theme={theme}>
@@ -115,23 +124,13 @@ const App = ({
       <div className={classes.toolBar} />
       <Grid container className={classes.container}>
         <Notification />
-        <Switch>
-          <Route
-            path="/graphs/"
-            render={() => (user ? <Graphs /> : <Redirect to="/login" />)}
-          />
-          <Route
-            path="/schedules"
-            render={() => (user ? <Schedules /> : <Redirect to="/login" />)}
-          />
-          <Route
-            path="/login"
-            render={() => (user ? <Redirect to="/" /> : <LoginForm history={history} />)}
-          />
-          <Route
-            path="/"
-            render={() => (user ? <Overview /> : <Redirect to="/login" />)}
-          />
+        <Switch location={location}>
+          <PrivateRoute path="/graphs" component={Graphs} />
+          <PrivateRoute path="/schedules" component={Schedules} />
+          <Route path="/login">
+            <LoginForm />
+          </Route>
+          <PrivateRoute path="/" component={Overview} />
         </Switch>
       </Grid>
     </MuiThemeProvider>
@@ -140,7 +139,6 @@ const App = ({
 
 const mapStateToProps = (state) => ({
   data: state.data,
-  user: state.user,
 });
 
 export default connect(
@@ -149,7 +147,6 @@ export default connect(
     initializeSchedules,
     initializeData,
     setData,
-    setUser,
     fetchStatus,
   },
 )(App);

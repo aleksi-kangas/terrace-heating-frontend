@@ -1,12 +1,12 @@
 import React from 'react';
-import { connect } from 'react-redux';
 import {
   AppBar, Button, Toolbar, Typography,
 } from '@material-ui/core';
 import MenuIcon from '@material-ui/icons/Menu';
 import { makeStyles } from '@material-ui/core/styles';
 import IconButton from '@material-ui/core/IconButton';
-import { logout } from '../../reducers/userReducer';
+import { useHistory } from 'react-router-dom';
+import { useAuth } from '../../contexts/AuthContext';
 
 /**
  * Custom styling.
@@ -29,13 +29,20 @@ const useStyles = makeStyles(() => ({
 /**
  * Represents the Toolbar at the top of the page.
  */
-const Header = ({ setSideBarOpen, user, logout }) => {
+const Header = ({ setSideBarOpen }) => {
   const classes = useStyles();
+  const history = useHistory();
+  const { isAuthenticated, logout } = useAuth();
+
+  const handleLogout = () => {
+    logout();
+    history.push('/login');
+  };
 
   return (
     <AppBar>
       <Toolbar className={classes.toolBar}>
-        {user
+        {isAuthenticated
           ? (
             <IconButton
               color="inherit"
@@ -50,9 +57,9 @@ const Header = ({ setSideBarOpen, user, logout }) => {
         <Typography variant="h6" noWrap className={classes.text}>
           Terrace Heating
         </Typography>
-        {user
+        {isAuthenticated
           ? (
-            <Button onClick={logout} className={classes.logout}>
+            <Button onClick={handleLogout} className={classes.logout}>
               Logout
             </Button>
           ) : null}
@@ -61,8 +68,4 @@ const Header = ({ setSideBarOpen, user, logout }) => {
   );
 };
 
-const mapStateToProps = (state) => ({
-  user: state.user,
-});
-
-export default connect(mapStateToProps, { logout })(Header);
+export default Header;

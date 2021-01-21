@@ -1,12 +1,12 @@
 import React from 'react';
-import { connect } from 'react-redux';
 import {
   Button, Grid, Paper, TextField,
 } from '@material-ui/core';
 import LockIcon from '@material-ui/icons/Lock';
 import PersonIcon from '@material-ui/icons/Person';
 import { makeStyles } from '@material-ui/core/styles';
-import { login } from '../reducers/userReducer';
+import { useHistory } from 'react-router-dom';
+import { useAuth } from '../contexts/AuthContext';
 
 /**
  * Custom styling.
@@ -28,8 +28,10 @@ const useStyles = makeStyles(() => ({
  * Represents the login form,
  * where user will enter username and password to have access to the application.
  */
-const LoginForm = ({ history, login }) => {
+const LoginForm = () => {
   const classes = useStyles();
+  const history = useHistory();
+  const { login } = useAuth();
 
   /**
    * Handler for login submission.
@@ -41,8 +43,7 @@ const LoginForm = ({ history, login }) => {
       username: event.target.username.value,
       password: event.target.password.value,
     };
-    login(credentials);
-    // Redirect
+    await login(credentials);
     history.push('/');
   };
 
@@ -93,4 +94,4 @@ const LoginForm = ({ history, login }) => {
   );
 };
 
-export default connect(null, { login })(LoginForm);
+export default LoginForm;
