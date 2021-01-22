@@ -74,7 +74,7 @@ const App = ({
     Open WebSocket connection if user has been authorized via HTTP connection.
     Subscribe to real-time heat-pump updates.
      */
-    const socket = io('ws://localhost:3003', { transports: ['websocket'] });
+    const socket = io(':3003', { transports: ['websocket'] });
     socket.emit('login');
 
     socket.on('heatPumpData', (heatPumpData) => {
