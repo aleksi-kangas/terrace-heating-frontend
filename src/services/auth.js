@@ -19,8 +19,12 @@ const logout = async () => {
 };
 
 const fetchAuth = async () => {
-  const response = await axios.get(`${baseUrl}/session`);
-  return response.data;
+  try {
+    const response = await axios.get(`${baseUrl}/session`);
+    return response.data;
+  } catch (error) {
+    return null;
+  }
 };
 
 const AuthService = { login, logout, fetchAuth };
