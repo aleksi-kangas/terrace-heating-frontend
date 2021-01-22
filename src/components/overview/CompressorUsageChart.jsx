@@ -94,6 +94,10 @@ const CompressorUsageChart = ({ data }) => {
           display: true,
           labelString: 'Usage (%)',
         },
+        ticks: {
+          suggestedMin: 0,
+          suggestedMax: 100,
+        },
       }],
     },
     plugins: {

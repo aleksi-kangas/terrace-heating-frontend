@@ -42,7 +42,9 @@ const CompressorUsageGauge = ({ data }) => {
     // Extract latest compressor usage from the data
     if (data) {
       const usages = data.filter((entry) => entry.compressorUsage != null);
-      setLatestUsage(usages[usages.length - 1].compressorUsage);
+      if (usages.length !== 0) {
+        setLatestUsage(usages[usages.length - 1].compressorUsage);
+      }
     }
   }, [data]);
 
