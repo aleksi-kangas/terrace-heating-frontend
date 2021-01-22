@@ -21,6 +21,9 @@ const useStyles = makeStyles({
     padding: 50,
   },
   card: {
+    margin: 0,
+  },
+  panel: {
     margin: 20,
   },
   shadow: {
@@ -86,11 +89,11 @@ const Schedules = ({
             </Grid>
           </CardActions>
         </Card>
-        <Grid container justify="center">
-          <Grid container item lg={4} justify="center">
+        <Grid container justify="space-around">
+          <Grid item md={12} lg={5} className={classes.panel}>
             <SchedulingPanel variable="lowerTank" title="Lower Tank" />
           </Grid>
-          <Grid container item lg={4} justify="center">
+          <Grid item md={12} lg={5} className={classes.panel}>
             <SchedulingPanel variable="heatDistCircuit3" title="Circuit 3" />
           </Grid>
         </Grid>

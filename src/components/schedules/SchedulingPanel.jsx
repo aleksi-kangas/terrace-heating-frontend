@@ -15,7 +15,6 @@ import { updateSchedule } from '../../reducers/scheduleReducer';
 const useStyles = makeStyles({
   container: {
     padding: 20,
-    margin: 20,
   },
   shadow: {
     borderRadius: 4,
@@ -48,23 +47,19 @@ const SchedulingPanel = ({
     return weekDays.map((weekDay) => (
       <TableRow key={weekDay}>
         <TableCell>
-          <Typography>
+          <Typography align="center">
             {weekDay}
           </Typography>
         </TableCell>
         {columnNames.map((columnName) => (
-          <TableCell key={columnName} size="small">
-            <Grid container justify="flex-start">
-              <Grid container item alignItems="center" xs={1} sm={1} md={1} lg={1} xl={1} className={classes.value}>
-                <Typography>
-                  {schedule[variable][weekDay.toLowerCase()][columnName]}
-                </Typography>
-              </Grid>
-              <Grid item xs={8} sm={8} md={4} lg={8} xl={6}>
+          <TableCell key={columnName} size="small" align="center">
+            <Grid container justify="center">
+              <Grid item sm={8} md={8} lg={8}>
                 <TextField
                   name={`${weekDay.toLowerCase()}_${columnName}`}
                   variant="outlined"
                   size="small"
+                  inputProps={{ min: 0, style: { textAlign: 'center' } }}
                   defaultValue={schedule[variable][weekDay.toLowerCase()][columnName]}
                 />
               </Grid>
@@ -115,10 +110,10 @@ const SchedulingPanel = ({
                 <Table>
                   <TableHead>
                     <TableRow>
-                      <TableCell size="small">Weekday</TableCell>
-                      <TableCell size="small">Start Hour</TableCell>
-                      <TableCell size="small">End Hour</TableCell>
-                      <TableCell size="small">Temperature Delta (+ °C)</TableCell>
+                      <TableCell size="small" align="center">Weekday</TableCell>
+                      <TableCell size="small" align="center">Start Hour</TableCell>
+                      <TableCell size="small" align="center">End Hour</TableCell>
+                      <TableCell size="small" align="center">Temperature Delta (+ °C)</TableCell>
                     </TableRow>
                   </TableHead>
                   <TableBody>
@@ -128,7 +123,7 @@ const SchedulingPanel = ({
               </TableContainer>
             </Grid>
             <Grid container item justify="space-evenly" className={classes.button}>
-              <Button type="submit" variant="contained" color="secondary">
+              <Button type="submit" variant="contained" color="primary">
                 Save
               </Button>
             </Grid>
