@@ -4,6 +4,7 @@ import clsx from 'clsx';
 import { connect } from 'react-redux';
 import {
   CircularProgress,
+  Fade,
   Grid, Paper, Tab, Tabs,
 } from '@material-ui/core';
 import { Link, Route } from 'react-router-dom';
@@ -122,24 +123,26 @@ const Graphs = ({ data }) => {
   };
 
   return (
-    <Grid container direction="column">
-      <Grid item>
-        <Tabs
-          value={activeTab}
-          onChange={handleChange}
-          indicatorColor="primary"
-          textColor="primary"
-          centered
-          variant="fullWidth"
-          className={clsx(classes.tabs, classes.shadow)}
-        >
-          {tabCreator()}
-        </Tabs>
+    <Fade in timeout={800}>
+      <Grid container direction="column">
+        <Grid item>
+          <Tabs
+            value={activeTab}
+            onChange={handleChange}
+            indicatorColor="secondary"
+            textColor="secondary"
+            centered
+            variant="fullWidth"
+            className={clsx(classes.tabs, classes.shadow)}
+          >
+            {tabCreator()}
+          </Tabs>
+        </Grid>
+        <Grid item component={Paper} className={clsx(classes.graph, classes.shadow)}>
+          {graphCreator()}
+        </Grid>
       </Grid>
-      <Grid item component={Paper} className={clsx(classes.graph, classes.shadow)}>
-        {graphCreator()}
-      </Grid>
-    </Grid>
+    </Fade>
   );
 };
 

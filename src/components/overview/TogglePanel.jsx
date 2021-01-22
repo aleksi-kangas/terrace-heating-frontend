@@ -213,6 +213,7 @@ const TogglePanel = ({
               checked={status === 'running' || status === 'softStart' || status === 'boosting'}
               onChange={handleTerraceHeatingToggle}
               name="terraceHeatingToggle"
+              color="primary"
             />
           )}
           label={status === 'stopped' ? 'Off' : 'On'}

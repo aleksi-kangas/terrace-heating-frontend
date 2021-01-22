@@ -1,5 +1,5 @@
 import React from 'react';
-import { Grid } from '@material-ui/core';
+import { Fade, Grid } from '@material-ui/core';
 import OutsideTempPanel from './OutsideTempPanel';
 import CompressorUsageGauge from './CompressorUsageGauge';
 import TogglePanel from './TogglePanel';
@@ -10,14 +10,16 @@ import CompressorUsageChart from './CompressorUsageChart';
  * Contains multiple panels which provide a simple overview of the heating system's status.
  */
 const Overview = () => (
-  <Grid item container>
-    <Grid container item justify="space-between">
-      <OutsideTempPanel />
-      <TogglePanel />
-      <CompressorUsageGauge />
-      <CompressorUsageChart />
+  <Fade in timeout={800}>
+    <Grid item container>
+      <Grid container item justify="space-between">
+        <OutsideTempPanel />
+        <TogglePanel />
+        <CompressorUsageGauge />
+        <CompressorUsageChart />
+      </Grid>
     </Grid>
-  </Grid>
+  </Fade>
 );
 
 export default Overview;

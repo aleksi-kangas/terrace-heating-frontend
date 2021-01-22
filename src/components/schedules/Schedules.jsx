@@ -2,7 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import clsx from 'clsx';
 import {
-  Card, CardActions, CardContent, CircularProgress, Grid, Switch, Typography,
+  Card, CardActions, CardContent, CircularProgress, Fade, Grid, Switch, Typography,
 } from '@material-ui/core';
 import CheckCircleOutlineIcon from '@material-ui/icons/CheckCircleOutline';
 import CloseIcon from '@material-ui/icons/Close';
@@ -57,43 +57,45 @@ const Schedules = ({
   };
 
   return (
-    <Grid container direction="column" alignItems="center">
-      <Card className={clsx(classes.card, classes.shadow)}>
-        <CardContent>
-          <Typography variant="h5">
-            Scheduling
-          </Typography>
-        </CardContent>
-        <CardActions>
-          <Grid container item justify="center" alignItems="center">
-            {schedule
-              ? (
-                <Grid container item justify="center" alignItems="center">
-                  <Switch
-                    className={classes.switchButton}
-                    color="primary"
-                    checked={schedule.scheduling}
-                    onChange={handleScheduleToggle}
-                    name="scheduleActiveToggle"
-                  />
-                  {schedule.scheduling
-                    ? <CheckCircleOutlineIcon color="primary" />
-                    : <CloseIcon />}
-                </Grid>
-              )
-              : <CircularProgress />}
+    <Fade in timeout={800}>
+      <Grid container direction="column" alignItems="center">
+        <Card className={clsx(classes.card, classes.shadow)}>
+          <CardContent>
+            <Typography variant="h5">
+              Scheduling
+            </Typography>
+          </CardContent>
+          <CardActions>
+            <Grid container item justify="center" alignItems="center">
+              {schedule
+                ? (
+                  <Grid container item justify="center" alignItems="center">
+                    <Switch
+                      className={classes.switchButton}
+                      color="primary"
+                      checked={schedule.scheduling}
+                      onChange={handleScheduleToggle}
+                      name="scheduleActiveToggle"
+                    />
+                    {schedule.scheduling
+                      ? <CheckCircleOutlineIcon color="primary" />
+                      : <CloseIcon />}
+                  </Grid>
+                )
+                : <CircularProgress />}
+            </Grid>
+          </CardActions>
+        </Card>
+        <Grid container justify="center">
+          <Grid container item lg={4} justify="center">
+            <SchedulingPanel variable="lowerTank" title="Lower Tank" />
           </Grid>
-        </CardActions>
-      </Card>
-      <Grid container justify="center">
-        <Grid container item lg={4} justify="center">
-          <SchedulingPanel variable="lowerTank" title="Lower Tank" />
-        </Grid>
-        <Grid container item lg={4} justify="center">
-          <SchedulingPanel variable="heatDistCircuit3" title="Circuit 3" />
+          <Grid container item lg={4} justify="center">
+            <SchedulingPanel variable="heatDistCircuit3" title="Circuit 3" />
+          </Grid>
         </Grid>
       </Grid>
-    </Grid>
+    </Fade>
   );
 };
 

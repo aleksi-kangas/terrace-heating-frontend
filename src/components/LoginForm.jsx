@@ -1,6 +1,6 @@
 import React from 'react';
 import {
-  Button, Grid, Paper, TextField,
+  Button, Fade, Grid, Paper, TextField,
 } from '@material-ui/core';
 import LockIcon from '@material-ui/icons/Lock';
 import PersonIcon from '@material-ui/icons/Person';
@@ -48,49 +48,51 @@ const LoginForm = () => {
   };
 
   return (
-    <Grid
-      container
-      direction="column"
-      alignItems="center"
-    >
-      <Grid item component={Paper} className={classes.form}>
-        <form onSubmit={handleLogin}>
-          <Grid
-            container
-            direction="column"
-            alignItems="center"
-            justify="space-evenly"
-          >
-            <Grid item className={classes.icon}>
-              <PersonIcon fontSize="large" />
+    <Fade in timeout={800}>
+      <Grid
+        container
+        direction="column"
+        alignItems="center"
+      >
+        <Grid item component={Paper} className={classes.form}>
+          <form onSubmit={handleLogin}>
+            <Grid
+              container
+              direction="column"
+              alignItems="center"
+              justify="space-evenly"
+            >
+              <Grid item className={classes.icon}>
+                <PersonIcon fontSize="large" />
+              </Grid>
+              <Grid item>
+                <TextField
+                  id="username"
+                  label="Username"
+                  placeholder="Username"
+                />
+              </Grid>
+              <Grid item className={classes.icon}>
+                <LockIcon fontSize="large" />
+              </Grid>
+              <Grid item>
+                <TextField
+                  id="password"
+                  label="Password"
+                  placeholder="Password"
+                  type="password"
+                />
+              </Grid>
+              <Grid item className={classes.button}>
+                <Button variant="contained" type="submit" color="secondary">
+                  Login
+                </Button>
+              </Grid>
             </Grid>
-            <Grid item>
-              <TextField
-                id="username"
-                label="Username"
-                placeholder="Username"
-              />
-            </Grid>
-            <Grid item className={classes.icon}>
-              <LockIcon fontSize="large" />
-            </Grid>
-            <Grid item>
-              <TextField
-                id="password"
-                label="Password"
-                placeholder="Password"
-                type="password"
-              />
-            </Grid>
-            <Grid item className={classes.button}>
-              <Button variant="contained" type="submit" color="secondary">
-                Login
-              </Button>
-            </Grid>
-          </Grid>
-        </form>
+          </form>
+        </Grid>
       </Grid>
-    </Grid>
+    </Fade>
   );
 };
 
