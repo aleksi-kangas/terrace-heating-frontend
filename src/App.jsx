@@ -37,7 +37,7 @@ const theme = createMuiTheme({
 const useStyles = makeStyles(() => ({
   toolBar: theme.mixins.toolbar,
   container: {
-    padding: 50,
+    padding: 30,
   },
 }));
 

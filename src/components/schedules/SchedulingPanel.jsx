@@ -14,7 +14,9 @@ import { updateSchedule } from '../../reducers/scheduleReducer';
  */
 const useStyles = makeStyles({
   container: {
-    padding: 20,
+    padding: 10,
+    marginRight: 50,
+    marginLeft: 0,
   },
   shadow: {
     borderRadius: 4,
@@ -48,13 +50,13 @@ const SchedulingPanel = ({
       <TableRow key={weekDay}>
         <TableCell>
           <Typography align="center">
-            {weekDay}
+            {weekDay.substr(0, 3)}
           </Typography>
         </TableCell>
         {columnNames.map((columnName) => (
           <TableCell key={columnName} size="small" align="center">
             <Grid container justify="center">
-              <Grid item sm={8} md={8} lg={8}>
+              <Grid item sm={6} md={6} lg={6}>
                 <TextField
                   name={`${weekDay.toLowerCase()}_${columnName}`}
                   variant="outlined"
@@ -110,10 +112,10 @@ const SchedulingPanel = ({
                 <Table>
                   <TableHead>
                     <TableRow>
-                      <TableCell size="small" align="center">Weekday</TableCell>
+                      <TableCell size="small" align="center">Day</TableCell>
                       <TableCell size="small" align="center">Start Hour</TableCell>
                       <TableCell size="small" align="center">End Hour</TableCell>
-                      <TableCell size="small" align="center">Temperature Delta (+ °C)</TableCell>
+                      <TableCell size="small" align="center">Delta (+ °C)</TableCell>
                     </TableRow>
                   </TableHead>
                   <TableBody>
