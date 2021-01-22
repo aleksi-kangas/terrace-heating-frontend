@@ -26,7 +26,7 @@ const theme = createMuiTheme({
       main: '#2F4050',
     },
     secondary: {
-      main: '#2F4050',
+      main: '#FFFFFF',
     },
     background: {
       default: '#F6F7FF',
@@ -54,21 +54,6 @@ const App = ({
   const classes = useStyles();
   // Create a reference to data, since WebSocket event handler needs one
   const dataRef = useRef(data);
-
-  /*
-  // Fetch user session from the API.
-  useEffect(() => {
-    LoginService
-      .fetchSession()
-      .then((user) => {
-        console.log(user);
-        const { setAuthStatus } = useAuth();
-        setAuthStatus({ loading: false, loggedIn: !!user });
-        //setUser(user)
-      });
-  }, []);
-
-   */
 
   // Fetch pre-existing data, status of heating, and schedules from the API
   useEffect(() => {
