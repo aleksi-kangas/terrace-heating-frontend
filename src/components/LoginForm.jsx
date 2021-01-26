@@ -2,6 +2,7 @@ import React from 'react';
 import {
   Button, Fade, Grid, Paper, TextField,
 } from '@material-ui/core';
+import clsx from 'clsx';
 import LockIcon from '@material-ui/icons/Lock';
 import PersonIcon from '@material-ui/icons/Person';
 import { makeStyles } from '@material-ui/core/styles';
@@ -12,15 +13,19 @@ import { useAuth } from '../contexts/AuthContext';
  * Custom styling.
  */
 const useStyles = makeStyles(() => ({
-  icon: {
-    padding: 10,
-  },
   button: {
     paddingTop: 50,
     color: '#2F4050',
   },
   form: {
     padding: 50,
+  },
+  icon: {
+    marginTop: 20,
+  },
+  shadow: {
+    borderRadius: 4,
+    boxShadow: '0px 3px 11px 0px #c0c4e0',
   },
 }));
 
@@ -49,48 +54,45 @@ const LoginForm = () => {
 
   return (
     <Fade in timeout={800}>
-      <Grid
-        container
-        direction="column"
-        alignItems="center"
-      >
-        <Grid item component={Paper} className={classes.form}>
-          <form onSubmit={handleLogin}>
-            <Grid
-              container
-              direction="column"
-              alignItems="center"
-              justify="space-evenly"
-            >
-              <Grid item className={classes.icon}>
-                <PersonIcon fontSize="large" />
-              </Grid>
-              <Grid item>
-                <TextField
-                  id="username"
-                  label="Username"
-                  placeholder="Username"
-                />
-              </Grid>
-              <Grid item className={classes.icon}>
-                <LockIcon fontSize="large" />
-              </Grid>
-              <Grid item>
-                <TextField
-                  id="password"
-                  label="Password"
-                  placeholder="Password"
-                  type="password"
-                />
-              </Grid>
-              <Grid item className={classes.button}>
-                <Button variant="contained" type="submit" color="secondary">
-                  Login
-                </Button>
-              </Grid>
+      <Grid container justify="center">
+        <form onSubmit={handleLogin}>
+          <Grid
+            container
+            item
+            component={Paper}
+            direction="column"
+            alignItems="center"
+            justify="space-evenly"
+            className={clsx(classes.form, classes.shadow)}
+          >
+            <Grid item className={classes.icon}>
+              <PersonIcon fontSize="large" />
             </Grid>
-          </form>
-        </Grid>
+            <Grid item>
+              <TextField
+                id="username"
+                label="Username"
+                placeholder="Username"
+              />
+            </Grid>
+            <Grid item className={classes.icon}>
+              <LockIcon fontSize="large" />
+            </Grid>
+            <Grid item>
+              <TextField
+                id="password"
+                label="Password"
+                placeholder="Password"
+                type="password"
+              />
+            </Grid>
+            <Grid item className={classes.button}>
+              <Button variant="contained" type="submit" color="primary">
+                Login
+              </Button>
+            </Grid>
+          </Grid>
+        </form>
       </Grid>
     </Fade>
   );
