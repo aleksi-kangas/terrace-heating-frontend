@@ -35,7 +35,6 @@ The features of the React.js frontend include:
   
 ![Schedule Example](/images/schedules_example.png)
 - UI created with [Material UI](https://material-ui.com/).
-    - Fully custom UI is in the works.
 
 ## Implementation
 - The Application has been created with [React.js](https://reactjs.org/)
@@ -43,20 +42,6 @@ The features of the React.js frontend include:
   - Some custom styling has been used, and planning to create a fully custom UI.
 - JavaScript ES6 revision is used.
 - [Redux.js](https://redux.js.org/) is used for state management.
-    - Simple example:
-```JavaScript
-/**
- * Handles the dispatched actions to update the heating system Redux state.
- */
-const statusReducer = (state = null, action) => {
-  switch (action.type) {
-    case 'SET_STATUS':
-      return action.payload;
-    default:
-      return state;
-  }
-};
-```
 
 ## Requirements
 - [modbus-serial](https://github.com/yaacov/node-modbus-serial#readme) installation requires some extra steps:
@@ -64,7 +49,6 @@ const statusReducer = (state = null, action) => {
   - Install modbus-serial with ```npm install modbus-serial```
     - If the installation fails, try the following command ```npm install modbus-serial --unsafe-perm --build-from-source```
 - Run ```npm install``` as usual
-- Environment variable: ```SOCKET_IO_URL='ws://localhost:3003'```
 
 ## Planned upcoming features
 - High priority for implementing a fully custom UI.
