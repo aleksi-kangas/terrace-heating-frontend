@@ -1,12 +1,11 @@
-import React, { useEffect, useState } from 'react';
-import { connect } from 'react-redux';
-import clsx from 'clsx';
-import GaugeChart from 'react-gauge-chart';
+import React, { createRef, useEffect, useState } from 'react';
+import { Doughnut } from 'react-chartjs-2';
 import {
-  CircularProgress,
-  Grid, Paper, Typography,
+  CircularProgress, Grid, Paper, Typography,
 } from '@material-ui/core';
+import clsx from 'clsx';
 import { makeStyles } from '@material-ui/core/styles';
+import { connect } from 'react-redux';
 
 /**
  * Custom styling.
@@ -29,21 +28,18 @@ const useStyles = makeStyles({
   },
 });
 
-/**
- * Represents the panel which holds a graph and gauge of compressor usage.
- * Usages are represented as percentages of running time / cycle time,
- * where cycle is defined as compressor start -> stop -> start.
- */
 const CompressorUsageGauge = ({ data }) => {
+  const [currentUsage, setCurrentUsage] = useState(null);
+  const [gaugeRef] = useState(createRef);
+
   const classes = useStyles();
-  const [latestUsage, setLatestUsage] = useState(0);
 
   useEffect(() => {
     // Extract latest compressor usage from the data
     if (data) {
       const usages = data.filter((entry) => entry.compressorUsage != null);
       if (usages.length !== 0) {
-        setLatestUsage(usages[usages.length - 1].compressorUsage);
+        setCurrentUsage(usages[usages.length - 1].compressorUsage * 100);
       }
     }
   }, [data]);
@@ -57,6 +53,75 @@ const CompressorUsageGauge = ({ data }) => {
       </Grid>
     );
   }
+
+  const gaugeData = {
+    datasets: [
+      {
+        data: [70, 15, 15],
+        backgroundColor: [
+          'rgb(155, 225, 90)',
+          'rgb(206,188,73)',
+          'rgb(255, 100, 50)',
+        ],
+        borderWidth: 2,
+      },
+    ],
+  };
+
+  /**
+   * Draws the needle on the gauge.
+   * Code by: obernals
+   * From: https://github.com/chartjs/Chart.js/issues/2874
+   * @param radius length of needle
+   * @param radianAngle angle of needle
+   */
+  const drawNeedle = (radius, radianAngle) => {
+    const { canvas } = gaugeRef.current.chartInstance;
+    const ctx = canvas.getContext('2d');
+    const cw = canvas.offsetWidth;
+    const ch = canvas.offsetHeight;
+    const cx = cw / 2;
+    const cy = ch - (ch / 4);
+
+    ctx.translate(cx, cy);
+    // Create needle
+    ctx.rotate(radianAngle);
+    ctx.beginPath();
+    ctx.moveTo(0, -5);
+    ctx.lineTo(radius, 0);
+    ctx.lineTo(0, 5);
+    ctx.fillStyle = '#131313';
+    ctx.fill();
+    // Create dot at the end of needle
+    ctx.rotate(-radianAngle);
+    ctx.translate(-cx, -cy);
+    ctx.beginPath();
+    ctx.arc(cx, cy, 10, 0, Math.PI * 2);
+    ctx.fill();
+  };
+
+  const options = {
+    rotation: -1.0 * Math.PI,
+    circumference: Math.PI,
+    events: [],
+    title: {
+      display: true,
+      position: 'bottom',
+      text: currentUsage ? `${currentUsage} %` : '',
+      fontSize: 16,
+      fontColor: '#131313',
+      padding: 5,
+    },
+    animation: {
+      easing: 'linear',
+      onProgress: () => {
+        if (currentUsage) {
+          return drawNeedle(80, Math.PI + (currentUsage / 100) * Math.PI);
+        }
+        return null;
+      },
+    },
+  };
 
   return (
     <Grid
@@ -72,14 +137,7 @@ const CompressorUsageGauge = ({ data }) => {
       className={clsx(classes.container, classes.shadow)}
     >
       <Grid item>
-        <GaugeChart
-          id="1"
-          animate={false}
-          nrOfLevels={20}
-          percent={latestUsage}
-          textColor="black"
-          needleColor="gray"
-        />
+        <Doughnut ref={gaugeRef} data={gaugeData} options={options} />
       </Grid>
       <Grid item>
         <Typography variant="h6" className={classes.text} align="center">
