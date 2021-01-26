@@ -44,6 +44,13 @@ const LineChart = ({ data, variables, xAxis }) => {
 
   const options = {
     maintainAspectRatio: false,
+    animation: {
+      duration: 0,
+    },
+    hover: {
+      animationDuration: 0,
+    },
+    responsiveAnimationDuration: 0,
     scales: {
       adapters: {
         date: {

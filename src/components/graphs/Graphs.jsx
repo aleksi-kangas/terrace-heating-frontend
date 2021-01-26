@@ -44,28 +44,28 @@ const useStyles = makeStyles({
  */
 const graphVariables = [
   {
+    title: 'Outside Temperatures',
+    variables: [
+      { label: 'Outside', id: 'outsideTemp' },
+      { label: 'Ground-loop Input', id: 'groundLoopTempInput' },
+      { label: 'Ground-loop Output', id: 'groundLoopTempOutput' },
+    ],
+  },
+  {
+    title: 'Tank Temperatures',
+    variables: [
+      { label: 'Lower Tank', id: 'lowerTankTemp' },
+      { label: 'Upper Tank', id: 'upperTankTemp' },
+      { label: 'Hot Gas', id: 'hotGasTemp' },
+    ],
+  },
+  {
     title: 'Heat Distribution Circuits',
     variables: [
       { label: 'Heat Distribution Circuit 1', id: 'heatDistCircuitTemp1' },
       { label: 'Heat Distribution Circuit 2', id: 'heatDistCircuitTemp2' },
       { label: 'Heat Distribution Circuit 3', id: 'heatDistCircuitTemp3' },
-    ],
-  },
-  {
-    title: 'General Temperatures',
-    variables: [
       { label: 'Inside', id: 'insideTemp' },
-      { label: 'Outside', id: 'outsideTemp' },
-      { label: 'Hot Gas', id: 'hotGasTemp' },
-    ],
-  },
-  {
-    title: 'Ground-loop and Tanks',
-    variables: [
-      { label: 'Ground-loop Input', id: 'groundLoopTempInput' },
-      { label: 'Ground-loop Output', id: 'groundLoopTempOutput' },
-      { label: 'Lower Tank', id: 'lowerTankTemp' },
-      { label: 'Upper Tank', id: 'upperTankTemp' },
     ],
   },
 ];
