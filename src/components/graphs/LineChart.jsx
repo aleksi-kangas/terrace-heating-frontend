@@ -5,6 +5,7 @@ import { Line } from 'react-chartjs-2';
 import { fi } from 'date-fns/locale';
 import { makeStyles } from '@material-ui/core/styles';
 import { Office6 } from 'chartjs-plugin-colorschemes/src/colorschemes/colorschemes.office';
+import dataFilterPlugin from '../../utils/chartFilter';
 
 /**
  * Custom styling.
@@ -65,7 +66,6 @@ const LineChart = ({ data, variables, xAxis }) => {
           unitStepSize: '1',
           displayFormats: {
             hour: 'HH:mm',
-            // day: 'DD MMM',
           },
         },
         ticks: {
@@ -88,6 +88,7 @@ const LineChart = ({ data, variables, xAxis }) => {
       }],
     },
     plugins: {
+      dataFilterPlugin,
       zoom: {
         pan: {
           enabled: true,
