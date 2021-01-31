@@ -4,13 +4,13 @@ import moment from 'moment';
 const baseUrl = '/api/heat-pump';
 
 /**
- * Request heat-pump data from a given date onwards from the API.
+ * Request heat-pump data for the given amount of days from the API.
  * Timestamp is defined by query strings: year, month and day.
  * @return [Object] array of heat-pump data entries
  */
-const getHeatPumpData = async () => {
+const getHeatPumpData = async (days) => {
   const date = moment();
-  date.subtract(2, 'weeks');
+  date.subtract(days, 'days');
   const dateParts = date.format('YYYY-MM-DD').split('-');
   const response = await axios
     .get(`${baseUrl}/?year=${dateParts[0]}&month=${dateParts[1]}&day=${dateParts[2]}`, {

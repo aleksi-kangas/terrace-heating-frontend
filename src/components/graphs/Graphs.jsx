@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import moment from 'moment';
 import clsx from 'clsx';
 import { connect } from 'react-redux';
@@ -10,6 +10,7 @@ import {
 import { Link, Route } from 'react-router-dom';
 import { makeStyles } from '@material-ui/core/styles';
 import LineChart from './LineChart';
+import TimeButtonGroup from './TimeButtonGroup';
 
 /**
  * Custom styling.
@@ -74,12 +75,40 @@ const graphVariables = [
  * Represents the graphs page as a whole.
  * Responsible for drawing three different LineCharts in separate tabs.
  */
-const Graphs = ({ data }) => {
+const Graphs = ({ data, dataTimePeriod, setDataTimePeriod }) => {
   const [activeTab, setActiveTab] = useState(0);
+  const [graphData, setGraphData] = useState(null);
+  const [xAxisLimits, setAxisLimits] = useState(null);
+  const [xAxis, setXAxis] = useState(null);
 
   const classes = useStyles();
 
-  if (!data) {
+  /**
+   * Helper function for filtering data for graph.
+   * Filters the given that and retains data for the given amount of days.
+   * @param data to filter
+   * @param days of data to retain
+   */
+  const createGraphData = (data, days) => {
+    const startThreshold = moment(data[data.length - 1].time).subtract(days, 'days');
+    const graphData = data.filter((entry) => startThreshold.isBefore(moment(entry.time)));
+    const limits = {
+      start: moment(graphData[0].time),
+      end: moment(graphData[graphData.length - 1].time),
+    };
+    setXAxis(graphData.map((entry) => moment(entry.time)));
+    setGraphData(graphData);
+    setAxisLimits(limits);
+  };
+
+  useEffect(() => {
+    if (data && !graphData) {
+      // Create graph data initially
+      createGraphData(data, 2);
+    }
+  }, [data]);
+
+  if (!graphData) {
     return (
       <Grid container className={classes.container} justify="center">
         <Grid item component={Paper} className={clsx(classes.graph, classes.shadow)}>
@@ -110,13 +139,16 @@ const Graphs = ({ data }) => {
    * Responsible for creating a LineChart for the variables given in graphVariables.
    */
   const graphCreator = () => {
-    const xAxis = data.map((entry) => moment(entry.time));
-    // eslint-disable-next-line arrow-body-style
-    const graphs = graphVariables.map((graph, index) => {
-      // eslint-disable-next-line react/no-array-index-key
-      return <LineChart key={index + 1} variables={graph.variables} xAxis={xAxis} />;
-    });
-
+    const graphs = graphVariables.map((graph, index) => (
+      <LineChart
+          // eslint-disable-next-line react/no-array-index-key
+        key={index + 1}
+        variables={graph.variables}
+        xAxis={xAxis}
+        xAxisLimits={xAxisLimits}
+        graphData={graphData}
+      />
+    ));
     return (
       graphs.map((graph) => <Route key={graph.key} path={`/graphs/${graph.key}`} render={() => graph} />)
     );
@@ -141,6 +173,13 @@ const Graphs = ({ data }) => {
         <Grid item component={Paper} className={clsx(classes.graph, classes.shadow)}>
           {graphCreator()}
         </Grid>
+        <TimeButtonGroup
+          dataTimePeriod={dataTimePeriod}
+          setXAxis={setXAxis}
+          setDataTimePeriod={setDataTimePeriod}
+          setGraphData={setGraphData}
+          createGraphData={createGraphData}
+        />
       </Grid>
     </Fade>
   );

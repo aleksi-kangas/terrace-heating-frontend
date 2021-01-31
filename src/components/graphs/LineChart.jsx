@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { createRef, useEffect, useState } from 'react';
 import 'chartjs-plugin-zoom';
 import { connect } from 'react-redux';
 import { Line } from 'react-chartjs-2';
@@ -19,14 +19,25 @@ const useStyles = makeStyles(() => ({
 /**
  * Represents a line chart rendered with Chart.js.
  */
-const LineChart = ({ data, variables, xAxis }) => {
+const LineChart = ({
+  graphData, variables, xAxis, xAxisLimits,
+}) => {
+  const [chartRef] = useState(createRef);
   const classes = useStyles();
 
   const dataSets = [];
 
+  useEffect(() => {
+    chartRef.current.chartInstance.resetZoom();
+  }, [xAxisLimits]);
+
+  if (!xAxisLimits) {
+    return null;
+  }
+
   // Create a Chart.js dataset for each variable
   variables.forEach((variable, index) => {
-    const dataPoints = data.map((entry) => entry[variable.id]);
+    const dataPoints = graphData.map((entry) => entry[variable.id]);
     const dataSet = {
       label: variable.label,
       data: dataPoints,
@@ -44,6 +55,7 @@ const LineChart = ({ data, variables, xAxis }) => {
   };
 
   const options = {
+    responsive: true,
     maintainAspectRatio: false,
     animation: {
       duration: 0,
@@ -94,11 +106,11 @@ const LineChart = ({ data, variables, xAxis }) => {
           enabled: true,
           mode: 'x',
           rangeMin: {
-            x: xAxis[0].valueOf(),
+            x: xAxisLimits.start.valueOf(),
             y: null,
           },
           rangeMax: {
-            x: xAxis[xAxis.length - 1].valueOf(),
+            x: xAxisLimits.end.valueOf(),
             y: null,
           },
         },
@@ -107,10 +119,10 @@ const LineChart = ({ data, variables, xAxis }) => {
           drag: false,
           mode: 'x',
           rangeMin: {
-            x: xAxis[0].valueOf(),
+            x: xAxisLimits.start.valueOf(),
           },
           rangeMax: {
-            x: xAxis[xAxis.length - 1].valueOf(),
+            x: xAxisLimits.end.valueOf(),
           },
         },
         speed: 15,
@@ -120,7 +132,7 @@ const LineChart = ({ data, variables, xAxis }) => {
 
   return (
     <div className={classes.canvasContainer}>
-      <Line data={lineData} options={options} />
+      <Line ref={chartRef} data={lineData} options={options} />
     </div>
   );
 };

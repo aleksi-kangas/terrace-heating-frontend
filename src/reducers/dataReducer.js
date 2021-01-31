@@ -16,8 +16,8 @@ const dataReducer = (state = null, action) => {
  * Action creator for initialing heat-pump data.
  * Used when data is received from the API the first time.
  */
-export const initializeData = () => async (dispatch) => {
-  const data = await heatPumpService.getHeatPumpData();
+export const initializeData = (dataTimePeriod) => async (dispatch) => {
+  const data = await heatPumpService.getHeatPumpData(dataTimePeriod);
   dispatch({
     type: 'SET_DATA',
     payload: data,

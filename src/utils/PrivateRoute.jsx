@@ -2,7 +2,9 @@ import React from 'react';
 import { Route, Redirect, useLocation } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 
-const PrivateRoute = ({ component: Component, ...rest }) => {
+const PrivateRoute = ({
+  component: Component, dataTimePeriod, setDataTimePeriod, ...rest
+}) => {
   const location = useLocation();
   const { isAuthenticated } = useAuth();
 
@@ -11,7 +13,7 @@ const PrivateRoute = ({ component: Component, ...rest }) => {
     <Route {...rest}>
       {
         isAuthenticated
-          ? <Component />
+          ? <Component dataTimePeriod={dataTimePeriod} setDataTimePeriod={setDataTimePeriod} />
           : <Redirect to={{ pathname: '/login', state: { from: location } }} />
       }
     </Route>

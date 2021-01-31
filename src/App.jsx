@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { connect } from 'react-redux';
 import {
   Route, Switch, useLocation,
@@ -48,7 +48,8 @@ const App = ({
    Data covers two week period to reduce data transfer and increase performance,
    since older data is not needed for monitoring general trends.
    */
-  const dataCoverTimePeriodHours = 24 * 14; // Two weeks
+  const [dataTimePeriod, setDataTimePeriod] = useState(2);
+  const maximumDataTimePeriod = 7; // One week
   const location = useLocation();
   const { isAuthenticated } = useAuth();
   const classes = useStyles();
@@ -58,7 +59,7 @@ const App = ({
   // Fetch pre-existing data, status of heating, and schedules from the API
   useEffect(() => {
     if (isAuthenticated) {
-      initializeData();
+      initializeData(dataTimePeriod);
       fetchStatus();
       initializeSchedules();
     }
@@ -80,7 +81,7 @@ const App = ({
     socket.on('heatPumpData', (heatPumpData) => {
       // Wait until pre-existing data is loaded before adding new data
       if (dataRef.current) {
-        const startTimeThreshold = moment(heatPumpData.time).subtract(dataCoverTimePeriodHours, 'hours');
+        const startTimeThreshold = moment(heatPumpData.time).subtract(maximumDataTimePeriod, 'days');
         let newData;
         if (dataRef.current.length !== 0 && startTimeThreshold.isAfter(dataRef.current[0].time)) {
           /*
@@ -110,7 +111,12 @@ const App = ({
       <Grid container className={classes.container}>
         <Notification />
         <Switch location={location}>
-          <PrivateRoute path="/graphs" component={Graphs} />
+          <PrivateRoute
+            path="/graphs"
+            component={Graphs}
+            dataTimePeriod={dataTimePeriod}
+            setDataTimePeriod={setDataTimePeriod}
+          />
           <PrivateRoute path="/schedules" component={Schedules} />
           <Route path="/login">
             <LoginForm />
