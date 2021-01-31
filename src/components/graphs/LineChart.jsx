@@ -2,7 +2,6 @@ import React, { createRef, useEffect, useState } from 'react';
 import 'chartjs-plugin-zoom';
 import { connect } from 'react-redux';
 import { Line } from 'react-chartjs-2';
-import { fi } from 'date-fns/locale';
 import { makeStyles } from '@material-ui/core/styles';
 import { Office6 } from 'chartjs-plugin-colorschemes/src/colorschemes/colorschemes.office';
 import dataFilterPlugin from '../../utils/chartFilter';
@@ -65,11 +64,6 @@ const LineChart = ({
     },
     responsiveAnimationDuration: 0,
     scales: {
-      adapters: {
-        date: {
-          locale: fi,
-        },
-      },
       xAxes: [{
         type: 'time',
         time: {
