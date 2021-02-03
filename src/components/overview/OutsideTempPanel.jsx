@@ -46,16 +46,18 @@ const OutsideTempPanel = ({ data }) => {
   useEffect(() => {
     // Create a Chart.js dataset for outside temperature
     if (data) {
+      const startThreshold = moment(data[data.length - 1].time).subtract(2, 'days');
+      const graphData = data.filter((entry) => startThreshold.isBefore(moment(entry.time)));
       const dataSet = {
         label: 'Outside Temperature',
-        data: data.map((entry) => entry.outsideTemp),
+        data: graphData.map((entry) => entry.outsideTemp),
         borderColor: Technic6[0],
         fill: false,
         pointRadius: 0,
         pointHitRadius: 5,
       };
       setDataSets([dataSet]);
-      setXAxis(data.map((entry) => moment(entry.time)));
+      setXAxis(graphData.map((entry) => moment(entry.time)));
     }
   }, [data]);
 
@@ -70,7 +72,7 @@ const OutsideTempPanel = ({ data }) => {
   }
 
   const lineData = {
-    labels: data.map((entry) => entry.time),
+    labels: xAxis,
     datasets: dataSets,
   };
 

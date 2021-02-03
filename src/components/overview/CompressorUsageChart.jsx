@@ -30,9 +30,11 @@ const CompressorUsageChart = ({ data }) => {
   useEffect(() => {
     // Create a Chart.js dataset for compressor usage
     if (data) {
+      const startThreshold = moment(data[data.length - 1].time).subtract(2, 'days');
+      const graphData = data.filter((entry) => startThreshold.isBefore(moment(entry.time)));
       const dataSet = {
         label: 'Compressor Usage',
-        data: data.map((entry) => {
+        data: graphData.map((entry) => {
           if (entry.compressorUsage) {
             return entry.compressorUsage * 100;
           }
@@ -45,7 +47,7 @@ const CompressorUsageChart = ({ data }) => {
         spanGaps: true,
       };
       setDataSets([dataSet]);
-      setXAxis(data.map((entry) => moment(entry.time)));
+      setXAxis(graphData.map((entry) => moment(entry.time)));
     }
   }, [data]);
 
@@ -60,7 +62,7 @@ const CompressorUsageChart = ({ data }) => {
   }
 
   const lineData = {
-    labels: data.map((entry) => entry.time),
+    labels: xAxis,
     datasets: dataSets,
   };
 
