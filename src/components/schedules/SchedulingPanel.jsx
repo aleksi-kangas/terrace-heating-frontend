@@ -1,13 +1,27 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { connect } from 'react-redux';
 import clsx from 'clsx';
 import {
-  Button, CircularProgress, Grid, Paper,
-  Table, TableHead, TableBody, TableContainer, TableCell, TableRow, TextField, Typography,
+  Button,
+  CircularProgress,
+  Grid,
+  Paper,
+  Table,
+  TableHead,
+  TableBody,
+  TableContainer,
+  TableCell,
+  TableRow,
+  TextField,
+  Typography,
+  DialogTitle,
+  DialogContent,
+  DialogContentText, Box, DialogActions, Dialog,
 } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import HeatPumpService from '../../services/heatPump';
 import { updateSchedule } from '../../reducers/scheduleReducer';
+import scheduleDefaults from '../../utils/scheduleDefaults';
 
 /**
  * Custom styling.
@@ -39,11 +53,16 @@ const useStyles = makeStyles({
 const SchedulingPanel = ({
   schedule, variable, title, updateSchedule,
 }) => {
+  const [resetDialogOpen, setResetDialogOpen] = useState(false);
+  // Used to force re-render of form to update field values
+  const [key, setKey] = useState(Date.now());
   const classes = useStyles();
-
   const weekDays = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
 
-  const createRows = () => {
+  /**
+   * Helper function for creating table rows for a schedule form.
+   */
+  const createTableRows = () => {
     const columnNames = ['start', 'end', 'delta'];
 
     return weekDays.map((weekDay) => (
@@ -93,8 +112,19 @@ const SchedulingPanel = ({
     updateSchedule(variable, schedule);
   };
 
+  /**
+   * Handler for resetting the schedule to the default values.
+   */
+  const handleDefaults = async () => {
+    await HeatPumpService.setSchedule(variable, scheduleDefaults[variable]);
+    updateSchedule(variable, scheduleDefaults[variable]);
+    setResetDialogOpen(false);
+    // Force re-render of form
+    setKey(Date.now());
+  };
+
   return (
-    <Grid container component={Paper} className={clsx(classes.container, classes.shadow)}>
+    <Grid key={key} container component={Paper} className={clsx(classes.container, classes.shadow)}>
       {!schedule || !schedule.lowerTank || !schedule.heatDistCircuit3 ? (
         <Grid container item justify="center">
           <CircularProgress />
@@ -119,7 +149,7 @@ const SchedulingPanel = ({
                     </TableRow>
                   </TableHead>
                   <TableBody>
-                    {createRows()}
+                    {createTableRows()}
                   </TableBody>
                 </Table>
               </TableContainer>
@@ -128,7 +158,33 @@ const SchedulingPanel = ({
               <Button type="submit" variant="contained" color="primary">
                 Save
               </Button>
+              <Button type="button" variant="contained" color="primary" onClick={() => setResetDialogOpen(true)}>
+                Default
+              </Button>
             </Grid>
+            <Dialog
+              open={resetDialogOpen}
+              onClose={() => setResetDialogOpen(false)}
+            >
+              <DialogTitle>
+                Reset to Defaults
+              </DialogTitle>
+              <DialogContent>
+                <DialogContentText>
+                  <Box fontWeight="bold" component="span">
+                    {`Are you sure you want to reset schedule of ${title} to defaults?`}
+                  </Box>
+                </DialogContentText>
+              </DialogContent>
+              <DialogActions>
+                <Button onClick={() => setResetDialogOpen(false)} color="primary" variant="contained" className={classes.button}>
+                  No
+                </Button>
+                <Button onClick={handleDefaults} color="primary" variant="contained" className={classes.button}>
+                  Yes
+                </Button>
+              </DialogActions>
+            </Dialog>
           </form>
         )}
     </Grid>
