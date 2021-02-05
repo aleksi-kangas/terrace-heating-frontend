@@ -231,16 +231,16 @@ const TogglePanel = ({
         <DialogContent>
           <DialogContentText>
             {dialogText}
-            <Box fontWeight="bold">
+            <Box fontWeight="bold" component="span">
               {dialogQuestion}
             </Box>
           </DialogContentText>
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleDecline} color="secondary" variant="contained" className={classes.button}>
+          <Button onClick={handleDecline} color="primary" variant="contained" className={classes.button}>
             No
           </Button>
-          <Button onClick={handleAccept} color="secondary" variant="contained" className={classes.button}>
+          <Button onClick={handleAccept} color="primary" variant="contained" className={classes.button}>
             Yes
           </Button>
         </DialogActions>
