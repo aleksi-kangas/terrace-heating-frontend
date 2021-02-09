@@ -27,6 +27,8 @@ const LineChart = ({
   const dataSets = [];
 
   useEffect(() => {
+    // Reset chart zoom, when xAxisLimits change
+    // This happens when time control buttons are clicked, e.g. '7 Days'
     chartRef.current.chartInstance.resetZoom();
   }, [xAxisLimits]);
 
@@ -48,11 +50,13 @@ const LineChart = ({
     dataSets.push(dataSet);
   });
 
+  // Data in Chart.js form
   const lineData = {
     labels: xAxis,
     datasets: dataSets,
   };
 
+  // Defining animations, ticks and zoom limits
   const options = {
     responsive: true,
     maintainAspectRatio: false,

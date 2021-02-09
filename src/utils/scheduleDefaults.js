@@ -1,3 +1,4 @@
+// Array for schedule defaults of lowerTank and heatDistCircuit3
 const scheduleDefaults = {
   lowerTank: {
     monday: { start: 3, end: 22, delta: 2 },

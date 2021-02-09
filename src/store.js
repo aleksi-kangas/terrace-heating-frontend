@@ -6,6 +6,7 @@ import dataReducer from './reducers/dataReducer';
 import scheduleReducer from './reducers/scheduleReducer';
 import statusReducer from './reducers/statusReducer';
 
+// Combine Redux reducers
 const reducer = combineReducers({
   data: dataReducer,
   notification: notificationReducer,
@@ -13,6 +14,7 @@ const reducer = combineReducers({
   status: statusReducer,
 });
 
+// Redux store
 const store = createStore(
   reducer,
   composeWithDevTools(applyMiddleware(thunk)),

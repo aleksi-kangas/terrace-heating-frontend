@@ -71,11 +71,13 @@ const OutsideTempPanel = ({ data }) => {
     );
   }
 
+  // Data in Chart.js form
   const lineData = {
     labels: xAxis,
     datasets: dataSets,
   };
 
+  // Define ticks and zoom limits
   const options = {
     maintainAspectRatio: false,
     scales: {

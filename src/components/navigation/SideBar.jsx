@@ -22,9 +22,15 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
+/**
+ * Represents the sidebar drawer which contains navigation links.
+ * @param sideBarOpen whether to show the sidebar or not
+ * @param setSideBarOpen method for changing sidebar visibility
+ */
 const SideBar = ({ sideBarOpen, setSideBarOpen }) => {
   const classes = useStyles();
 
+  // Array of navigation links
   const sideBarItems = [
     { name: 'Overview', icon: <AssessmentIcon />, link: '/' },
     { name: 'Graphs', icon: <ShowChartIcon />, link: '/graphs/1' },

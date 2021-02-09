@@ -43,7 +43,7 @@ const Schedules = ({
 
   /**
    * Handler for enabling and disabling schedules.
-   * Sends the state to the server.
+   * Sends the state to the server and updates the toggle switch accordingly.
    */
   const handleScheduleToggle = async () => {
     const newStatus = await HeatPumpService.setScheduling(!schedule.scheduling);

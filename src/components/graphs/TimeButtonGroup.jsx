@@ -18,12 +18,20 @@ const useStyles = makeStyles({
   },
 });
 
+/**
+ * Represents the buttons which control the time period which is shown on the graph.
+ * @param createGraphData helper method for filtering data for the graph
+ */
 const TimeButtonGroup = ({
   data, dataTimePeriod,
   createGraphData, setData, setDataTimePeriod,
 }) => {
   const classes = useStyles();
 
+  /**
+   * Handler for clicking '7 days' button.
+   * Sets the data coverage of the graph to 7 days.
+   */
   const handleSevenDays = async () => {
     let newData = data;
     if (dataTimePeriod !== 7) {
@@ -34,10 +42,18 @@ const TimeButtonGroup = ({
     createGraphData(data, 7);
   };
 
+  /**
+   * Handler for clicking '2 days' button.
+   * Sets the data coverage of the graph to 2 days.
+   */
   const handleTwoDays = () => {
     createGraphData(data, 2);
   };
 
+  /**
+   * Handler for clicking '1 day' button.
+   * Sets the data coverage of the graph to 1 day.
+   */
   const handleOneDay = () => {
     createGraphData(data, 1);
   };

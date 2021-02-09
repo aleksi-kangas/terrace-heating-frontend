@@ -28,6 +28,11 @@ const useStyles = makeStyles({
   },
 });
 
+/**
+ * Represents a gauge for current compressor usage.
+ * Responsible for rendering a simple gauge,
+ * showing the percentage of compressor usage during the last cycle.
+ */
 const CompressorUsageGauge = ({ data }) => {
   const [currentUsage, setCurrentUsage] = useState(null);
   const [gaugeRef] = useState(createRef);
@@ -54,6 +59,7 @@ const CompressorUsageGauge = ({ data }) => {
     );
   }
 
+  // Define the color areas of the gauge
   const gaugeData = {
     datasets: [
       {

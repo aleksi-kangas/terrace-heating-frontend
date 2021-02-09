@@ -34,6 +34,10 @@ const Header = ({ setSideBarOpen }) => {
   const history = useHistory();
   const { isAuthenticated, logout } = useAuth();
 
+  /**
+   * Handler for clicking logout button.
+   * Destroys user session and redirects to login.
+   */
   const handleLogout = () => {
     logout();
     history.push('/login');

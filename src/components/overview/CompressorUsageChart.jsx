@@ -22,6 +22,11 @@ const useStyles = makeStyles({
   },
 });
 
+/**
+ * Represents the compressor usage line-chart.
+ * Responsible for rendering a Chart.js line-chart,
+ * containing two days of compressor usage data.
+ */
 const CompressorUsageChart = ({ data }) => {
   const classes = useStyles();
   const [dataSets, setDataSets] = useState([]);
