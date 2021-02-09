@@ -9,7 +9,6 @@ import { Grid, createMuiTheme } from '@material-ui/core';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import io from 'socket.io-client';
 import Navigation from './components/navigation/Navigation';
-import Notification from './components/Notification';
 import Graphs from './components/graphs/Graphs';
 import Schedules from './components/schedules/Schedules';
 import Overview from './components/overview/Overview';
@@ -109,7 +108,6 @@ const App = ({
       <Navigation />
       <div className={classes.toolBar} />
       <Grid container className={classes.container}>
-        <Notification />
         <Switch location={location}>
           <PrivateRoute
             path="/graphs"

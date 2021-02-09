@@ -7,6 +7,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import IconButton from '@material-ui/core/IconButton';
 import { useHistory } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
+import Notification from '../Notification';
 
 /**
  * Custom styling.
@@ -23,6 +24,7 @@ const useStyles = makeStyles(() => ({
   },
   text: {
     marginLeft: 20,
+    paddingRight: 40,
   },
 }));
 
@@ -61,6 +63,7 @@ const Header = ({ setSideBarOpen }) => {
         <Typography variant="h6" noWrap className={classes.text}>
           Terrace Heating
         </Typography>
+        <Notification />
         {isAuthenticated
           ? (
             <Button onClick={handleLogout} className={classes.logout}>

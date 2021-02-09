@@ -18,6 +18,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import heatPumpService from '../../services/heatPump';
 import { fetchStatus, setStatus } from '../../reducers/statusReducer';
 import { updateScheduling } from '../../reducers/scheduleReducer';
+import { setNotification, removeNotification } from '../../reducers/notificationReducer';
 
 /**
  * Custom styling.
@@ -54,7 +55,7 @@ const useStyles = makeStyles({
  * Represents the panel which holds the heating control switch and status information.
  */
 const TogglePanel = ({
-  data, status, setStatus, updateScheduling,
+  data, status, setStatus, updateScheduling, setNotification, removeNotification,
 }) => {
   const [dialogOpen, setDialogOpen] = useState(false);
   const [outsideTemp, setOutsideTemp] = useState(null);
@@ -126,6 +127,10 @@ const TogglePanel = ({
     setStatus(newStatus);
     updateScheduling(true);
     setDialogOpen(false);
+    setNotification('Heating enabled', 'success');
+    setTimeout(() => {
+      removeNotification();
+    }, 5000);
   };
 
   /**
@@ -137,6 +142,10 @@ const TogglePanel = ({
     const newStatus = await heatPumpService.startCircuitThree(true);
     setStatus(newStatus);
     setDialogOpen(false);
+    setNotification('Heating enabled', 'success');
+    setTimeout(() => {
+      removeNotification();
+    }, 5000);
   };
 
   /**
@@ -148,6 +157,10 @@ const TogglePanel = ({
     setStatus(newStatus);
     updateScheduling(false);
     setDialogOpen(false);
+    setNotification('Heating disabled', 'info');
+    setTimeout(() => {
+      removeNotification();
+    }, 5000);
   };
 
   /**
@@ -231,6 +244,7 @@ const TogglePanel = ({
         <DialogContent>
           <DialogContentText>
             {dialogText}
+            <br />
             <Box fontWeight="bold" component="span">
               {dialogQuestion}
             </Box>
@@ -254,4 +268,8 @@ const mapStateToProps = (state) => ({
   status: state.status,
 });
 
-export default connect(mapStateToProps, { fetchStatus, setStatus, updateScheduling })(TogglePanel);
+export default connect(
+  mapStateToProps, {
+    fetchStatus, setStatus, updateScheduling, setNotification, removeNotification,
+  },
+)(TogglePanel);

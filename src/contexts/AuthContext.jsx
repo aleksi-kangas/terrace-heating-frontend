@@ -40,10 +40,12 @@ const AuthProvider = ({ children }) => {
    */
   const login = async (credentials) => {
     try {
-      await AuthService.login(credentials);
+      const user = await AuthService.login(credentials);
       setIsAuthenticated(true);
+      return user;
     } catch (error) {
       setIsAuthenticated(false);
+      return null;
     }
   };
 

@@ -1,4 +1,5 @@
 import React from 'react';
+import { connect } from 'react-redux';
 import {
   Button, Fade, Grid, Paper, TextField,
 } from '@material-ui/core';
@@ -8,6 +9,7 @@ import PersonIcon from '@material-ui/icons/Person';
 import { makeStyles } from '@material-ui/core/styles';
 import { useHistory } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
+import { removeNotification, setNotification } from '../reducers/notificationReducer';
 
 /**
  * Custom styling.
@@ -33,7 +35,7 @@ const useStyles = makeStyles(() => ({
  * Represents the login form,
  * where user will enter username and password to have access to the application.
  */
-const LoginForm = () => {
+const LoginForm = ({ setNotification, removeNotification }) => {
   const classes = useStyles();
   const history = useHistory();
   const { login } = useAuth();
@@ -48,7 +50,13 @@ const LoginForm = () => {
       username: event.target.username.value,
       password: event.target.password.value,
     };
-    await login(credentials);
+    const result = await login(credentials);
+    if (result) {
+      setNotification('Login successful', 'success');
+      setTimeout(() => {
+        removeNotification();
+      }, 3000);
+    }
     history.push('/');
   };
 
@@ -98,4 +106,4 @@ const LoginForm = () => {
   );
 };
 
-export default LoginForm;
+export default connect(null, { setNotification, removeNotification })(LoginForm);

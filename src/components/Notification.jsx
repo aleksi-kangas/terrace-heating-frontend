@@ -1,6 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import MuiAlert from '@material-ui/lab/Alert';
+import { Fade } from '@material-ui/core';
 
 /**
  * Represents a notification component which is rendered upon events,
@@ -14,9 +15,11 @@ const Notification = ({ notification }) => {
     return null;
   }
   return (
-    <MuiAlert elevation={6} variant="standard" severity={notification.type}>
-      {notification.message}
-    </MuiAlert>
+    <Fade in timeout={400}>
+      <MuiAlert elevation={6} variant="standard" severity={notification.type}>
+        {notification.message}
+      </MuiAlert>
+    </Fade>
   );
 };
 
