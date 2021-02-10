@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 import {
   CircularProgress,
   Fade,
-  Grid, Paper, Tab, Tabs,
+  Grid, LinearProgress, Paper, Tab, Tabs,
 } from '@material-ui/core';
 import { Link, Route } from 'react-router-dom';
 import { makeStyles } from '@material-ui/core/styles';
@@ -37,6 +37,9 @@ const useStyles = makeStyles({
   shadow: {
     borderRadius: 4,
     boxShadow: '0px 3px 11px 0px #c0c4e0',
+  },
+  updating: {
+    zIndex: 10,
   },
 });
 
@@ -80,6 +83,7 @@ const Graphs = ({ data, dataTimePeriod, setDataTimePeriod }) => {
   const [graphData, setGraphData] = useState(null);
   const [xAxisLimits, setAxisLimits] = useState(null);
   const [xAxis, setXAxis] = useState(null);
+  const [updating, setUpdating] = useState(false);
 
   const classes = useStyles();
 
@@ -172,6 +176,7 @@ const Graphs = ({ data, dataTimePeriod, setDataTimePeriod }) => {
         </Grid>
         <Grid item component={Paper} className={clsx(classes.graph, classes.shadow)}>
           {graphCreator()}
+          { updating ? <LinearProgress className={classes.updating} /> : null }
         </Grid>
         <TimeButtonGroup
           dataTimePeriod={dataTimePeriod}
@@ -179,6 +184,7 @@ const Graphs = ({ data, dataTimePeriod, setDataTimePeriod }) => {
           setDataTimePeriod={setDataTimePeriod}
           setGraphData={setGraphData}
           createGraphData={createGraphData}
+          setUpdating={setUpdating}
         />
       </Grid>
     </Fade>

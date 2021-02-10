@@ -21,10 +21,14 @@ const useStyles = makeStyles({
 /**
  * Represents the buttons which control the time period which is shown on the graph.
  * @param createGraphData helper method for filtering data for the graph
+ * @param dataTimePeriod time period in days which data covers
+ * @param data contains heat-pump data
+ * @param setDataTimePeriod method for changing time period which data covers
+ * @param setUpdating method for changing state of updating, which shows a progress bar
  */
 const TimeButtonGroup = ({
   data, dataTimePeriod,
-  createGraphData, setData, setDataTimePeriod,
+  createGraphData, setData, setDataTimePeriod, setUpdating,
 }) => {
   const classes = useStyles();
 
@@ -33,6 +37,7 @@ const TimeButtonGroup = ({
    * Sets the data coverage of the graph to 7 days.
    */
   const handleSevenDays = async () => {
+    setUpdating(true);
     let newData = data;
     if (dataTimePeriod !== 7) {
       newData = await HeatPumpService.getHeatPumpData(7);
@@ -40,6 +45,7 @@ const TimeButtonGroup = ({
       setData(newData);
     }
     createGraphData(data, 7);
+    setUpdating(false);
   };
 
   /**
@@ -47,7 +53,9 @@ const TimeButtonGroup = ({
    * Sets the data coverage of the graph to 2 days.
    */
   const handleTwoDays = () => {
+    setUpdating(true);
     createGraphData(data, 2);
+    setUpdating(false);
   };
 
   /**
