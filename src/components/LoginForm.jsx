@@ -51,19 +51,23 @@ const LoginForm = ({ setNotification, removeNotification }) => {
       password: event.target.password.value,
     };
     const result = await login(credentials);
-    if (result) {
-      setNotification('Login successful', 'success');
+    // Clear form fields
+    document.getElementById('login-form').reset();
+    if (!result) {
+      setNotification('Wrong username or password', 'error');
+
       setTimeout(() => {
         removeNotification();
-      }, 3000);
+      }, 5000);
+    } else {
+      history.push('/');
     }
-    history.push('/');
   };
 
   return (
     <Fade in timeout={800}>
       <Grid container justify="center">
-        <form onSubmit={handleLogin}>
+        <form onSubmit={handleLogin} id="login-form">
           <Grid
             container
             item
