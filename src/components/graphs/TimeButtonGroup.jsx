@@ -23,6 +23,7 @@ const useStyles = makeStyles({
  * @param createGraphData helper method for filtering data for the graph
  * @param dataTimePeriod time period in days which data covers
  * @param data contains heat-pump data
+ * @param setData method for updating heat pump data of Redux-state
  * @param setDataTimePeriod method for changing time period which data covers
  * @param setUpdating method for changing state of updating, which shows a progress bar
  */
@@ -44,7 +45,7 @@ const TimeButtonGroup = ({
       setDataTimePeriod(7);
       setData(newData);
     }
-    createGraphData(data, 7);
+    createGraphData(newData, 7);
     setUpdating(false);
   };
 
