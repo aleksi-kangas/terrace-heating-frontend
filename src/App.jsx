@@ -81,20 +81,16 @@ const App = ({
       // Wait until pre-existing data is loaded before adding new data
       if (dataRef.current) {
         const startTimeThreshold = moment(heatPumpData.time).subtract(maximumDataTimePeriod, 'days');
-        let newData;
+        let newData = [...dataRef.current];
         if (dataRef.current.length !== 0 && startTimeThreshold.isAfter(dataRef.current[0].time)) {
           /*
           Need to drop the oldest entry to accommodate the new entry.
           Frontend holds dataCoverTimePeriodHours amount of data as in a ring buffer.
            */
-          newData = [...dataRef.current].slice(1);
-          newData.push(heatPumpData);
-          setData(newData);
-        } else {
-          newData = [...dataRef.current];
-          newData.push(heatPumpData);
-          setData(newData);
+          newData = newData.slice(1);
         }
+        newData.push(heatPumpData);
+        setData(newData);
       }
     });
     return () => {
