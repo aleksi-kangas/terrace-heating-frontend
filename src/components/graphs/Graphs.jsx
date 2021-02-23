@@ -61,6 +61,10 @@ const graphVariables = [
       { label: 'Lower Tank', id: 'lowerTankTemp' },
       { label: 'Upper Tank', id: 'upperTankTemp' },
       { label: 'Hot Gas', id: 'hotGasTemp' },
+      { label: 'lowerTankLowerLimit', id: 'lowerTankLowerLimit' },
+      { label: 'lowerTankUpperLimit', id: 'lowerTankUpperLimit' },
+      { label: 'upperTankLowerLimit', id: 'upperTankLowerLimit' },
+      { label: 'upperTankUpperLimit', id: 'upperTankUpperLimit' },
     ],
   },
   {

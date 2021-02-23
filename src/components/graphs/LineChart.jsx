@@ -3,7 +3,7 @@ import 'chartjs-plugin-zoom';
 import { connect } from 'react-redux';
 import { Line } from 'react-chartjs-2';
 import { makeStyles } from '@material-ui/core/styles';
-import { Office6 } from 'chartjs-plugin-colorschemes/src/colorschemes/colorschemes.office';
+import { Tableau10 } from 'chartjs-plugin-colorschemes/src/colorschemes/colorschemes.tableau';
 import dataFilterPlugin from '../../utils/chartFilter';
 
 /**
@@ -14,6 +14,22 @@ const useStyles = makeStyles(() => ({
     height: '60vh',
   },
 }));
+
+/**
+ * Helper function for converting hex-color to rgba-color
+ * Source: https://stackoverflow.com/a/51564734/13167013
+ * @author Lobster Fighter & Chicken Suop
+ * @param hex
+ * @param alpha
+ * @return {string}
+ */
+const hex2rgba = (hex, alpha) => {
+  const parts = hex.match(/\w\w/g);
+  const red = parseInt(parts[0], 16);
+  const green = parseInt(parts[1], 16);
+  const blue = parseInt(parts[2], 16);
+  return `rgba(${red}, ${green}, ${blue}, ${alpha})`;
+};
 
 /**
  * Represents a line chart rendered with Chart.js.
@@ -36,16 +52,30 @@ const LineChart = ({
     return null;
   }
 
+  const lineColor = (variable, index) => {
+    if (variable.id === 'lowerTankLowerLimit') return hex2rgba(Tableau10[3], 0.5);
+    if (variable.id === 'lowerTankUpperLimit') return hex2rgba(Tableau10[3], 0.5);
+    if (variable.id === 'upperTankLowerLimit') return hex2rgba(Tableau10[5], 0.5);
+    if (variable.id === 'upperTankUpperLimit') return hex2rgba(Tableau10[5], 0.5);
+    return Tableau10[index];
+  };
+
+  const isATankLimit = (id) => {
+    const limits = ['lowerTankLowerLimit', 'lowerTankUpperLimit', 'upperTankLowerLimit', 'upperTankUpperLimit'];
+    return limits.includes(id);
+  };
+
   // Create a Chart.js dataset for each variable
   variables.forEach((variable, index) => {
     const dataPoints = graphData.map((entry) => entry[variable.id]);
     const dataSet = {
       label: variable.label,
       data: dataPoints,
-      borderColor: Office6[index],
+      borderColor: lineColor(variable, index),
       fill: false,
       pointRadius: 0,
-      pointHitRadius: 5,
+      pointHitRadius: isATankLimit(variable.id) ? 0 : 5,
+      spanGaps: true,
     };
     dataSets.push(dataSet);
   });
@@ -67,6 +97,11 @@ const LineChart = ({
       animationDuration: 0,
     },
     responsiveAnimationDuration: 0,
+    legend: {
+      labels: {
+        filter: (label) => !isATankLimit(label.text),
+      },
+    },
     scales: {
       xAxes: [{
         type: 'time',
