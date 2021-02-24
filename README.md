@@ -16,8 +16,7 @@ This repository contains the implementation of the frontend portion of the appli
 
 ### Table of Contents
 [Features](#features)   
-[Implementation](#implementation)  
-[Requirements](#requirements)  
+[Implementation](#implementation)
 [Planned Upcoming Features](#planned-upcoming-features)
 
 ## Features
@@ -42,13 +41,6 @@ The features of the React.js frontend include:
   - Some custom styling has been used, and planning to create a fully custom UI.
 - JavaScript ES6 revision is used.
 - [Redux.js](https://redux.js.org/) is used for state management.
-
-## Requirements
-- [modbus-serial](https://github.com/yaacov/node-modbus-serial#readme) installation requires some extra steps:
-  - Install Windows Build Tools with ```npm install --global windows-build-tools```
-  - Install modbus-serial with ```npm install modbus-serial```
-    - If the installation fails, try the following command ```npm install modbus-serial --unsafe-perm --build-from-source```
-- Run ```npm install``` as usual
 
 ## Planned upcoming features
 - High priority for implementing a fully custom UI.
