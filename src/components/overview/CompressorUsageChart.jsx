@@ -58,7 +58,7 @@ const CompressorUsageChart = ({ data }) => {
 
   if (!data || !xAxis) {
     return (
-      <Grid container item component={Paper} className={clsx(classes.container, classes.shadow)} alignItems="center" justify="center">
+      <Grid container item sm={12} md={8} lg={8} component={Paper} className={clsx(classes.container, classes.shadow)} alignItems="center" justify="center">
         <Grid item>
           <CircularProgress />
         </Grid>
