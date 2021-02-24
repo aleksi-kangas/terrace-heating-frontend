@@ -14,9 +14,11 @@ I visioned about a simple and responsive web application which would provide my 
 
 This repository contains the implementation of the frontend portion of the application.
 
+[Backend Repository](https://github.com/aleksi-kangas/terrace-heating-backend)
+
 ### Table of Contents
 [Features](#features)   
-[Implementation](#implementation)
+[Implementation](#implementation)   
 [Planned Upcoming Features](#planned-upcoming-features)
 
 ## Features
@@ -43,7 +45,5 @@ The features of the React.js frontend include:
 - [Redux.js](https://redux.js.org/) is used for state management.
 
 ## Planned upcoming features
-- High priority for implementing a fully custom UI.
 - Conversion to TypeScript.
 - Additional controlling and monitoring features while keeping the overall application simple.
-
