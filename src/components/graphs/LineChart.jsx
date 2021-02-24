@@ -17,17 +17,14 @@ const useStyles = makeStyles(() => ({
 
 /**
  * Helper function for converting hex-color to rgba-color
- * Source: https://stackoverflow.com/a/51564734/13167013
- * @author Lobster Fighter & Chicken Suop
- * @param hex
- * @param alpha
- * @return {string}
+ * @param hex String representing a hex-color, e.g. #FFFFFF
+ * @param alpha Number [0.0, 1.0]
+ * @return {string} e.g. rgba(255, 255, 255, 0.5)
  */
 const hex2rgba = (hex, alpha) => {
-  const parts = hex.match(/\w\w/g);
-  const red = parseInt(parts[0], 16);
-  const green = parseInt(parts[1], 16);
-  const blue = parseInt(parts[2], 16);
+  const red = parseInt(hex.slice(1, 3), 16);
+  const green = parseInt(hex.slice(3, 5), 16);
+  const blue = parseInt(hex.slice(5, 7), 16);
   return `rgba(${red}, ${green}, ${blue}, ${alpha})`;
 };
 
@@ -52,6 +49,14 @@ const LineChart = ({
     return null;
   }
 
+  /**
+   * Helper function for determining line color for the graph.
+   * Returns half opacity colors for tank limits.
+   * Otherwise returns colors from Tableau10 color scheme.
+   * @param variable String variable name
+   * @param index of the variable in Chart.js dataset creation loop
+   * @return {string} hex-color or rgba-color for a line
+   */
   const lineColor = (variable, index) => {
     if (variable.id === 'lowerTankLowerLimit') return hex2rgba(Tableau10[3], 0.5);
     if (variable.id === 'lowerTankUpperLimit') return hex2rgba(Tableau10[3], 0.5);
@@ -60,6 +65,11 @@ const LineChart = ({
     return Tableau10[index];
   };
 
+  /**
+   * Helper function for determining if a variable is a tank limit.
+   * @param id variable id/name
+   * @return {boolean} true when variable is a tank limit
+   */
   const isATankLimit = (id) => {
     const limits = ['lowerTankLowerLimit', 'lowerTankUpperLimit', 'upperTankLowerLimit', 'upperTankUpperLimit'];
     return limits.includes(id);
