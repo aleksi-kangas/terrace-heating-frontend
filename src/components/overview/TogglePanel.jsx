@@ -26,7 +26,7 @@ import { setNotification, removeNotification } from '../../reducers/notification
 const useStyles = makeStyles({
   container: {
     marginBottom: 40,
-    height: '250px',
+    height: '300px',
     padding: 10,
   },
   shadow: {
@@ -35,18 +35,17 @@ const useStyles = makeStyles({
   },
   text: {
     color: '#131313',
-    margin: 10,
   },
   switchBox: {
     borderRadius: 10,
     borderColor: '#2f4050',
     borderWidth: 2,
     borderStyle: 'solid',
+    margin: 0,
     padding: 10,
-    paddingLeft: 15,
-    marginLeft: 0,
+    pointerEvents: 'none',
   },
-  button: {
+  dialogButton: {
     margin: 10,
   },
 });
@@ -227,6 +226,7 @@ const TogglePanel = ({
               onChange={handleTerraceHeatingToggle}
               name="terraceHeatingToggle"
               color="primary"
+              style={{ pointerEvents: 'auto' }}
             />
           )}
           label={status === 'stopped' ? 'Off' : 'On'}
@@ -251,10 +251,10 @@ const TogglePanel = ({
           </DialogContentText>
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleDecline} color="primary" variant="contained" className={classes.button}>
+          <Button onClick={handleDecline} color="primary" variant="contained" className={classes.dialogButton}>
             No
           </Button>
-          <Button onClick={handleAccept} color="primary" variant="contained" className={classes.button}>
+          <Button onClick={handleAccept} color="primary" variant="contained" className={classes.dialogButton}>
             Yes
           </Button>
         </DialogActions>

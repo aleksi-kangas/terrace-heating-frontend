@@ -13,8 +13,8 @@ import { Technic6 } from 'chartjs-plugin-colorschemes/src/colorschemes/colorsche
 const useStyles = makeStyles({
   container: {
     marginBottom: 40,
-    height: '250px',
-    padding: 15,
+    height: '300px',
+    padding: 10,
   },
   shadow: {
     borderRadius: 4,

@@ -11,13 +11,11 @@ import CompressorUsageChart from './CompressorUsageChart';
  */
 const Overview = () => (
   <Fade in timeout={800}>
-    <Grid item container>
-      <Grid container item justify="space-between">
-        <OutsideTempPanel />
-        <TogglePanel />
-        <CompressorUsageGauge />
-        <CompressorUsageChart />
-      </Grid>
+    <Grid container item justify="space-between">
+      <OutsideTempPanel />
+      <TogglePanel />
+      <CompressorUsageGauge />
+      <CompressorUsageChart />
     </Grid>
   </Fade>
 );

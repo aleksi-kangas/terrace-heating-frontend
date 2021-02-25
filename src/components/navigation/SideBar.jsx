@@ -11,14 +11,21 @@ import ScheduleIcon from '@material-ui/icons/Schedule';
 /**
  * Custom styling.
  */
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles((theme) => ({
   sideBar: {
-    height: '100%',
-    width: '175px',
+    flex: 1,
     backgroundColor: '#2F4050',
   },
   white: {
     color: 'white',
+  },
+  item: {
+    '&:hover': {
+      background: theme.palette.action.hover,
+    },
+    '& > *': {
+      color: 'white',
+    },
   },
 }));
 
@@ -50,11 +57,11 @@ const SideBar = ({ sideBarOpen, setSideBarOpen }) => {
       <List className={classes.sideBar}>
         {sideBarItems.map((item) => (
           <Link to={item.link} key={item.name} style={{ textDecoration: 'none' }}>
-            <ListItem onClick={() => setSideBarOpen(false)}>
-              <ListItemIcon className={classes.white}>
+            <ListItem onClick={() => setSideBarOpen(false)} className={classes.item}>
+              <ListItemIcon>
                 {item.icon}
               </ListItemIcon>
-              <ListItemText className={classes.white}>
+              <ListItemText>
                 {item.name}
               </ListItemText>
             </ListItem>
