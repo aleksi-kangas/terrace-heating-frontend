@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 import { CircularProgress, Grid, Paper } from '@material-ui/core';
-import clsx from 'clsx';
 import { Line } from 'react-chartjs-2';
 import { Technic6 } from 'chartjs-plugin-colorschemes/src/colorschemes/colorschemes.office';
 import moment from 'moment';
@@ -11,12 +10,10 @@ import { makeStyles } from '@material-ui/core/styles';
  * Custom styling.
  */
 const useStyles = makeStyles({
-  container: {
-    marginBottom: 40,
+  panel: {
+    margin: 20,
     height: '300px',
     padding: 10,
-  },
-  shadow: {
     borderRadius: 4,
     boxShadow: '0px 3px 11px 0px #c0c4e0',
   },
@@ -58,7 +55,7 @@ const CompressorUsageChart = ({ data }) => {
 
   if (!data || !xAxis) {
     return (
-      <Grid container item sm={12} md={8} lg={8} component={Paper} className={clsx(classes.container, classes.shadow)} alignItems="center" justify="center">
+      <Grid container item sm={12} md={8} lg={8} component={Paper} className={classes.panel} alignItems="center" justify="center">
         <Grid item>
           <CircularProgress />
         </Grid>
@@ -138,7 +135,7 @@ const CompressorUsageChart = ({ data }) => {
   };
 
   return (
-    <Grid container item component={Paper} sm={12} md={8} lg={8} justify="center" direction="column" className={clsx(classes.container, classes.shadow)}>
+    <Grid container item component={Paper} sm={12} md={8} lg={8} justify="center" direction="column" className={classes.panel}>
       <Line data={lineData} options={options} />
     </Grid>
   );

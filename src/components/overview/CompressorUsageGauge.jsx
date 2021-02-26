@@ -3,7 +3,6 @@ import { Doughnut } from 'react-chartjs-2';
 import {
   CircularProgress, Grid, Paper, Typography,
 } from '@material-ui/core';
-import clsx from 'clsx';
 import { makeStyles } from '@material-ui/core/styles';
 import { connect } from 'react-redux';
 
@@ -11,12 +10,10 @@ import { connect } from 'react-redux';
  * Custom styling.
  */
 const useStyles = makeStyles({
-  container: {
-    marginBottom: 40,
+  panel: {
+    margin: 20,
     height: '300px',
     padding: 10,
-  },
-  shadow: {
     borderRadius: 4,
     boxShadow: '0px 3px 11px 0px #c0c4e0',
   },
@@ -58,7 +55,7 @@ const CompressorUsageGauge = ({ data }) => {
         md={3}
         lg={3}
         component={Paper}
-        className={clsx(classes.container, classes.shadow)}
+        className={classes.panel}
         alignItems="center"
         justify="center"
       >
@@ -150,7 +147,7 @@ const CompressorUsageGauge = ({ data }) => {
       alignItems="center"
       justify="center"
       direction="column"
-      className={clsx(classes.container, classes.shadow)}
+      className={classes.panel}
     >
       <Grid item>
         <Doughnut ref={gaugeRef} data={gaugeData} options={options} />

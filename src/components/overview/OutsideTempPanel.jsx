@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
-import clsx from 'clsx';
 import moment from 'moment';
 import { CircularProgress, Grid, Paper } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
@@ -11,26 +10,12 @@ import { Technic6 } from 'chartjs-plugin-colorschemes/src/colorschemes/colorsche
  * Custom styling.
  */
 const useStyles = makeStyles({
-  container: {
-    marginBottom: 40,
+  panel: {
+    margin: 20,
     height: '300px',
     padding: 10,
-  },
-  shadow: {
     borderRadius: 4,
     boxShadow: '0px 3px 11px 0px #c0c4e0',
-  },
-  card: {
-    margin: 5,
-  },
-  loading: {
-    borderBottom: '10px solid rgba(100, 100, 100, 0.5)',
-  },
-  active: {
-    borderBottom: '10px solid rgba(0, 150, 0, 0.5)',
-  },
-  stopped: {
-    borderBottom: '10px solid rgba(150, 0, 0, 0.5)',
   },
 });
 
@@ -63,7 +48,7 @@ const OutsideTempPanel = ({ data }) => {
 
   if (!data || !xAxis) {
     return (
-      <Grid container item component={Paper} sm={12} lg={7} className={clsx(classes.container, classes.shadow)} alignItems="center" justify="center">
+      <Grid container item component={Paper} sm={12} lg={7} className={classes.panel} alignItems="center" justify="center">
         <Grid item>
           <CircularProgress />
         </Grid>
@@ -148,7 +133,7 @@ const OutsideTempPanel = ({ data }) => {
       sm={12}
       md={8}
       lg={7}
-      className={clsx(classes.container, classes.shadow)}
+      className={classes.panel}
     >
       <Line data={lineData} options={options} />
     </Grid>

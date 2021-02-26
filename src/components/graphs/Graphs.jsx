@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import moment from 'moment';
-import clsx from 'clsx';
 import { connect } from 'react-redux';
 import {
   CircularProgress,
@@ -16,27 +15,26 @@ import TimeButtonGroup from './TimeButtonGroup';
  * Custom styling.
  */
 const useStyles = makeStyles({
+  container: {
+    margin: 20,
+  },
   tabs: {
     marginBottom: 10,
-    borderRadius: 10,
     background: '#2f4050',
+    borderRadius: 4,
+    boxShadow: '0px 3px 11px 0px #c0c4e0',
   },
   tab: {
     color: '#bfbfbf',
   },
   graph: {
-    padding: 10,
-  },
-  container: {
-    padding: 50,
+    padding: 15,
+    borderRadius: 4,
+    boxShadow: '0px 3px 11px 0px #c0c4e0',
   },
   loading: {
     margin: 20,
     padding: 50,
-  },
-  shadow: {
-    borderRadius: 4,
-    boxShadow: '0px 3px 11px 0px #c0c4e0',
   },
   updating: {
     zIndex: 10,
@@ -119,7 +117,7 @@ const Graphs = ({ data, dataTimePeriod, setDataTimePeriod }) => {
   if (!graphData) {
     return (
       <Grid container className={classes.container} justify="center">
-        <Grid item component={Paper} className={clsx(classes.graph, classes.shadow)}>
+        <Grid item component={Paper} className={classes.panel}>
           <CircularProgress />
         </Grid>
       </Grid>
@@ -173,12 +171,12 @@ const Graphs = ({ data, dataTimePeriod, setDataTimePeriod }) => {
             textColor="secondary"
             centered
             variant="fullWidth"
-            className={clsx(classes.tabs, classes.shadow)}
+            className={classes.tabs}
           >
             {tabCreator()}
           </Tabs>
         </Grid>
-        <Grid item component={Paper} className={clsx(classes.graph, classes.shadow)}>
+        <Grid item component={Paper} className={classes.graph}>
           {graphCreator()}
           { updating ? <LinearProgress className={classes.updating} /> : null }
         </Grid>

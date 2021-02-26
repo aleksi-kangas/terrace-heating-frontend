@@ -9,10 +9,8 @@ import HeatPumpService from '../../services/heatPump';
  * Custom styling.
  */
 const useStyles = makeStyles({
-  buttonGroup: {
-    padding: 10,
-  },
-  shadow: {
+  buttons: {
+    margin: 20,
     borderRadius: 4,
     boxShadow: '0px 3px 11px 0px #c0c4e0',
   },
@@ -68,8 +66,8 @@ const TimeButtonGroup = ({
   };
 
   return (
-    <Grid container item justify="center" className={classes.buttonGroup}>
-      <ButtonGroup variant="contained" color="primary" className={classes.shadow}>
+    <Grid container item justify="center">
+      <ButtonGroup variant="contained" color="primary" className={classes.buttons}>
         <Button onClick={handleSevenDays}>
           7 Days
         </Button>

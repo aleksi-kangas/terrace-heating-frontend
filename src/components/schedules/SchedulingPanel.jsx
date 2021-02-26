@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { connect } from 'react-redux';
-import clsx from 'clsx';
 import {
   Button,
   CircularProgress,
@@ -27,20 +26,15 @@ import scheduleDefaults from '../../utils/scheduleDefaults';
  * Custom styling.
  */
 const useStyles = makeStyles({
-  container: {
-    padding: 10,
-    marginRight: 50,
-    marginLeft: 0,
-  },
-  shadow: {
+  panel: {
+    padding: 20,
+    paddingBottom: 0,
+    margin: 20,
     borderRadius: 4,
     boxShadow: '0px 3px 11px 0px #c0c4e0',
   },
-  value: {
-    marginRight: 20,
-  },
   button: {
-    marginTop: 20,
+    margin: 20,
   },
 });
 
@@ -124,7 +118,7 @@ const SchedulingPanel = ({
   };
 
   return (
-    <Grid key={key} container component={Paper} className={clsx(classes.container, classes.shadow)}>
+    <Grid key={key} container component={Paper} className={classes.panel}>
       {!schedule || !schedule.lowerTank || !schedule.heatDistCircuit3 ? (
         <Grid container item justify="center">
           <CircularProgress />
@@ -154,11 +148,11 @@ const SchedulingPanel = ({
                 </Table>
               </TableContainer>
             </Grid>
-            <Grid container item justify="space-evenly" className={classes.button}>
-              <Button type="submit" variant="contained" color="primary">
+            <Grid container item justify="center">
+              <Button type="submit" variant="contained" color="primary" className={classes.button}>
                 Save
               </Button>
-              <Button type="button" variant="contained" color="primary" onClick={() => setResetDialogOpen(true)}>
+              <Button type="button" variant="contained" color="primary" onClick={() => setResetDialogOpen(true)} className={classes.button}>
                 Default
               </Button>
             </Grid>

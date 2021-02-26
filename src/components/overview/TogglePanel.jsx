@@ -13,7 +13,6 @@ import {
   Grid, Paper,
   Switch, Typography,
 } from '@material-ui/core';
-import clsx from 'clsx';
 import { makeStyles } from '@material-ui/core/styles';
 import heatPumpService from '../../services/heatPump';
 import { fetchStatus, setStatus } from '../../reducers/statusReducer';
@@ -24,17 +23,16 @@ import { setNotification, removeNotification } from '../../reducers/notification
  * Custom styling.
  */
 const useStyles = makeStyles({
-  container: {
-    marginBottom: 40,
+  panel: {
+    margin: 20,
     height: '300px',
     padding: 10,
-  },
-  shadow: {
     borderRadius: 4,
     boxShadow: '0px 3px 11px 0px #c0c4e0',
   },
   text: {
     color: '#131313',
+    margin: 10,
   },
   switchBox: {
     borderRadius: 10,
@@ -104,7 +102,7 @@ const TogglePanel = ({
 
   if (!data) {
     return (
-      <Grid container item component={Paper} sm={12} lg={4} className={clsx(classes.container, classes.shadow)} justify="center" alignItems="center">
+      <Grid container item component={Paper} sm={12} lg={4} className={classes.panel} justify="center" alignItems="center">
         <CircularProgress />
       </Grid>
     );
@@ -206,7 +204,7 @@ const TogglePanel = ({
       sm={12}
       md={3}
       lg={4}
-      className={clsx(classes.container, classes.shadow)}
+      className={classes.panel}
       justify="space-evenly"
       alignItems="center"
     >

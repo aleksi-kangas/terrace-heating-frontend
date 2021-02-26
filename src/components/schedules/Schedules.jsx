@@ -1,6 +1,5 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import clsx from 'clsx';
 import {
   Card, CardActions, CardContent, CircularProgress, Fade, Grid, Switch, Typography,
 } from '@material-ui/core';
@@ -18,15 +17,9 @@ import { setStatus } from '../../reducers/statusReducer';
  */
 const useStyles = makeStyles({
   container: {
-    padding: 50,
-  },
-  card: {
-    margin: 0,
-  },
-  panel: {
     margin: 20,
   },
-  shadow: {
+  scheduleToggleCard: {
     borderRadius: 4,
     boxShadow: '0px 3px 11px 0px #c0c4e0',
   },
@@ -61,8 +54,8 @@ const Schedules = ({
 
   return (
     <Fade in timeout={800}>
-      <Grid container direction="column" alignItems="center">
-        <Card className={clsx(classes.card, classes.shadow)}>
+      <Grid container direction="column" alignItems="center" justify="center">
+        <Card className={classes.scheduleToggleCard}>
           <CardContent>
             <Typography variant="h5">
               Scheduling
@@ -74,7 +67,6 @@ const Schedules = ({
                 ? (
                   <Grid container item justify="center" alignItems="center">
                     <Switch
-                      className={classes.switchButton}
                       color="primary"
                       checked={schedule.scheduling}
                       onChange={handleScheduleToggle}
@@ -90,10 +82,10 @@ const Schedules = ({
           </CardActions>
         </Card>
         <Grid container justify="space-around">
-          <Grid item md={12} lg={5} className={classes.panel}>
+          <Grid item md={12} lg={5}>
             <SchedulingPanel variable="lowerTank" title="Lower Tank" />
           </Grid>
-          <Grid item md={12} lg={5} className={classes.panel}>
+          <Grid item md={12} lg={5}>
             <SchedulingPanel variable="heatDistCircuit3" title="Circuit 3" />
           </Grid>
         </Grid>
