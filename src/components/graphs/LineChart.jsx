@@ -11,7 +11,7 @@ import dataFilterPlugin from '../../utils/chartFilter';
  */
 const useStyles = makeStyles(() => ({
   canvasContainer: {
-    height: '70vh',
+    height: '60vh',
   },
 }));
 
