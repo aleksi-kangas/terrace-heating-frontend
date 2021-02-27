@@ -38,7 +38,7 @@ const CompressorUsageChart = ({ data }) => {
         label: 'Compressor Usage',
         data: graphData.map((entry) => {
           if (entry.compressorUsage) {
-            return entry.compressorUsage * 100;
+            return Math.round(entry.compressorUsage * 100);
           }
           return Number.NaN;
         }),

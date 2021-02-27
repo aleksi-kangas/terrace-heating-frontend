@@ -41,7 +41,7 @@ const CompressorUsageGauge = ({ data }) => {
     if (data) {
       const usages = data.filter((entry) => entry.compressorUsage != null);
       if (usages.length !== 0) {
-        setCurrentUsage(usages[usages.length - 1].compressorUsage * 100);
+        setCurrentUsage(Math.round(usages[usages.length - 1].compressorUsage * 100));
       }
     }
   }, [data]);
