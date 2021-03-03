@@ -29,7 +29,7 @@ const useStyles = makeStyles({
   panel: {
     padding: 20,
     paddingBottom: 0,
-    margin: 20,
+    marginTop: 20,
     borderRadius: 4,
     boxShadow: '0px 3px 11px 0px #c0c4e0',
   },
