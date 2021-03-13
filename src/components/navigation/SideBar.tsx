@@ -29,12 +29,17 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+type SideBarProps = {
+  sideBarOpen: boolean,
+  setSideBarOpen: (arg0: boolean) => void,
+}
+
 /**
  * Represents the sidebar drawer which contains navigation links.
  * @param sideBarOpen whether to show the sidebar or not
  * @param setSideBarOpen method for changing sidebar visibility
  */
-const SideBar = ({ sideBarOpen, setSideBarOpen }) => {
+const SideBar = ({ sideBarOpen, setSideBarOpen }: SideBarProps): JSX.Element => {
   const classes = useStyles();
 
   // Array of navigation links

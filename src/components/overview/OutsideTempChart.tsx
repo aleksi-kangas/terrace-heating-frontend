@@ -4,7 +4,13 @@ import moment from 'moment';
 import { CircularProgress, Grid, Paper } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import { Line } from 'react-chartjs-2';
+// TODO
+// @ts-ignore
 import { Technic6 } from 'chartjs-plugin-colorschemes/src/colorschemes/colorschemes.office';
+import { ChartData, ChartDataSets, ChartOptions } from 'chart.js';
+import { HeatPumpEntry } from '../../types';
+import { State } from '../../store';
+import { XAxisEntry } from '../graphs/Graphs';
 
 /**
  * Custom styling.
@@ -19,21 +25,27 @@ const useStyles = makeStyles({
   },
 });
 
+type OutsideTempPanelProps = {
+  heatPumpData: HeatPumpEntry[],
+};
+
 /**
  * Represents the panel which renders a LineChart of outside temperature.
  */
-const OutsideTempPanel = ({ data }) => {
-  const [dataSets, setDataSets] = useState([]);
-  const [xAxis, setXAxis] = useState(null);
+const OutsideTempChart = ({ heatPumpData }: OutsideTempPanelProps) => {
+  const [dataSets, setDataSets] = useState<ChartDataSets[]>([]);
+  const [xAxis, setXAxis] = useState<XAxisEntry[]>([]);
 
   const classes = useStyles();
 
   useEffect(() => {
     // Create a Chart.js dataset for outside temperature
-    if (data) {
-      const startThreshold = moment(data[data.length - 1].time).subtract(2, 'days');
-      const graphData = data.filter((entry) => startThreshold.isBefore(moment(entry.time)));
-      const dataSet = {
+    if (heatPumpData.length) {
+      const startThreshold = moment(heatPumpData[heatPumpData.length - 1].time).subtract(2, 'days');
+      const graphData = heatPumpData.filter(
+        (entry: HeatPumpEntry) => startThreshold.isBefore(moment(entry.time)),
+      );
+      const dataSet: ChartDataSets = {
         label: 'Outside Temperature',
         data: graphData.map((entry) => entry.outsideTemp),
         borderColor: Technic6[0],
@@ -44,11 +56,20 @@ const OutsideTempPanel = ({ data }) => {
       setDataSets([dataSet]);
       setXAxis(graphData.map((entry) => moment(entry.time)));
     }
-  }, [data]);
+  }, [heatPumpData]);
 
-  if (!data || !xAxis) {
+  if (!heatPumpData.length || !xAxis.length) {
     return (
-      <Grid container item component={Paper} sm={12} lg={7} className={classes.panel} alignItems="center" justify="center">
+      <Grid
+        container
+        item
+        component={Paper}
+        sm={12}
+        lg={7}
+        className={classes.panel}
+        alignItems="center"
+        justify="center"
+      >
         <Grid item>
           <CircularProgress />
         </Grid>
@@ -57,13 +78,13 @@ const OutsideTempPanel = ({ data }) => {
   }
 
   // Data in Chart.js form
-  const lineData = {
+  const lineData: ChartData = {
     labels: xAxis,
     datasets: dataSets,
   };
 
   // Define ticks and zoom limits
-  const options = {
+  const options: ChartOptions = {
     maintainAspectRatio: false,
     scales: {
       xAxes: [{
@@ -71,7 +92,7 @@ const OutsideTempPanel = ({ data }) => {
         time: {
           tooltipFormat: 'YYYY-MM-DD HH:mm',
           unit: 'hour',
-          unitStepSize: '1',
+          unitStepSize: 1,
           displayFormats: {
             hour: 'HH:mm',
           },
@@ -140,8 +161,8 @@ const OutsideTempPanel = ({ data }) => {
   );
 };
 
-const mapStateToProps = (state) => ({
-  data: state.data,
+const mapStateToProps = (state: State) => ({
+  heatPumpData: state.heatPump.data,
 });
 
-export default connect(mapStateToProps)(OutsideTempPanel);
+export default connect(mapStateToProps)(OutsideTempChart);

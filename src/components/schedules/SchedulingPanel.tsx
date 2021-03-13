@@ -19,8 +19,12 @@ import {
 } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import HeatPumpService from '../../services/heatPump';
-import { updateSchedule } from '../../reducers/scheduleReducer';
+import { setScheduleAction } from '../../reducers/heatPumpReducer';
 import scheduleDefaults from '../../utils/scheduleDefaults';
+import {
+  HeatingSchedules, VariableHeatingSchedule, ScheduleVariable, WeekDays, WeekDayScheduleKeys,
+} from '../../types';
+import { State } from '../../store';
 
 /**
  * Custom styling.
@@ -38,61 +42,72 @@ const useStyles = makeStyles({
   },
 });
 
+type SchedulingPanelProps = {
+  heatingSchedules: HeatingSchedules,
+  variable: ScheduleVariable,
+  title: string,
+  setSchedule: (variable: ScheduleVariable, schedule: VariableHeatingSchedule) => void,
+}
+
 /**
  * Represents a single schedule panel which contains properties:
  * start hour, end hour and temperature delta for each weekday.
+ * @param heatingSchedules
  * @param variable either 'lowerTank' or 'heatDistCircuit3'
  * @param title text of the schedule panel
+ * @param updateSchedule
  */
 const SchedulingPanel = ({
-  schedule, variable, title, updateSchedule,
-}) => {
+  heatingSchedules, variable, title, setSchedule,
+}: SchedulingPanelProps) => {
   const [resetDialogOpen, setResetDialogOpen] = useState(false);
   // Used to force re-render of form to update field values
   const [key, setKey] = useState(Date.now());
   const classes = useStyles();
-  const weekDays = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+  const weekDays = WeekDays;
 
   /**
    * Helper function for creating table rows for a schedule form.
    */
-  const createTableRows = () => {
-    const columnNames = ['start', 'end', 'delta'];
-
-    return weekDays.map((weekDay) => (
-      <TableRow key={weekDay}>
-        <TableCell>
-          <Typography align="center">
-            {weekDay.substr(0, 3)}
-          </Typography>
-        </TableCell>
-        {columnNames.map((columnName) => (
-          <TableCell key={columnName} size="small" align="center">
+  const createTableRows = () => Object.values(WeekDays).map((weekDay) => (
+    <TableRow key={weekDay}>
+      <TableCell>
+        <Typography align="center">
+          {weekDay.substr(0, 3)}
+        </Typography>
+      </TableCell>
+      {Object.values(WeekDayScheduleKeys).map((weekDayScheduleKey) => {
+        const variableSchedule = heatingSchedules[variable];
+        const weekDaySchedule = variableSchedule[weekDay];
+        return (
+          <TableCell key={weekDayScheduleKey} size="small" align="center">
             <Grid container justify="center">
               <Grid item sm={6} md={6} lg={6}>
                 <TextField
-                  name={`${weekDay.toLowerCase()}_${columnName}`}
+                  name={`${weekDay.toLowerCase()}_${weekDayScheduleKey}`}
                   variant="outlined"
                   size="small"
                   inputProps={{ min: 0, style: { textAlign: 'center' } }}
-                  defaultValue={schedule[variable][weekDay.toLowerCase()][columnName]}
+                  defaultValue={weekDaySchedule[weekDayScheduleKey]}
                 />
               </Grid>
             </Grid>
           </TableCell>
-        ))}
-      </TableRow>
-    ));
-  };
+        );
+      })}
+    </TableRow>
+  ));
 
   /**
    * Handler for schedule submission.
    * Sends the inputted schedule to the server.
    */
+  // TODO
+  // @ts-ignore
   const handleSubmit = async (event) => {
     event.preventDefault();
-    let schedule = {};
-    weekDays.forEach((weekDay) => {
+    let schedule: VariableHeatingSchedule = {} as VariableHeatingSchedule;
+    Object.values(weekDays).forEach((weekDay) => {
       schedule = {
         ...schedule,
         [weekDay.toLowerCase()]: {
@@ -103,7 +118,7 @@ const SchedulingPanel = ({
       };
     });
     await HeatPumpService.setSchedule(variable, schedule);
-    updateSchedule(variable, schedule);
+    setSchedule(variable, schedule);
   };
 
   /**
@@ -111,7 +126,7 @@ const SchedulingPanel = ({
    */
   const handleDefaults = async () => {
     await HeatPumpService.setSchedule(variable, scheduleDefaults[variable]);
-    updateSchedule(variable, scheduleDefaults[variable]);
+    setSchedule(variable, scheduleDefaults[variable]);
     setResetDialogOpen(false);
     // Force re-render of form
     setKey(Date.now());
@@ -119,7 +134,7 @@ const SchedulingPanel = ({
 
   return (
     <Grid key={key} container component={Paper} className={classes.panel}>
-      {!schedule || !schedule.lowerTank || !schedule.heatDistCircuit3 ? (
+      {Object.keys(heatingSchedules).length !== 2 ? (
         <Grid container item justify="center">
           <CircularProgress />
         </Grid>
@@ -152,7 +167,13 @@ const SchedulingPanel = ({
               <Button type="submit" variant="contained" color="primary" className={classes.button}>
                 Save
               </Button>
-              <Button type="button" variant="contained" color="primary" onClick={() => setResetDialogOpen(true)} className={classes.button}>
+              <Button
+                type="button"
+                variant="contained"
+                color="primary"
+                onClick={() => setResetDialogOpen(true)}
+                className={classes.button}
+              >
                 Default
               </Button>
             </Grid>
@@ -171,7 +192,12 @@ const SchedulingPanel = ({
                 </DialogContentText>
               </DialogContent>
               <DialogActions>
-                <Button onClick={() => setResetDialogOpen(false)} color="primary" variant="contained" className={classes.button}>
+                <Button
+                  onClick={() => setResetDialogOpen(false)}
+                  color="primary"
+                  variant="contained"
+                  className={classes.button}
+                >
                   No
                 </Button>
                 <Button onClick={handleDefaults} color="primary" variant="contained" className={classes.button}>
@@ -185,8 +211,8 @@ const SchedulingPanel = ({
   );
 };
 
-const mapStateToProps = (state) => ({
-  schedule: state.schedule,
+const mapStateToProps = (state: State) => ({
+  heatingSchedules: state.heatPump.heatingSchedules,
 });
 
-export default connect(mapStateToProps, { updateSchedule })(SchedulingPanel);
+export default connect(mapStateToProps, { setSchedule: setScheduleAction })(SchedulingPanel);

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import {
   AppBar, Button, Toolbar, Typography,
 } from '@material-ui/core';
@@ -6,7 +6,7 @@ import MenuIcon from '@material-ui/icons/Menu';
 import { makeStyles } from '@material-ui/core/styles';
 import IconButton from '@material-ui/core/IconButton';
 import { useHistory } from 'react-router-dom';
-import { useAuth } from '../../contexts/AuthContext';
+import { AuthContext } from '../../contexts/AuthContext';
 import Notification from '../Notification';
 
 /**
@@ -28,13 +28,17 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
+type HeaderProps = {
+  setSideBarOpen: (arg0: boolean) => void
+}
+
 /**
  * Represents the Toolbar at the top of the page.
  */
-const Header = ({ setSideBarOpen }) => {
+const Header = ({ setSideBarOpen }: HeaderProps): JSX.Element => {
   const classes = useStyles();
   const history = useHistory();
-  const { isAuthenticated, logout } = useAuth();
+  const { isAuthenticated, logout } = useContext(AuthContext);
 
   /**
    * Handler for clicking logout button.

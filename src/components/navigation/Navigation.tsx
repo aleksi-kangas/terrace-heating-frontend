@@ -5,7 +5,7 @@ import SideBar from './SideBar';
 /**
  * Responsible for rendering the Toolbar and SideMenu for navigation.
  */
-const Navigation = () => {
+const Navigation = (): JSX.Element => {
   const [sideBarOpen, setSideBarOpen] = useState(false);
 
   return (

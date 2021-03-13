@@ -1,5 +1,6 @@
-// Array for schedule defaults of lowerTank and heatDistCircuit3
-const scheduleDefaults = {
+import { HeatingSchedules } from '../types';
+
+const scheduleDefaults: HeatingSchedules = {
   lowerTank: {
     monday: { start: 3, end: 22, delta: 2 },
     tuesday: { start: 3, end: 22, delta: 2 },

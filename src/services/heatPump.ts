@@ -1,5 +1,8 @@
 import axios from 'axios';
 import moment from 'moment';
+import {
+  HeatingStatus, HeatPumpEntry, ScheduleVariable, VariableHeatingSchedule,
+} from '../types';
 
 const baseUrl = '/api/heat-pump';
 
@@ -8,7 +11,7 @@ const baseUrl = '/api/heat-pump';
  * Timestamp is defined by query strings: year, month and day.
  * @return [Object] array of heat-pump data entries
  */
-const getHeatPumpData = async (days) => {
+const getHeatPumpData = async (days: number): Promise<HeatPumpEntry[]> => {
   const date = moment();
   date.subtract(days, 'days');
   const dateParts = date.format('YYYY-MM-DD').split('-');
@@ -23,7 +26,7 @@ const getHeatPumpData = async (days) => {
  * Request the status of the heating from the API.
  * @return { Number }
  */
-const getStatus = async () => {
+const getStatus = async (): Promise<HeatingStatus> => {
   const response = await axios.get('/api/heat-pump/status', { withCredentials: true });
   return response.data;
 };
@@ -32,7 +35,7 @@ const getStatus = async () => {
  * Start the heat distribution circuit three via API.
  * @param softStart boolean - should soft-start functionality be used
  */
-const startCircuitThree = async (softStart) => {
+const startCircuitThree = async (softStart: boolean): Promise<HeatingStatus> => {
   const data = {
     softStart,
   };
@@ -43,7 +46,7 @@ const startCircuitThree = async (softStart) => {
 /**
  * Stop the heat distribution circuit three via API.
  */
-const stopCircuitThree = async () => {
+const stopCircuitThree = async (): Promise<HeatingStatus> => {
   const response = await axios.post('/api/heat-pump/stop', null, { withCredentials: true });
   return response.data;
 };
@@ -53,7 +56,7 @@ const stopCircuitThree = async () => {
  * @param variable either 'lowerTank' or 'heatDistCircuit3'
  * @return {Object} containing the heating schedule of the variable
  */
-const getSchedule = async (variable) => {
+const getSchedule = async (variable: ScheduleVariable): Promise<VariableHeatingSchedule> => {
   const response = await axios.get(`/api/heat-pump/schedules/${variable}`, { withCredentials: true });
   return response.data;
 };
@@ -64,7 +67,9 @@ const getSchedule = async (variable) => {
  * @param schedule object containing the schedule to set, e.g.
  * { monday: { start: Number, end: Number, delta: Number }, ... }
  */
-const setSchedule = async (variable, schedule) => {
+const setSchedule = async (
+  variable: ScheduleVariable, schedule: VariableHeatingSchedule,
+): Promise<void> => {
   const data = {
     schedule,
   };
@@ -76,7 +81,7 @@ const setSchedule = async (variable, schedule) => {
  * Enable or disable scheduling via API.
  * @param schedulingEnable Boolean shall scheduling be enabled or not
  */
-const setScheduling = async (schedulingEnable) => {
+const setSchedulingEnabled = async (schedulingEnable: boolean): Promise<HeatingStatus> => {
   const data = { scheduling: schedulingEnable };
   const response = await axios.post('/api/heat-pump/scheduling', data, { withCredentials: true });
   return response.data;
@@ -87,7 +92,7 @@ const setScheduling = async (schedulingEnable) => {
  * and current schedules for 'lowerTank' and 'heatDistCircuit3' from the API.
  * @return {Object} { scheduling: Boolean, lowerTank: {Object}, heatDistCircuit3: {Object} }
  */
-const getScheduling = async () => {
+const getSchedulingEnabled = async (): Promise<boolean> => {
   const response = await axios.get('/api/heat-pump/scheduling', { withCredentials: true });
   return response.data;
 };
@@ -99,8 +104,8 @@ const HeatPumpService = {
   setSchedule,
   startCircuitThree,
   stopCircuitThree,
-  setScheduling,
-  getScheduling,
+  setSchedulingEnabled,
+  getSchedulingEnabled,
 };
 
 export default HeatPumpService;

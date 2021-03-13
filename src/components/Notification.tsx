@@ -1,7 +1,13 @@
-import React from 'react';
+import * as React from 'react';
 import { connect } from 'react-redux';
 import MuiAlert from '@material-ui/lab/Alert';
 import { Fade } from '@material-ui/core';
+import { NotificationType } from '../types';
+import { State } from '../store';
+
+type NotificationProps = {
+  notification: { message: string, type: NotificationType }
+}
 
 /**
  * Represents a notification component which is rendered upon events,
@@ -10,8 +16,8 @@ import { Fade } from '@material-ui/core';
  * @return {JSX.Element|null}
  * @constructor
  */
-const Notification = ({ notification }) => {
-  if (!notification) {
+const Notification = ({ notification }: NotificationProps) => {
+  if (notification.message === '') {
     return null;
   }
   return (
@@ -23,7 +29,7 @@ const Notification = ({ notification }) => {
   );
 };
 
-const mapStateToProps = (state) => ({
+const mapStateToProps = (state: State) => ({
   notification: state.notification,
 });
 

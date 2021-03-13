@@ -4,7 +4,8 @@ Put only that part of allData in the dataset to optimize zoom/pan performance
 Original Author: Evert van der Weit - 2018
 Modified: Aleksi Kangas
  */
-
+// TODO
+// @ts-ignore
 const filterData = (chartInstance) => {
   const { datasets } = chartInstance.data;
   const originalDatasets = chartInstance.data.allData;
@@ -41,6 +42,8 @@ const filterData = (chartInstance) => {
 };
 
 const dataFilterPlugin = {
+  // TODO
+  // @ts-ignore
   beforeUpdate(chartInstance) {
     filterData(chartInstance);
   },

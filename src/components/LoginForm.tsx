@@ -1,15 +1,15 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { connect } from 'react-redux';
 import {
   Button, Fade, Grid, Paper, TextField,
 } from '@material-ui/core';
-import clsx from 'clsx';
 import LockIcon from '@material-ui/icons/Lock';
 import PersonIcon from '@material-ui/icons/Person';
 import { makeStyles } from '@material-ui/core/styles';
 import { useHistory } from 'react-router-dom';
-import { useAuth } from '../contexts/AuthContext';
-import { removeNotification, setNotification } from '../reducers/notificationReducer';
+import { AuthContext } from '../contexts/AuthContext';
+import { removeNotificationAction, setNotificationAction } from '../reducers/notificationReducer';
+import { Credentials, NotificationType } from '../types';
 
 /**
  * Custom styling.
@@ -21,40 +21,43 @@ const useStyles = makeStyles(() => ({
   },
   form: {
     padding: 50,
+    borderRadius: 4,
+    boxShadow: '0px 3px 11px 0px #c0c4e0',
   },
   icon: {
     marginTop: 20,
   },
-  shadow: {
-    borderRadius: 4,
-    boxShadow: '0px 3px 11px 0px #c0c4e0',
-  },
 }));
+
+type LoginFormProps = {
+  setNotification: (message: string, type: NotificationType) => void,
+  removeNotification: () => void,
+}
 
 /**
  * Represents the login form,
  * where user will enter username and password to have access to the application.
  */
-const LoginForm = ({ setNotification, removeNotification }) => {
+const LoginForm = ({ setNotification, removeNotification }: LoginFormProps) => {
   const classes = useStyles();
   const history = useHistory();
-  const { login } = useAuth();
+  const { login } = useContext(AuthContext);
 
   /**
    * Handler for login submission.
    * Verifies the credentials at the server and redirects to overview page.
    */
-  const handleLogin = async (event) => {
+  const handleLogin = async (event: React.SyntheticEvent) => {
     event.preventDefault();
-    const credentials = {
-      username: event.target.username.value,
-      password: event.target.password.value,
+    const credentials: Credentials = {
+      username: (event.target as HTMLFormElement).username.value,
+      password: (event.target as HTMLFormElement).password.value,
     };
     const result = await login(credentials);
     // Clear form fields
-    document.getElementById('login-form').reset();
+    (document.getElementById('login-form') as HTMLFormElement).reset();
     if (!result) {
-      setNotification('Wrong username or password', 'error');
+      setNotification('Wrong username or password', NotificationType.Error);
 
       setTimeout(() => {
         removeNotification();
@@ -75,7 +78,7 @@ const LoginForm = ({ setNotification, removeNotification }) => {
             direction="column"
             alignItems="center"
             justify="space-evenly"
-            className={clsx(classes.form, classes.shadow)}
+            className={classes.form}
           >
             <Grid item className={classes.icon}>
               <PersonIcon fontSize="large" />
@@ -110,4 +113,10 @@ const LoginForm = ({ setNotification, removeNotification }) => {
   );
 };
 
-export default connect(null, { setNotification, removeNotification })(LoginForm);
+export default connect(
+  null,
+  {
+    setNotification: setNotificationAction,
+    removeNotification: removeNotificationAction,
+  },
+)(LoginForm);

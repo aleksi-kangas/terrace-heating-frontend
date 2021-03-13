@@ -10,14 +10,17 @@ import {
   DialogContentText,
   DialogTitle,
   FormControlLabel,
-  Grid, Paper,
-  Switch, Typography,
+  Grid,
+  Paper,
+  Switch,
+  Typography,
 } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import heatPumpService from '../../services/heatPump';
-import { fetchStatus, setStatus } from '../../reducers/statusReducer';
-import { updateScheduling } from '../../reducers/scheduleReducer';
-import { setNotification, removeNotification } from '../../reducers/notificationReducer';
+import { setHeatingStatusAction, setSchedulingEnabledAction } from '../../reducers/heatPumpReducer';
+import { setNotificationAction, removeNotificationAction } from '../../reducers/notificationReducer';
+import { HeatingStatus, HeatPumpEntry, NotificationType } from '../../types';
+import { State } from '../../store';
 
 /**
  * Custom styling.
@@ -48,26 +51,37 @@ const useStyles = makeStyles({
   },
 });
 
+type TogglePanelProps = {
+  heatPumpData: HeatPumpEntry[],
+  heatingStatus: HeatingStatus,
+  setHeatingStatus: (heatingStatus: HeatingStatus) => void,
+  setSchedulingEnabled: (schedulingEnabled: boolean) => void,
+  setNotification: (message: string, type: NotificationType) => void,
+  removeNotification: () => void,
+}
+
 /**
  * Represents the panel which holds the heating control switch and status information.
  */
 const TogglePanel = ({
-  data, status, setStatus, updateScheduling, setNotification, removeNotification,
-}) => {
+  heatPumpData, heatingStatus, setHeatingStatus, setSchedulingEnabled, setNotification, removeNotification,
+}: TogglePanelProps) => {
   const [dialogOpen, setDialogOpen] = useState(false);
-  const [outsideTemp, setOutsideTemp] = useState(null);
-  const [statusHeader, setStatusHeader] = useState(null);
-  const [statusText, setStatusText] = useState(null);
-  const [dialogTitle, setDialogTitle] = useState(null);
-  const [dialogText, setDialogText] = useState(null);
-  const [dialogQuestion, setDialogQuestion] = useState(null);
+  const [outsideTemp, setOutsideTemp] = useState<number>(0);
+  const [statusHeader, setStatusHeader] = useState<string>('');
+  const [statusText, setStatusText] = useState<string>('');
+  const [dialogTitle, setDialogTitle] = useState<string>('');
+  const [dialogText, setDialogText] = useState<string>('');
+  const [dialogQuestion, setDialogQuestion] = useState<string>('');
 
   const classes = useStyles();
 
   useEffect(() => {
     // Conditionally determine content for the startup dialog
-    if (data) {
-      const latest = data[data.length - 1];
+    if (heatPumpData.length) {
+      // TODO
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      const latest = heatPumpData.slice(-1).pop()!;
       setOutsideTemp(latest.outsideTemp);
       if (latest.outsideTemp > 0 && latest.outsideTemp < 10) {
         setDialogTitle('Use soft-start?');
@@ -79,30 +93,41 @@ const TogglePanel = ({
         setDialogQuestion('Are you sure you want to start heating?');
       }
     }
-  }, [data]);
+  }, [heatPumpData]);
 
   useEffect(() => {
     // Conditionally determine the status information text
-    if (status === 'running' || status === 'boosting' || status === 'softStart') {
+    if (heatingStatus === HeatingStatus.Running
+      || heatingStatus === HeatingStatus.Boosting
+      || heatingStatus === HeatingStatus.SoftStart) {
       setStatusHeader('Heating Enabled');
     } else {
       setStatusHeader('Heating Disabled');
-      setStatusText(null);
+      setStatusText('');
     }
-    if (status === 'boosting') {
+    if (heatingStatus === HeatingStatus.Boosting) {
       setStatusText('Scheduled boosting');
-    } else if (status === 'softStart') {
+    } else if (heatingStatus === HeatingStatus.SoftStart) {
       setStatusText('Soft-starting');
-    } else if (status === 'running') {
+    } else if (heatingStatus === HeatingStatus.Running) {
       setDialogText('Upkeep period');
     } else {
-      setStatusText(null);
+      setStatusText('');
     }
-  }, [status]);
+  }, [heatingStatus]);
 
-  if (!data) {
+  if (!heatPumpData.length) {
     return (
-      <Grid container item component={Paper} sm={12} lg={4} className={classes.panel} justify="center" alignItems="center">
+      <Grid
+        container
+        item
+        component={Paper}
+        sm={12}
+        lg={4}
+        className={classes.panel}
+        justify="center"
+        alignItems="center"
+      >
         <CircularProgress />
       </Grid>
     );
@@ -121,10 +146,10 @@ const TogglePanel = ({
    */
   const normalStartup = async () => {
     const newStatus = await heatPumpService.startCircuitThree(false);
-    setStatus(newStatus);
-    updateScheduling(true);
+    setHeatingStatus(newStatus);
+    setSchedulingEnabled(true);
     setDialogOpen(false);
-    setNotification('Heating enabled', 'success');
+    setNotification('Heating enabled', NotificationType.Success);
     setTimeout(() => {
       removeNotification();
     }, 5000);
@@ -137,9 +162,9 @@ const TogglePanel = ({
    */
   const softStartup = async () => {
     const newStatus = await heatPumpService.startCircuitThree(true);
-    setStatus(newStatus);
+    setHeatingStatus(newStatus);
     setDialogOpen(false);
-    setNotification('Heating enabled', 'success');
+    setNotification('Heating enabled', NotificationType.Error);
     setTimeout(() => {
       removeNotification();
     }, 5000);
@@ -151,10 +176,10 @@ const TogglePanel = ({
    */
   const shutdown = async () => {
     const newStatus = await heatPumpService.stopCircuitThree();
-    setStatus(newStatus);
-    updateScheduling(false);
+    setHeatingStatus(newStatus);
+    setSchedulingEnabled(false);
     setDialogOpen(false);
-    setNotification('Heating disabled', 'info');
+    setNotification('Heating disabled', NotificationType.Info);
     setTimeout(() => {
       removeNotification();
     }, 5000);
@@ -166,9 +191,9 @@ const TogglePanel = ({
    * the heating system is either started via soft-start, normally or shut down.
    */
   const handleTerraceHeatingToggle = async () => {
-    if (status === 'stopped' && outsideTemp < 10) {
+    if (heatingStatus === HeatingStatus.Stopped && outsideTemp < 10) {
       setDialogOpen(true);
-    } else if (status === 'stopped') {
+    } else if (heatingStatus === HeatingStatus.Stopped) {
       await normalStartup();
     } else {
       await shutdown();
@@ -220,14 +245,18 @@ const TogglePanel = ({
         <FormControlLabel
           control={(
             <Switch
-              checked={status === 'running' || status === 'softStart' || status === 'boosting'}
+              checked={
+                heatingStatus === HeatingStatus.Running
+                || heatingStatus === HeatingStatus.SoftStart
+                || heatingStatus === HeatingStatus.Boosting
+}
               onChange={handleTerraceHeatingToggle}
               name="terraceHeatingToggle"
               color="primary"
               style={{ pointerEvents: 'auto' }}
             />
           )}
-          label={status === 'stopped' ? 'Off' : 'On'}
+          label={heatingStatus === HeatingStatus.Stopped ? 'Off' : 'On'}
           labelPlacement="start"
           className={classes.switchBox}
         />
@@ -261,13 +290,16 @@ const TogglePanel = ({
   );
 };
 
-const mapStateToProps = (state) => ({
-  data: state.data,
-  status: state.status,
+const mapStateToProps = (state: State) => ({
+  heatPumpData: state.heatPump.data,
+  heatingStatus: state.heatPump.heatingStatus,
 });
 
 export default connect(
   mapStateToProps, {
-    fetchStatus, setStatus, updateScheduling, setNotification, removeNotification,
+    setHeatingStatus: setHeatingStatusAction,
+    setSchedulingEnabled: setSchedulingEnabledAction,
+    setNotification: setNotificationAction,
+    removeNotification: removeNotificationAction,
   },
 )(TogglePanel);

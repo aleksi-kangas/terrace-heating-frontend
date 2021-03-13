@@ -2,9 +2,15 @@ import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 import { CircularProgress, Grid, Paper } from '@material-ui/core';
 import { Line } from 'react-chartjs-2';
+// @ts-ignore
+// TODO
 import { Technic6 } from 'chartjs-plugin-colorschemes/src/colorschemes/colorschemes.office';
 import moment from 'moment';
 import { makeStyles } from '@material-ui/core/styles';
+import { ChartData, ChartDataSets, ChartOptions } from 'chart.js';
+import { HeatPumpEntry } from '../../types';
+import { XAxisEntry } from '../graphs/Graphs';
+import { State } from '../../store';
 
 /**
  * Custom styling.
@@ -19,29 +25,43 @@ const useStyles = makeStyles({
   },
 });
 
+type CompressorUsageChartProps = {
+  heatPumpData: HeatPumpEntry[]
+}
+
 /**
  * Represents the compressor usage line-chart.
  * Responsible for rendering a Chart.js line-chart,
  * containing two days of compressor usage data.
  */
-const CompressorUsageChart = ({ data }) => {
+const CompressorUsageChart = ({ heatPumpData }: CompressorUsageChartProps) => {
   const classes = useStyles();
-  const [dataSets, setDataSets] = useState([]);
-  const [xAxis, setXAxis] = useState(null);
+  const [dataSets, setDataSets] = useState<ChartDataSets[]>([]);
+  const [xAxis, setXAxis] = useState<XAxisEntry[]>([]);
 
   useEffect(() => {
     // Create a Chart.js dataset for compressor usage
-    if (data) {
-      const startThreshold = moment(data[data.length - 1].time).subtract(2, 'days');
-      const graphData = data.filter((entry) => startThreshold.isBefore(moment(entry.time)));
-      const dataSet = {
+    if (heatPumpData.length) {
+      const startThreshold = moment(heatPumpData[heatPumpData.length - 1].time).subtract(2, 'days');
+      const graphData: number[] = [];
+      heatPumpData.forEach((entry: HeatPumpEntry) => {
+        if (!startThreshold.isBefore(moment(entry.time))) {
+          graphData.push(
+            entry.compressorUsage ? Math.round(entry.compressorUsage * 100) : Number.NaN,
+          );
+        }
+      });
+
+      // const graphData = heatPumpData.filter((entry: HeatPumpEntry) => startThreshold.isBefore(moment(entry.time)));
+      const dataSet: ChartDataSets = {
         label: 'Compressor Usage',
-        data: graphData.map((entry) => {
-          if (entry.compressorUsage) {
-            return Math.round(entry.compressorUsage * 100);
-          }
-          return Number.NaN;
-        }),
+        // data: graphData.map((entry: HeatPumpEntry) => {
+        //   if (entry.compressorUsage) {
+        //     return Math.round(entry.compressorUsage * 100);
+        //   }
+        //   return Number.NaN;
+        // }),
+        data: graphData,
         borderColor: Technic6[0],
         fill: true,
         pointRadius: 4,
@@ -49,13 +69,23 @@ const CompressorUsageChart = ({ data }) => {
         spanGaps: true,
       };
       setDataSets([dataSet]);
-      setXAxis(graphData.map((entry) => moment(entry.time)));
+      setXAxis(heatPumpData.map((entry: HeatPumpEntry) => moment(entry.time)));
     }
-  }, [data]);
+  }, [heatPumpData]);
 
-  if (!data || !xAxis) {
+  if (!heatPumpData.length || !xAxis.length) {
     return (
-      <Grid container item sm={12} md={8} lg={8} component={Paper} className={classes.panel} alignItems="center" justify="center">
+      <Grid
+        container
+        item
+        sm={12}
+        md={8}
+        lg={8}
+        component={Paper}
+        className={classes.panel}
+        alignItems="center"
+        justify="center"
+      >
         <Grid item>
           <CircularProgress />
         </Grid>
@@ -63,12 +93,12 @@ const CompressorUsageChart = ({ data }) => {
     );
   }
 
-  const lineData = {
+  const lineData: ChartData = {
     labels: xAxis,
     datasets: dataSets,
   };
 
-  const options = {
+  const options: ChartOptions = {
     maintainAspectRatio: false,
     scales: {
       xAxes: [{
@@ -76,7 +106,7 @@ const CompressorUsageChart = ({ data }) => {
         time: {
           tooltipFormat: 'YYYY-MM-DD HH:mm',
           unit: 'hour',
-          unitStepSize: '1',
+          unitStepSize: 1,
           displayFormats: {
             hour: 'HH:mm',
           },
@@ -135,14 +165,24 @@ const CompressorUsageChart = ({ data }) => {
   };
 
   return (
-    <Grid container item component={Paper} sm={12} md={8} lg={8} justify="center" direction="column" className={classes.panel}>
+    <Grid
+      container
+      item
+      component={Paper}
+      sm={12}
+      md={8}
+      lg={8}
+      justify="center"
+      direction="column"
+      className={classes.panel}
+    >
       <Line data={lineData} options={options} />
     </Grid>
   );
 };
 
-const mapStateToProps = (state) => ({
-  data: state.data,
+const mapStateToProps = (state: State) => ({
+  heatPumpData: state.heatPump.data,
 });
 
 export default connect(mapStateToProps)(CompressorUsageChart);

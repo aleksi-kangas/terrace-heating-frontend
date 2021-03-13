@@ -1,6 +1,19 @@
 import axios from 'axios';
+import { Credentials, User } from '../types';
 
 const baseUrl = '/api/auth';
+
+type Session = {
+  id: string,
+  name: string,
+  username: string
+}
+
+type AuthService = {
+  login: (userCredentials: Credentials) => Promise<User>,
+  logout: () => Promise<void>,
+  fetchAuth: () => Promise<Session | null>
+}
 
 /**
  * Enables login functionality with credentials.
@@ -8,7 +21,7 @@ const baseUrl = '/api/auth';
  * @param userCredentials {username, password}
  * @return {Object} user
  */
-const login = async (userCredentials) => {
+const login = async (userCredentials: { username: string, password: string }): Promise<User> => {
   const response = await axios.post(`${baseUrl}/login`, userCredentials);
   return response.data;
 };
@@ -17,7 +30,7 @@ const login = async (userCredentials) => {
  * Enables logout functionality.
  * Sends the action to the server.
  */
-const logout = async () => {
+const logout = async (): Promise<void> => {
   const response = await axios.post(`${baseUrl}/logout`);
   return response.data;
 };
@@ -25,7 +38,7 @@ const logout = async () => {
 /**
  * Enables fetching user session from the server.
  */
-const fetchAuth = async () => {
+const fetchAuth = async (): Promise<Session | null> => {
   try {
     const response = await axios.get(`${baseUrl}/session`);
     return response.data;
@@ -34,6 +47,6 @@ const fetchAuth = async () => {
   }
 };
 
-const AuthService = { login, logout, fetchAuth };
+const AuthService: AuthService = { login, logout, fetchAuth };
 
 export default AuthService;

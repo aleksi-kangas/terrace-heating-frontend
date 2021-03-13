@@ -1,10 +1,13 @@
-import React, { createRef, useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Doughnut } from 'react-chartjs-2';
 import {
   CircularProgress, Grid, Paper, Typography,
 } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import { connect } from 'react-redux';
+import { ChartOptions } from 'chart.js';
+import { HeatPumpEntry } from '../../types';
+import { State } from '../../store';
 
 /**
  * Custom styling.
@@ -25,28 +28,39 @@ const useStyles = makeStyles({
   },
 });
 
+type CompressorUsageGaugeProps = {
+  heatPumpData: HeatPumpEntry[]
+}
+
+type GaugeRef = {
+  chartInstance: {
+    canvas: HTMLCanvasElement
+  }
+}
+
 /**
  * Represents a gauge for current compressor usage.
  * Responsible for rendering a simple gauge,
  * showing the percentage of compressor usage during the last cycle.
  */
-const CompressorUsageGauge = ({ data }) => {
-  const [currentUsage, setCurrentUsage] = useState(null);
-  const [gaugeRef] = useState(createRef);
+const CompressorUsageGauge = ({ heatPumpData }: CompressorUsageGaugeProps) => {
+  const [currentUsage, setCurrentUsage] = useState<number>(0);
+  // const [gaugeRef] = useState(createRef);
+  const gaugeRef = useRef<GaugeRef>({} as GaugeRef);
 
   const classes = useStyles();
 
   useEffect(() => {
     // Extract latest compressor usage from the data
-    if (data) {
-      const usages = data.filter((entry) => entry.compressorUsage != null);
+    if (heatPumpData) {
+      const usages = heatPumpData.filter((entry: HeatPumpEntry) => entry.compressorUsage != null);
       if (usages.length !== 0) {
         setCurrentUsage(Math.round(usages[usages.length - 1].compressorUsage * 100));
       }
     }
-  }, [data]);
+  }, [heatPumpData]);
 
-  if (!data) {
+  if (!heatPumpData) {
     return (
       <Grid
         container
@@ -88,9 +102,11 @@ const CompressorUsageGauge = ({ data }) => {
    * @param radius length of needle
    * @param radianAngle angle of needle
    */
-  const drawNeedle = (radius, radianAngle) => {
+  const drawNeedle = (radius: number, radianAngle: number) => {
     const { canvas } = gaugeRef.current.chartInstance;
-    const ctx = canvas.getContext('2d');
+    // TODO
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    const ctx = canvas.getContext('2d')!;
     const cw = canvas.offsetWidth;
     const ch = canvas.offsetHeight;
     const cx = cw / 2;
@@ -113,7 +129,7 @@ const CompressorUsageGauge = ({ data }) => {
     ctx.fill();
   };
 
-  const options = {
+  const options: ChartOptions = {
     rotation: -1.0 * Math.PI,
     circumference: Math.PI,
     events: [],
@@ -150,7 +166,13 @@ const CompressorUsageGauge = ({ data }) => {
       className={classes.panel}
     >
       <Grid item>
-        <Doughnut ref={gaugeRef} data={gaugeData} options={options} />
+        <Doughnut
+          // TODO
+          // @ts-ignore
+          ref={gaugeRef}
+          data={gaugeData}
+          options={options}
+        />
       </Grid>
       <Grid item>
         <Typography variant="h6" className={classes.text} align="center">
@@ -161,8 +183,8 @@ const CompressorUsageGauge = ({ data }) => {
   );
 };
 
-const mapStateToProps = (state) => ({
-  data: state.data,
+const mapStateToProps = (state: State) => ({
+  heatPumpData: state.heatPump.data,
 });
 
 export default connect(mapStateToProps)(CompressorUsageGauge);

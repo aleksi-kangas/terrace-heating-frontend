@@ -1,19 +1,31 @@
-import React, {
-  createContext, useContext, useEffect, useState,
+import * as React from 'react';
+import {
+  createContext, useEffect, useState,
 } from 'react';
 import { CircularProgress } from '@material-ui/core';
 import AuthService from '../services/auth';
+import { Credentials, User } from '../types';
+
+type AuthContext = {
+  isAuthenticated: boolean,
+  login: (credentials: Credentials) => Promise<User | null>,
+  logout: () => void,
+}
 
 // React context for authentication
-const AuthContext = createContext({});
+export const AuthContext = createContext<AuthContext>({} as AuthContext);
+
+type AuthProviderProps = {
+  children: JSX.Element
+}
 
 /**
  * Authentication context provider.
  * @param children objects to render
  */
-const AuthProvider = ({ children }) => {
-  const [isLoading, setIsLoading] = useState(true);
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
+const AuthProvider = ({ children }: AuthProviderProps): JSX.Element => {
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
 
   useEffect(() => {
     /**
@@ -38,7 +50,7 @@ const AuthProvider = ({ children }) => {
    * Authenticates with the server and updates context accordingly.
    * @param credentials Object { username: String, password: String }
    */
-  const login = async (credentials) => {
+  const login = async (credentials: Credentials): Promise<User | null> => {
     try {
       const user = await AuthService.login(credentials);
       setIsAuthenticated(true);
@@ -53,7 +65,7 @@ const AuthProvider = ({ children }) => {
    * Method for logging out a user.
    * Destroys the session with the server and updates context accordingly.
    */
-  const logout = async () => {
+  const logout = async (): Promise<void> => {
     await AuthService.logout();
     setIsAuthenticated(false);
   };
@@ -73,7 +85,5 @@ const AuthProvider = ({ children }) => {
     </AuthContext.Provider>
   );
 };
-
-export const useAuth = () => useContext(AuthContext);
 
 export default AuthProvider;
