@@ -39,13 +39,13 @@ const useStyles = makeStyles(() => ({
 }));
 
 type AppProps = {
-  data: HeatPumpEntry[],
+  heatPumpData: HeatPumpEntry[],
   initialize: () => void,
   setData: (data: HeatPumpEntry[]) => void,
 }
 
 // eslint-disable-next-line @typescript-eslint/no-shadow
-const App = ({ data, initialize, setData }: AppProps) => {
+const App = ({ heatPumpData, initialize, setData }: AppProps) => {
   /*
    Data covers two week period to reduce data transfer and increase performance,
    since older data is not needed for monitoring general trends.
@@ -55,7 +55,12 @@ const App = ({ data, initialize, setData }: AppProps) => {
   const { isAuthenticated } = useContext(AuthContext);
   const classes = useStyles();
   // Create a reference to data, since WebSocket event handler needs one
-  const dataRef = useRef(data);
+  const dataRef = useRef(heatPumpData);
+
+  // Update dataRef which is used in WebSocket connection
+  useEffect(() => {
+    dataRef.current = heatPumpData;
+  }, [heatPumpData]);
 
   // Fetch pre-existing data, status of heating, and schedules from the API
   useEffect(() => {
@@ -69,10 +74,10 @@ const App = ({ data, initialize, setData }: AppProps) => {
       const socket = io(':3003', { transports: ['websocket'] });
       socket.emit('login');
 
-      socket.on('heatPumpData', (heatPumpData) => {
+      socket.on('heatPumpData', (heatPumpDataEntry) => {
         // Wait until pre-existing data is loaded before adding new data
         if (dataRef.current) {
-          const startTimeThreshold = moment(heatPumpData.time).subtract(maximumDataTimePeriod, 'days');
+          const startTimeThreshold = moment(heatPumpDataEntry.time).subtract(maximumDataTimePeriod, 'days');
           let newData = [...dataRef.current];
           if (dataRef.current.length !== 0 && startTimeThreshold.isAfter(dataRef.current[0].time)) {
             /*
@@ -81,7 +86,7 @@ const App = ({ data, initialize, setData }: AppProps) => {
              */
             newData = newData.slice(1);
           }
-          newData.push(heatPumpData);
+          newData.push(heatPumpDataEntry);
           setData(newData);
         }
       });
@@ -92,11 +97,6 @@ const App = ({ data, initialize, setData }: AppProps) => {
     // eslint-disable-next-line no-useless-return, consistent-return
     return;
   }, [isAuthenticated]);
-
-  // Update dataRef which is used in WebSocket connection
-  useEffect(() => {
-    dataRef.current = data;
-  }, [data]);
 
   return (
     <MuiThemeProvider theme={theme}>

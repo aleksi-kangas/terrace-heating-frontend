@@ -141,16 +141,12 @@ const Graphs = ({
     if (heatPumpData.length && !graphData.length) {
       // Create graph data initially
       createGraphData(dataCoverageDays).then();
-    }
-  }, [heatPumpData]);
-
-  useEffect(() => {
-    if (heatPumpData.length) {
+    } else if (heatPumpData.length) {
       // Graph data is updated when graphDataCoverageDays is changed,
       // i.e. the user clicks any of the TimeButtonGroup's buttons
       createGraphData(graphDataCoverageDays).then();
     }
-  }, [graphDataCoverageDays]);
+  }, [heatPumpData, graphDataCoverageDays]);
 
   if (!graphData.length) {
     return (

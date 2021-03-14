@@ -1,7 +1,4 @@
-import * as React from 'react';
-import {
-  createContext, useEffect, useState,
-} from 'react';
+import React, { createContext, useEffect, useState } from 'react';
 import { CircularProgress } from '@material-ui/core';
 import AuthService from '../services/auth';
 import { Credentials, User } from '../types';
