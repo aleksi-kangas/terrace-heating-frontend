@@ -154,7 +154,7 @@ export const setSchedulingEnabledAction = (schedulingEnabled: boolean) => (dispa
  */
 export const setHeatingStatusAction = (status: HeatingStatus) => (dispatch: Dispatch): void => {
   dispatch({
-    type: 'SET_STATUS',
+    type: 'SET_HEATING_STATUS',
     payload: status,
   });
 };

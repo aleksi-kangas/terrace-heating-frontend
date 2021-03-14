@@ -92,7 +92,7 @@ const getSchedulingEnabled = async (): Promise<boolean> => {
  * @param schedulingEnabled boolean shall scheduling be enabled or not
  */
 const setSchedulingEnabled = async (schedulingEnabled: boolean): Promise<HeatingStatus> => {
-  const response = await axios.post(`/api/heat-pump/scheduling/${schedulingEnabled}`, { withCredentials: true });
+  const response = await axios.post('/api/heat-pump/scheduling', { schedulingEnabled }, { withCredentials: true });
   return response.data;
 };
 
