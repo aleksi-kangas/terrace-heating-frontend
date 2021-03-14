@@ -1,7 +1,35 @@
 {
   "name": "terrace-heating-frontend",
-  "version": "0.1.0",
-  "private": true,
+  "version": "1.0.0",
+  "description": "A React.js frontend which enables monitoring and controlling of a terrace heating system",
+  "author": "Aleksi Kangas",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/aleksi-kangas/terrace-heating-frontend"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts --max-old-space-size=512 build",
+    "lint": "eslint src",
+    "lint:fix": "eslint src --fix"
+  },
+  "eslintConfig": {
+    "extends": "react-app"
+  },
+  "proxy": "http://localhost:3003",
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  },
   "dependencies": {
     "@material-ui/core": "^4.11.3",
     "@material-ui/icons": "^4.11.2",
@@ -25,29 +53,6 @@
     "redux-devtools-extension": "^2.13.9",
     "redux-thunk": "^2.3.0",
     "socket.io-client": "^4.0.0"
-  },
-  "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts --max-old-space-size=512 build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject",
-    "lint": "eslint src --ext .js,.jsx"
-  },
-  "eslintConfig": {
-    "extends": "react-app"
-  },
-  "proxy": "http://localhost:3003",
-  "browserslist": {
-    "production": [
-      ">0.2%",
-      "not dead",
-      "not op_mini all"
-    ],
-    "development": [
-      "last 1 chrome version",
-      "last 1 firefox version",
-      "last 1 safari version"
-    ]
   },
   "devDependencies": {
     "@types/chartjs-plugin-colorschemes": "^0.4.0",
