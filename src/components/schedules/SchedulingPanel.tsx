@@ -66,6 +66,7 @@ const SchedulingPanel = ({
   const classes = useStyles();
   const weekDays = WeekDays;
 
+  // TODO TextField name and handleSubmit
   /**
    * Helper function for creating table rows for a schedule form.
    */
@@ -107,10 +108,10 @@ const SchedulingPanel = ({
   const handleSubmit = async (event) => {
     event.preventDefault();
     let schedule: VariableHeatingSchedule = {} as VariableHeatingSchedule;
-    Object.values(weekDays).forEach((weekDay) => {
+    Object.values(weekDays).forEach((weekDay: WeekDays) => {
       schedule = {
         ...schedule,
-        [weekDay.toLowerCase()]: {
+        [weekDay]: {
           start: Number(event.target[`${weekDay.toLowerCase()}_start`].value),
           end: Number(event.target[`${weekDay.toLowerCase()}_end`].value),
           delta: Number(event.target[`${weekDay.toLowerCase()}_delta`].value),

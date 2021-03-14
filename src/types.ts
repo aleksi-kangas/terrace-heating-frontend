@@ -1,54 +1,12 @@
-export enum HeatPumpEntryVariables {
-  Time = 'time',
-  OutsideTemp = 'outsideTemp',
-  InsideTemp = 'insideTemp',
-  HotGasTemp = 'hotGasTemp',
-  HeatDistCircuit1Temp = 'heatDistCircuit1Temp',
-  HeatDistCircuit2Temp = 'heatDistCircuit2Temp',
-  HeatDistCircuit3Temp = 'heatDistCircuit3Temp',
-  LowerTankTemp = 'lowerTankTemp',
-  UpperTankTemp = 'upperTankTemp',
-  GroundLoopInputTemp = 'groundLoopInputTemp',
-  GroundLoopOutputTemp = 'groundLoopOutputTemp',
-  ActiveHeatDistCircuits = 'activeHeatDistCircuits',
-  CompressorRunning = 'compressorRunning',
-  CompressorUsage = 'compressorUsage',
-  LowerTankLowerLimit = 'lowerTankLowerLimit',
-  LowerTankUpperLimit = 'lowerTankUpperLimit',
-  UpperTankLowerLimit = 'upperTankLowerLimit',
-  UpperTankUpperLimit = 'upperTankUpperLimit',
-}
+/**
+ * Heat-pump related enums and types.
+ */
 
-export enum GraphVariableIds {
-  OutsideTemp = 'outsideTemp',
-  InsideTemp = 'insideTemp',
-  GroundLoopInputTemp = 'groundLoopInputTemp',
-  GroundLoopOutputTemp = 'groundLoopOutputTemp',
-  LowerTankTemp = 'lowerTankTemp',
-  UpperTankTemp = 'upperTankTemp',
-  HotGasTemp = 'hotGasTemp',
-  LowerTankLowerLimit = 'lowerTankLowerLimit',
-  LowerTankUpperLimit = 'lowerTankUpperLimit',
-  UpperTankLowerLimit = 'upperTankLowerLimit',
-  UpperTankUpperLimit = 'upperTankUpperLimit',
-  HeatDistCircuit1Temp = 'heatDistCircuit1Temp',
-  HeatDistCircuit2Temp = 'heatDistCircuit2Temp',
-  HeatDistCircuit3Temp = 'heatDistCircuit3Temp',
-}
-
-export type GraphVariable = {
-  label: string,
-  id: GraphVariableIds
-}
-
-// export type GraphVariables = [
-//   title: string,
-//   variables: GraphVariable[]
-// ]
-
-export type GraphGroup = {
-  title: string,
-  variables: GraphVariable[]
+export enum HeatingStatus {
+  Running = 'RUNNING',
+  Boosting = 'BOOSTING',
+  SoftStart = 'SOFT_START',
+  Stopped = 'STOPPED',
 }
 
 export type HeatPumpEntry = {
@@ -72,23 +30,40 @@ export type HeatPumpEntry = {
   upperTankUpperLimit: number,
 }
 
-export enum HeatingStatus {
-  Running = 'RUNNING',
-  Boosting = 'BOOSTING',
-  SoftStart = 'SOFT_START',
-  Stopped = 'STOPPED',
+/**
+ * Graph related enums and types
+ */
+
+export enum GraphVariableIds {
+  OutsideTemp = 'outsideTemp',
+  InsideTemp = 'insideTemp',
+  GroundLoopInputTemp = 'groundLoopInputTemp',
+  GroundLoopOutputTemp = 'groundLoopOutputTemp',
+  LowerTankTemp = 'lowerTankTemp',
+  UpperTankTemp = 'upperTankTemp',
+  HotGasTemp = 'hotGasTemp',
+  LowerTankLowerLimit = 'lowerTankLowerLimit',
+  LowerTankUpperLimit = 'lowerTankUpperLimit',
+  UpperTankLowerLimit = 'upperTankLowerLimit',
+  UpperTankUpperLimit = 'upperTankUpperLimit',
+  HeatDistCircuit1Temp = 'heatDistCircuit1Temp',
+  HeatDistCircuit2Temp = 'heatDistCircuit2Temp',
+  HeatDistCircuit3Temp = 'heatDistCircuit3Temp',
 }
 
-export enum NotificationType {
-  Success = 'success',
-  Info = 'info',
-  Error = 'error'
+export type GraphVariable = {
+  label: string,
+  id: GraphVariableIds
 }
 
-export enum ScheduleVariable {
-  LowerTank = 'lowerTank',
-  HeatDistCircuit3 = 'heatDistCircuit3'
+export type GraphGroup = {
+  title: string,
+  variables: GraphVariable[]
 }
+
+/**
+ * Scheduling related enums and types.
+ */
 
 export enum WeekDays {
   Monday = 'monday',
@@ -106,6 +81,11 @@ export enum WeekDayScheduleKeys {
   Delta = 'delta',
 }
 
+export enum ScheduleVariable {
+  LowerTank = 'lowerTank',
+  HeatDistCircuit3 = 'heatDistCircuit3'
+}
+
 export type WeekDaySchedule = {
   [key in WeekDayScheduleKeys]: number
 }
@@ -116,6 +96,16 @@ export type VariableHeatingSchedule = {
 
 export type HeatingSchedules = {
   [key in ScheduleVariable]: VariableHeatingSchedule
+}
+
+/**
+ * Miscellaneous enums and types.
+ */
+
+export enum NotificationType {
+  Success = 'success',
+  Info = 'info',
+  Error = 'error'
 }
 
 export type Credentials = {

@@ -184,7 +184,7 @@ const CompressorUsageGauge = ({ heatPumpData }: CompressorUsageGaugeProps) => {
 };
 
 const mapStateToProps = (state: State) => ({
-  heatPumpData: state.heatPump.data,
+  heatPumpData: state.heatPump.heatPumpData,
 });
 
 export default connect(mapStateToProps)(CompressorUsageGauge);

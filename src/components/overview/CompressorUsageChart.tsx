@@ -182,7 +182,7 @@ const CompressorUsageChart = ({ heatPumpData }: CompressorUsageChartProps) => {
 };
 
 const mapStateToProps = (state: State) => ({
-  heatPumpData: state.heatPump.data,
+  heatPumpData: state.heatPump.heatPumpData,
 });
 
 export default connect(mapStateToProps)(CompressorUsageChart);

@@ -1,6 +1,10 @@
 import { Dispatch } from 'redux';
 import { NotificationType } from '../types';
 
+/**
+ * Types
+ */
+
 export type NotificationReducerState = {
   message: string,
   type: NotificationType
@@ -17,10 +21,13 @@ type RemoveNotificationAction = { type: 'REMOVE_NOTIFICATION' }
 type NotificationReducerActions = SetNotificationAction | RemoveNotificationAction
 
 /**
- * Handles the dispatched actions to update the notification to the Redux state.
+ * Redux reducer which handles application state related to notifications.
+ * The state contains notification message and type.
+ * @param state HeatPumpReducerState
+ * @param action HeatPumpReducerActions
  */
 const notificationReducer = (
-  state = initialState, action: NotificationReducerActions,
+  state: NotificationReducerState = initialState, action: NotificationReducerActions,
 ): NotificationReducerState => {
   switch (action.type) {
     case 'SET_NOTIFICATION':
@@ -33,9 +40,9 @@ const notificationReducer = (
 };
 
 /**
- * Dispatcher for setting the notification message.
- * @param message
- * @param type either 'error' or 'success'
+ * Action creator for writing new notification message and type to the state.
+ * @param message string
+ * @param type NotificationType
  */
 export const setNotificationAction = (
   message: string, type: NotificationType,
@@ -47,7 +54,7 @@ export const setNotificationAction = (
 };
 
 /**
- * Dispatcher for removing the notification message.
+ * Action creator for clearing notification message from the state.
  */
 export const removeNotificationAction = () => (dispatch: Dispatch): void => {
   dispatch({

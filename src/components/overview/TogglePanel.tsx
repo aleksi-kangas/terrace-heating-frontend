@@ -291,7 +291,7 @@ const TogglePanel = ({
 };
 
 const mapStateToProps = (state: State) => ({
-  heatPumpData: state.heatPump.data,
+  heatPumpData: state.heatPump.heatPumpData,
   heatingStatus: state.heatPump.heatingStatus,
 });
 

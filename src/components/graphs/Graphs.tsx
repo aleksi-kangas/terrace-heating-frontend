@@ -231,7 +231,7 @@ const Graphs = ({
 };
 
 const mapStateToProps = (state: State) => ({
-  heatPumpData: state.heatPump.data,
+  heatPumpData: state.heatPump.heatPumpData,
   dataCoverageDays: state.heatPump.dataCoverageDays,
 });
 

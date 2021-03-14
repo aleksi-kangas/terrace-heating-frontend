@@ -4,8 +4,12 @@ import {
   HeatingSchedules, HeatingStatus, HeatPumpEntry, ScheduleVariable, VariableHeatingSchedule,
 } from '../types';
 
+/**
+ * Types
+ */
+
 export type HeatPumpReducerState = {
-  data: HeatPumpEntry[],
+  heatPumpData: HeatPumpEntry[],
   schedulingEnabled: boolean,
   heatingSchedules: {
     lowerTank: VariableHeatingSchedule,
@@ -30,19 +34,25 @@ type HeatPumpReducerActions =
   SetDataCoverageDays
 
 const initialState: HeatPumpReducerState = {
-  data: [],
+  heatPumpData: [],
   schedulingEnabled: false,
   heatingSchedules: {} as HeatingSchedules,
   heatingStatus: HeatingStatus.Stopped,
   dataCoverageDays: 2,
 };
 
+/**
+ * Redux reducer which handles application state related to heat-pump.
+ * The state contains heat-pump data, heating status and scheduling related variables.
+ * @param state HeatPumpReducerState
+ * @param action HeatPumpReducerActions
+ */
 const heatPumpReducer = (
-  state = initialState, action: HeatPumpReducerActions,
+  state: HeatPumpReducerState = initialState, action: HeatPumpReducerActions,
 ): HeatPumpReducerState => {
   switch (action.type) {
     case 'SET_DATA':
-      return { ...state, data: action.payload };
+      return { ...state, heatPumpData: action.payload };
     case 'SET_SCHEDULING_ENABLED':
       return { ...state, schedulingEnabled: action.payload };
     case 'SET_VARIABLE_HEATING_SCHEDULE':
@@ -63,8 +73,8 @@ const heatPumpReducer = (
 };
 
 /**
- * Action creator for initialing heat-pump data.
- * Used when data is retrieved from the API the first time.
+ * Action creator for initialing application data related to the heat-pump.
+ * Used for retrieving data from the API initially.
  */
 export const initializeAction = () => async (dispatch: Dispatch): Promise<void> => {
   const heatPumpData = await heatPumpService.getHeatPumpData(2);
@@ -104,17 +114,22 @@ export const initializeAction = () => async (dispatch: Dispatch): Promise<void> 
 /**
  * Action creator for updating/overwriting the heat-pump data.
  * Used when real-time updates are received from the API.
- * @param data array of heat-pump data
+ * @param newHeatPumpData HeatPumpEntry[]
  */
-export const setDataAction = (data: HeatPumpEntry[]) => (dispatch: Dispatch): void => {
+export const setDataAction = (newHeatPumpData: HeatPumpEntry[]) => (dispatch: Dispatch): void => {
   dispatch({
     type: 'SET_DATA',
-    payload: data,
+    payload: newHeatPumpData,
   });
 };
 
+/**
+ * Action creator for writing a variable's heating schedule to the state.
+ * @param variable ScheduleVariable
+ * @param schedule VariableHeatingSchedule
+ */
 export const setScheduleAction = (
-  variable: string, schedule: VariableHeatingSchedule,
+  variable: ScheduleVariable, schedule: VariableHeatingSchedule,
 ) => (dispatch: Dispatch): void => {
   dispatch({
     type: 'UPDATE_SCHEDULE',
@@ -122,6 +137,10 @@ export const setScheduleAction = (
   });
 };
 
+/**
+ * Action creator for writing the scheduling status to the state.
+ * @param schedulingEnabled boolean
+ */
 export const setSchedulingEnabledAction = (schedulingEnabled: boolean) => (dispatch: Dispatch): void => {
   dispatch({
     type: 'SET_SCHEDULING_ENABLED',
@@ -129,6 +148,10 @@ export const setSchedulingEnabledAction = (schedulingEnabled: boolean) => (dispa
   });
 };
 
+/**
+ * Action creator for writing the status of heating to the state.
+ * @param status HeatingStatus
+ */
 export const setHeatingStatusAction = (status: HeatingStatus) => (dispatch: Dispatch): void => {
   dispatch({
     type: 'SET_STATUS',
@@ -136,6 +159,10 @@ export const setHeatingStatusAction = (status: HeatingStatus) => (dispatch: Disp
   });
 };
 
+/**
+ * Action creator for writing the data coverage period in days to the state.
+ * @param days number
+ */
 export const setDataCoverageDaysAction = (days: number) => (dispatch: Dispatch): void => {
   dispatch({
     type: 'SET_DATA_COVERAGE_DAYS',

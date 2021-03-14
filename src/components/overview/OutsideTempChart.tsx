@@ -162,7 +162,7 @@ const OutsideTempChart = ({ heatPumpData }: OutsideTempPanelProps) => {
 };
 
 const mapStateToProps = (state: State) => ({
-  heatPumpData: state.heatPump.data,
+  heatPumpData: state.heatPump.heatPumpData,
 });
 
 export default connect(mapStateToProps)(OutsideTempChart);

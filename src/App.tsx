@@ -121,7 +121,7 @@ const App = ({ heatPumpData, initialize, setData }: AppProps) => {
 };
 
 const mapStateToProps = (state: State) => ({
-  heatPumpData: state.heatPump.data,
+  heatPumpData: state.heatPump.heatPumpData,
 });
 
 export default connect(
