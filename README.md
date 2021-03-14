@@ -40,10 +40,5 @@ The features of the React.js frontend include:
 ## Implementation
 - The Application has been created with [React.js](https://reactjs.org/)
   framework in conjunction with [Material UI](https://material-ui.com/).
-  - Some custom styling has been used, and planning to create a fully custom UI.
-- JavaScript ES6 revision is used.
-- [Redux.js](https://redux.js.org/) is used for state management.
-
-## Planned upcoming features
-- Conversion to TypeScript.
-- Additional controlling and monitoring features while keeping the overall application simple.
+- Initially created with JavaScript ES6 version and later converted to TypeScript.
+- [Redux.js](https://redux.js.org/) is used for global state management.
