@@ -22,7 +22,7 @@ const useStyles = makeStyles({
 });
 
 type CompressorUsageChartProps = {
-  compressorUsages: number[],
+  compressorUsages: (number | undefined)[],
   xAxis: XAxisEntry[]
 }
 

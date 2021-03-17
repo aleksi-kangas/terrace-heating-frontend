@@ -19,32 +19,37 @@ type OverviewProps = {
  * Contains multiple panels which provide a simple overview of the heating system's status.
  */
 const Overview = ({ heatPumpData }: OverviewProps): JSX.Element => {
-  const [latestHeatPumpEntry, setLatestHeatPumpEntry] = useState<HeatPumpEntry>();
-  const [compressorUsages, setCompressorUsages] = useState<number[]>([]);
+  const [compressorUsages, setCompressorUsages] = useState<(number | undefined)[]>([]);
   const [outsideTemps, setOutsideTemps] = useState<number[]>([]);
   const [xAxis, setXAxis] = useState<XAxisEntry[]>([]);
+  const [latestOutsideTemp, setLatestOutsideTemp] = useState<number>();
+  const [latestCompressorUsage, setLatestCompressorUsage] = useState<number>();
 
   useEffect(() => {
     if (heatPumpData.length) {
       const startThreshold = moment(heatPumpData[heatPumpData.length - 1].time).subtract(2, 'days');
-      const newCompressorUsages: number[] = [];
+      const newCompressorUsages: (number | undefined)[] = [];
       const newOutsideTemps: number[] = [];
       const newXAxis: XAxisEntry[] = [];
+
+      let newLatestCompressorUsage = null;
 
       heatPumpData.forEach((entry: HeatPumpEntry) => {
         if (startThreshold.isBefore(moment(entry.time))) {
           newCompressorUsages.push(
-            entry.compressorUsage ? Math.round(entry.compressorUsage * 100) : Number.NaN,
+            entry.compressorUsage ? Math.round(entry.compressorUsage * 100) : undefined,
           );
           newOutsideTemps.push(entry.outsideTemp);
           newXAxis.push(moment(entry.time));
+          if (entry.compressorUsage) newLatestCompressorUsage = Math.round(entry.compressorUsage * 100);
         }
       });
 
-      setLatestHeatPumpEntry(heatPumpData.slice(-1).pop());
       setCompressorUsages(newCompressorUsages);
       setOutsideTemps(newOutsideTemps);
       setXAxis(newXAxis);
+      if (newLatestCompressorUsage != null) setLatestCompressorUsage(newLatestCompressorUsage);
+      setLatestOutsideTemp(heatPumpData[heatPumpData.length - 1].outsideTemp);
     }
   }, [heatPumpData]);
 
@@ -52,8 +57,8 @@ const Overview = ({ heatPumpData }: OverviewProps): JSX.Element => {
     <Fade in timeout={800}>
       <Grid container item justify="space-between">
         <OutsideTempChart outsideTemps={outsideTemps} xAxis={xAxis} />
-        <TogglePanel latestHeatPumpEntry={latestHeatPumpEntry} />
-        <CompressorUsageGauge latestHeatPumpEntry={latestHeatPumpEntry} />
+        <TogglePanel latestOutsideTemp={latestOutsideTemp} />
+        <CompressorUsageGauge latestCompressorUsage={latestCompressorUsage} />
         <CompressorUsageChart compressorUsages={compressorUsages} xAxis={xAxis} />
       </Grid>
     </Fade>

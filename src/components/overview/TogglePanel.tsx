@@ -19,7 +19,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import heatPumpService from '../../services/heatPump';
 import { setHeatingStatusAction, setSchedulingEnabledAction } from '../../reducers/heatPumpReducer';
 import { removeNotificationAction, setNotificationAction } from '../../reducers/notificationReducer';
-import { HeatingStatus, HeatPumpEntry, NotificationType } from '../../types';
+import { HeatingStatus, NotificationType } from '../../types';
 import { State } from '../../store';
 
 /**
@@ -52,7 +52,7 @@ const useStyles = makeStyles({
 });
 
 type TogglePanelProps = {
-  latestHeatPumpEntry: HeatPumpEntry | undefined,
+  latestOutsideTemp: number | undefined,
   heatingStatus: HeatingStatus,
   setHeatingStatus: (heatingStatus: HeatingStatus) => void,
   setSchedulingEnabled: (schedulingEnabled: boolean) => void,
@@ -64,7 +64,7 @@ type TogglePanelProps = {
  * Represents the panel which holds the heating control switch and status information.
  */
 const TogglePanel = ({
-  latestHeatPumpEntry, heatingStatus, setHeatingStatus, setSchedulingEnabled, setNotification, removeNotification,
+  latestOutsideTemp, heatingStatus, setHeatingStatus, setSchedulingEnabled, setNotification, removeNotification,
 }: TogglePanelProps) => {
   const [dialogOpen, setDialogOpen] = useState(false);
   const [statusHeader, setStatusHeader] = useState<string>('');
@@ -77,8 +77,7 @@ const TogglePanel = ({
 
   useEffect(() => {
     // Conditionally determine content for the startup dialog
-    if (latestHeatPumpEntry) {
-      const latestOutsideTemp = latestHeatPumpEntry.outsideTemp;
+    if (latestOutsideTemp !== undefined) {
       if (latestOutsideTemp > 0 && latestOutsideTemp < 10) {
         // Outside temp between 0 and 10 celsius -> Soft-start should be used
         setDialogTitle('Use soft-start?');
@@ -91,7 +90,7 @@ const TogglePanel = ({
         setDialogQuestion('Are you sure you want to start heating?');
       }
     }
-  }, [latestHeatPumpEntry]);
+  }, [latestOutsideTemp]);
 
   useEffect(() => {
     // Conditionally determine the status information text
@@ -110,7 +109,7 @@ const TogglePanel = ({
     }
   }, [heatingStatus]);
 
-  if (!latestHeatPumpEntry) {
+  if (latestOutsideTemp === undefined) {
     return (
       <Grid
         container
@@ -126,8 +125,6 @@ const TogglePanel = ({
       </Grid>
     );
   }
-
-  const latestOutsideTemp = latestHeatPumpEntry.outsideTemp;
 
   /**
    * Helper method for closing the dialog and notifying user with a message.

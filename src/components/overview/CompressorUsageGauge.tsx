@@ -5,7 +5,6 @@ import {
 } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import { ChartOptions } from 'chart.js';
-import { HeatPumpEntry } from '../../types';
 
 /**
  * Custom styling.
@@ -27,7 +26,7 @@ const useStyles = makeStyles({
 });
 
 type CompressorUsageGaugeProps = {
-  latestHeatPumpEntry: HeatPumpEntry | undefined
+  latestCompressorUsage: number | undefined
 }
 
 type GaugeRef = {
@@ -41,11 +40,11 @@ type GaugeRef = {
  * Responsible for rendering a simple gauge,
  * showing the percentage of compressor usage during the last cycle.
  */
-const CompressorUsageGauge = ({ latestHeatPumpEntry }: CompressorUsageGaugeProps): JSX.Element => {
+const CompressorUsageGauge = ({ latestCompressorUsage }: CompressorUsageGaugeProps): JSX.Element => {
   const classes = useStyles();
   const gaugeRef = useRef<GaugeRef>({} as GaugeRef);
 
-  if (!latestHeatPumpEntry) {
+  if (latestCompressorUsage === undefined) {
     return (
       <Grid
         container
@@ -121,14 +120,14 @@ const CompressorUsageGauge = ({ latestHeatPumpEntry }: CompressorUsageGaugeProps
     title: {
       display: true,
       position: 'bottom',
-      text: `${latestHeatPumpEntry.compressorUsage} %`,
+      text: `${latestCompressorUsage} %`,
       fontSize: 16,
       fontColor: '#131313',
       padding: 5,
     },
     animation: {
       easing: 'linear',
-      onProgress: () => drawNeedle(80, Math.PI + (latestHeatPumpEntry.compressorUsage / 100) * Math.PI),
+      onProgress: () => drawNeedle(80, Math.PI + (latestCompressorUsage / 100) * Math.PI),
     },
   };
 
