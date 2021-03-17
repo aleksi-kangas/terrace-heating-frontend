@@ -1,6 +1,4 @@
-import React, { useEffect, useState } from 'react';
-import { connect } from 'react-redux';
-import moment from 'moment';
+import React from 'react';
 import { CircularProgress, Grid, Paper } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import { Line } from 'react-chartjs-2';
@@ -8,8 +6,6 @@ import { Line } from 'react-chartjs-2';
 // @ts-ignore
 import { Technic6 } from 'chartjs-plugin-colorschemes/src/colorschemes/colorschemes.office';
 import { ChartData, ChartDataSets, ChartOptions } from 'chart.js';
-import { HeatPumpEntry } from '../../types';
-import { State } from '../../store';
 import { XAxisEntry } from '../graphs/Graphs';
 
 /**
@@ -26,39 +22,17 @@ const useStyles = makeStyles({
 });
 
 type OutsideTempPanelProps = {
-  heatPumpData: HeatPumpEntry[],
+  outsideTemps: number[],
+  xAxis: XAxisEntry[]
 };
 
 /**
  * Represents the panel which renders a LineChart of outside temperature.
  */
-const OutsideTempChart = ({ heatPumpData }: OutsideTempPanelProps) => {
-  const [dataSets, setDataSets] = useState<ChartDataSets[]>([]);
-  const [xAxis, setXAxis] = useState<XAxisEntry[]>([]);
-
+const OutsideTempChart = ({ outsideTemps, xAxis }: OutsideTempPanelProps): JSX.Element => {
   const classes = useStyles();
 
-  useEffect(() => {
-    // Create a Chart.js dataset for outside temperature
-    if (heatPumpData.length) {
-      const startThreshold = moment(heatPumpData[heatPumpData.length - 1].time).subtract(2, 'days');
-      const graphData = heatPumpData.filter(
-        (entry: HeatPumpEntry) => startThreshold.isBefore(moment(entry.time)),
-      );
-      const dataSet: ChartDataSets = {
-        label: 'Outside Temperature',
-        data: graphData.map((entry) => entry.outsideTemp),
-        borderColor: Technic6[0],
-        fill: false,
-        pointRadius: 0,
-        pointHitRadius: 5,
-      };
-      setDataSets([dataSet]);
-      setXAxis(graphData.map((entry) => moment(entry.time)));
-    }
-  }, [heatPumpData]);
-
-  if (!heatPumpData.length || !xAxis.length) {
+  if (!outsideTemps.length || !xAxis.length) {
     return (
       <Grid
         container
@@ -77,10 +51,19 @@ const OutsideTempChart = ({ heatPumpData }: OutsideTempPanelProps) => {
     );
   }
 
+  const dataSet: ChartDataSets = {
+    label: 'Outside Temperature',
+    data: outsideTemps,
+    borderColor: Technic6[0],
+    fill: false,
+    pointRadius: 0,
+    pointHitRadius: 5,
+  };
+
   // Data in Chart.js form
   const lineData: ChartData = {
     labels: xAxis,
-    datasets: dataSets,
+    datasets: [dataSet],
   };
 
   // Define ticks and zoom limits
@@ -161,8 +144,4 @@ const OutsideTempChart = ({ heatPumpData }: OutsideTempPanelProps) => {
   );
 };
 
-const mapStateToProps = (state: State) => ({
-  heatPumpData: state.heatPump.heatPumpData,
-});
-
-export default connect(mapStateToProps)(OutsideTempChart);
+export default OutsideTempChart;

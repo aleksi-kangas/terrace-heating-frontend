@@ -52,7 +52,7 @@ const useStyles = makeStyles({
 });
 
 type TogglePanelProps = {
-  heatPumpData: HeatPumpEntry[],
+  latestHeatPumpEntry: HeatPumpEntry | undefined,
   heatingStatus: HeatingStatus,
   setHeatingStatus: (heatingStatus: HeatingStatus) => void,
   setSchedulingEnabled: (schedulingEnabled: boolean) => void,
@@ -64,10 +64,9 @@ type TogglePanelProps = {
  * Represents the panel which holds the heating control switch and status information.
  */
 const TogglePanel = ({
-  heatPumpData, heatingStatus, setHeatingStatus, setSchedulingEnabled, setNotification, removeNotification,
+  latestHeatPumpEntry, heatingStatus, setHeatingStatus, setSchedulingEnabled, setNotification, removeNotification,
 }: TogglePanelProps) => {
   const [dialogOpen, setDialogOpen] = useState(false);
-  const [outsideTemp, setOutsideTemp] = useState<number>(0);
   const [statusHeader, setStatusHeader] = useState<string>('');
   const [statusText, setStatusText] = useState<string>('');
   const [dialogTitle, setDialogTitle] = useState<string>('');
@@ -78,23 +77,21 @@ const TogglePanel = ({
 
   useEffect(() => {
     // Conditionally determine content for the startup dialog
-    if (heatPumpData.length) {
-      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      const latest = heatPumpData.slice(-1).pop()!;
-      setOutsideTemp(latest.outsideTemp);
-      if (latest.outsideTemp > 0 && latest.outsideTemp < 10) {
+    if (latestHeatPumpEntry) {
+      const latestOutsideTemp = latestHeatPumpEntry.outsideTemp;
+      if (latestOutsideTemp > 0 && latestOutsideTemp < 10) {
         // Outside temp between 0 and 10 celsius -> Soft-start should be used
         setDialogTitle('Use soft-start?');
         setDialogText('It is recommended to use soft-start due to cold outside temperature.');
         setDialogQuestion('Do you want to use soft-start?');
-      } else if (latest.outsideTemp < 0) {
+      } else if (latestOutsideTemp < 0) {
         // Outside temp is below 0 celsius -> Heating is not recommended
         setDialogTitle('Heating not recommended');
         setDialogText('Heating is NOT recommended due to cold outside temperature. Soft-start is forced on.');
         setDialogQuestion('Are you sure you want to start heating?');
       }
     }
-  }, [heatPumpData]);
+  }, [latestHeatPumpEntry]);
 
   useEffect(() => {
     // Conditionally determine the status information text
@@ -113,7 +110,7 @@ const TogglePanel = ({
     }
   }, [heatingStatus]);
 
-  if (!heatPumpData.length) {
+  if (!latestHeatPumpEntry) {
     return (
       <Grid
         container
@@ -129,6 +126,8 @@ const TogglePanel = ({
       </Grid>
     );
   }
+
+  const latestOutsideTemp = latestHeatPumpEntry.outsideTemp;
 
   /**
    * Helper method for closing the dialog and notifying user with a message.
@@ -189,7 +188,7 @@ const TogglePanel = ({
    * the heating system is either started via soft-start, normally or shut down.
    */
   const handleTerraceHeatingToggle = async () => {
-    if (heatingStatus === HeatingStatus.Stopped && outsideTemp < 10) {
+    if (heatingStatus === HeatingStatus.Stopped && latestOutsideTemp < 10) {
       setDialogOpen(true);
     } else if (heatingStatus === HeatingStatus.Stopped) {
       await normalStartup();
@@ -203,9 +202,9 @@ const TogglePanel = ({
    * Depending on outside temperature heating is started normally or nothing happens.
    */
   const handleDecline = async () => {
-    if (outsideTemp > 0 && outsideTemp < 10) {
+    if (latestOutsideTemp > 0 && latestOutsideTemp < 10) {
       await normalStartup();
-    } else if (outsideTemp < 0) {
+    } else if (latestOutsideTemp < 0) {
       setDialogOpen(false);
     }
   };
@@ -285,7 +284,6 @@ const TogglePanel = ({
 };
 
 const mapStateToProps = (state: State) => ({
-  heatPumpData: state.heatPump.heatPumpData,
   heatingStatus: state.heatPump.heatingStatus,
 });
 

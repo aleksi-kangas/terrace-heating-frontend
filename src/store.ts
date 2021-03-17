@@ -1,5 +1,7 @@
 import thunk from 'redux-thunk';
-import { createStore, combineReducers, applyMiddleware } from 'redux';
+import {
+  createStore, combineReducers, applyMiddleware, Reducer,
+} from 'redux';
 import { composeWithDevTools } from 'redux-devtools-extension';
 import heatPumpReducer, { HeatPumpReducerState } from './reducers/heatPumpReducer';
 import notificationReducer, { NotificationReducerState } from './reducers/notificationReducer';
@@ -10,7 +12,7 @@ export type State = {
 }
 
 // Combine Redux reducers
-const reducer = combineReducers({
+const reducer: Reducer = combineReducers({
   heatPump: heatPumpReducer,
   notification: notificationReducer,
 });

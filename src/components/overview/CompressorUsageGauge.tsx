@@ -1,13 +1,11 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useRef } from 'react';
 import { Doughnut } from 'react-chartjs-2';
 import {
   CircularProgress, Grid, Paper, Typography,
 } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
-import { connect } from 'react-redux';
 import { ChartOptions } from 'chart.js';
 import { HeatPumpEntry } from '../../types';
-import { State } from '../../store';
 
 /**
  * Custom styling.
@@ -29,7 +27,7 @@ const useStyles = makeStyles({
 });
 
 type CompressorUsageGaugeProps = {
-  heatPumpData: HeatPumpEntry[]
+  latestHeatPumpEntry: HeatPumpEntry | undefined
 }
 
 type GaugeRef = {
@@ -43,24 +41,11 @@ type GaugeRef = {
  * Responsible for rendering a simple gauge,
  * showing the percentage of compressor usage during the last cycle.
  */
-const CompressorUsageGauge = ({ heatPumpData }: CompressorUsageGaugeProps) => {
-  const [currentUsage, setCurrentUsage] = useState<number>(0);
-  // const [gaugeRef] = useState(createRef);
+const CompressorUsageGauge = ({ latestHeatPumpEntry }: CompressorUsageGaugeProps): JSX.Element => {
+  const classes = useStyles();
   const gaugeRef = useRef<GaugeRef>({} as GaugeRef);
 
-  const classes = useStyles();
-
-  useEffect(() => {
-    // Extract latest compressor usage from the data
-    if (heatPumpData) {
-      const usages = heatPumpData.filter((entry: HeatPumpEntry) => entry.compressorUsage != null);
-      if (usages.length !== 0) {
-        setCurrentUsage(Math.round(usages[usages.length - 1].compressorUsage * 100));
-      }
-    }
-  }, [heatPumpData]);
-
-  if (!heatPumpData) {
+  if (!latestHeatPumpEntry) {
     return (
       <Grid
         container
@@ -136,19 +121,14 @@ const CompressorUsageGauge = ({ heatPumpData }: CompressorUsageGaugeProps) => {
     title: {
       display: true,
       position: 'bottom',
-      text: currentUsage ? `${currentUsage} %` : '',
+      text: `${latestHeatPumpEntry.compressorUsage} %`,
       fontSize: 16,
       fontColor: '#131313',
       padding: 5,
     },
     animation: {
       easing: 'linear',
-      onProgress: () => {
-        if (currentUsage) {
-          return drawNeedle(80, Math.PI + (currentUsage / 100) * Math.PI);
-        }
-        return null;
-      },
+      onProgress: () => drawNeedle(80, Math.PI + (latestHeatPumpEntry.compressorUsage / 100) * Math.PI),
     },
   };
 
@@ -183,8 +163,4 @@ const CompressorUsageGauge = ({ heatPumpData }: CompressorUsageGaugeProps) => {
   );
 };
 
-const mapStateToProps = (state: State) => ({
-  heatPumpData: state.heatPump.heatPumpData,
-});
-
-export default connect(mapStateToProps)(CompressorUsageGauge);
+export default CompressorUsageGauge;
