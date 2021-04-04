@@ -76,40 +76,50 @@ const heatPumpReducer = (
  * Action creator for initialing application data related to the heat-pump.
  * Used for retrieving data from the API initially.
  */
-export const initializeAction = () => async (dispatch: Dispatch): Promise<void> => {
-  const heatPumpData = await heatPumpService.getHeatPumpData(2);
-  const heatingStatus = await heatPumpService.getStatus();
-  const schedulingEnabled = await heatPumpService.getSchedulingEnabled();
-  const lowerTankSchedule = await heatPumpService.getSchedule(ScheduleVariable.LowerTank);
-  const heatDistCircuitThreeSchedule = await heatPumpService.getSchedule(ScheduleVariable.HeatDistCircuit3);
-
-  dispatch({
-    type: 'SET_DATA',
-    payload: heatPumpData,
-  });
-  dispatch({
-    type: 'SET_HEATING_STATUS',
-    payload: heatingStatus,
-  });
-  dispatch({
-    type: 'SET_SCHEDULING_ENABLED',
-    payload: schedulingEnabled,
-  });
-  dispatch({
-    type: 'SET_VARIABLE_HEATING_SCHEDULE',
-    payload: {
-      variable: ScheduleVariable.LowerTank,
-      schedule: lowerTankSchedule,
-    },
-  });
-  dispatch({
-    type: 'SET_VARIABLE_HEATING_SCHEDULE',
-    payload: {
-      variable: ScheduleVariable.HeatDistCircuit3,
-      schedule: heatDistCircuitThreeSchedule,
-    },
-  });
-};
+export const initializeAction = () => (dispatch: Dispatch): Promise<void> => new Promise((resolve) => {
+  heatPumpService.getHeatPumpData(2)
+    .then((heatPumpData: HeatPumpEntry[]) => {
+      dispatch({
+        type: 'SET_DATA',
+        payload: heatPumpData,
+      });
+    });
+  heatPumpService.getStatus()
+    .then((heatingStatus: HeatingStatus) => {
+      dispatch({
+        type: 'SET_HEATING_STATUS',
+        payload: heatingStatus,
+      });
+    });
+  heatPumpService.getSchedulingEnabled()
+    .then((schedulingEnabled: boolean) => {
+      dispatch({
+        type: 'SET_SCHEDULING_ENABLED',
+        payload: schedulingEnabled,
+      });
+    });
+  heatPumpService.getSchedule(ScheduleVariable.LowerTank)
+    .then((lowerTankSchedule: VariableHeatingSchedule) => {
+      dispatch({
+        type: 'SET_VARIABLE_HEATING_SCHEDULE',
+        payload: {
+          variable: ScheduleVariable.LowerTank,
+          schedule: lowerTankSchedule,
+        },
+      });
+    });
+  heatPumpService.getSchedule(ScheduleVariable.HeatDistCircuit3)
+    .then((heatDistCircuitThreeSchedule: VariableHeatingSchedule) => {
+      dispatch({
+        type: 'SET_VARIABLE_HEATING_SCHEDULE',
+        payload: {
+          variable: ScheduleVariable.HeatDistCircuit3,
+          schedule: heatDistCircuitThreeSchedule,
+        },
+      });
+    });
+  resolve();
+});
 
 /**
  * Action creator for updating/overwriting the heat-pump data.

@@ -1,4 +1,6 @@
-import React, { useContext, useEffect, useRef } from 'react';
+import React, {
+  useContext, useEffect, useRef,
+} from 'react';
 import { connect } from 'react-redux';
 import { Route, Switch, useLocation } from 'react-router-dom';
 import moment from 'moment';
@@ -12,7 +14,7 @@ import Schedules from './components/schedules/Schedules';
 import Overview from './components/overview/Overview';
 import LoginForm from './components/LoginForm';
 import PrivateRoute from './components/PrivateRoute';
-import { initializeAction, setDataAction } from './reducers/heatPumpReducer';
+import { setDataAction } from './reducers/heatPumpReducer';
 import { AuthContext } from './contexts/AuthContext';
 import { HeatPumpEntry } from './types';
 import { State } from './store';
@@ -40,12 +42,11 @@ const useStyles = makeStyles(() => ({
 
 type AppProps = {
   heatPumpData: HeatPumpEntry[],
-  initialize: () => void,
   setData: (data: HeatPumpEntry[]) => void,
 }
 
 // eslint-disable-next-line @typescript-eslint/no-shadow
-const App = ({ heatPumpData, initialize, setData }: AppProps) => {
+const App = ({ heatPumpData, setData }: AppProps) => {
   /*
    Data covers two week period to reduce data transfer and increase performance,
    since older data is not needed for monitoring general trends.
@@ -65,8 +66,6 @@ const App = ({ heatPumpData, initialize, setData }: AppProps) => {
   // Fetch pre-existing data, status of heating, and schedules from the API
   useEffect(() => {
     if (isAuthenticated) {
-      initialize();
-
       /*
     Open WebSocket connection if user has been authorized via HTTP connection.
     Subscribe to real-time heat-pump updates.
@@ -126,5 +125,5 @@ const mapStateToProps = (state: State) => ({
 
 export default connect(
   mapStateToProps,
-  { initialize: initializeAction, setData: setDataAction },
+  { setData: setDataAction },
 )(App);

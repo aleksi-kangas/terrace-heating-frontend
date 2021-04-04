@@ -1,7 +1,19 @@
 import React, { createContext, useEffect, useState } from 'react';
+import { connect } from 'react-redux';
 import { CircularProgress } from '@material-ui/core';
+import { makeStyles } from '@material-ui/core/styles';
 import AuthService from '../services/auth';
 import { Credentials, User } from '../types';
+import { initializeAction } from '../reducers/heatPumpReducer';
+
+const useStyles = makeStyles(() => ({
+  loading: {
+    position: 'fixed',
+    top: '50%',
+    left: '50%',
+    transform: 'translate(-50%, -50%)',
+  },
+}));
 
 type AuthContext = {
   isAuthenticated: boolean,
@@ -13,16 +25,20 @@ type AuthContext = {
 export const AuthContext = createContext<AuthContext>({} as AuthContext);
 
 type AuthProviderProps = {
-  children: JSX.Element
+  children: JSX.Element,
+  initialize: () => Promise<void>,
 }
 
 /**
  * Authentication context provider.
  * @param children objects to render
+ * @param initialize Redux-action for initializing heat-pump data
  */
-const AuthProvider = ({ children }: AuthProviderProps): JSX.Element => {
+const AuthProvider = ({ children, initialize }: AuthProviderProps): JSX.Element => {
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
+
+  const classes = useStyles();
 
   useEffect(() => {
     /**
@@ -32,6 +48,7 @@ const AuthProvider = ({ children }: AuthProviderProps): JSX.Element => {
     const fetchAuthStatus = async () => {
       const result = await AuthService.fetchAuth();
       if (result) {
+        await initialize();
         setIsAuthenticated(true);
         setIsLoading(false);
       } else {
@@ -50,6 +67,7 @@ const AuthProvider = ({ children }: AuthProviderProps): JSX.Element => {
   const login = async (credentials: Credentials): Promise<User | null> => {
     try {
       const user = await AuthService.login(credentials);
+      await initialize();
       setIsAuthenticated(true);
       return user;
     } catch (error) {
@@ -69,7 +87,7 @@ const AuthProvider = ({ children }: AuthProviderProps): JSX.Element => {
 
   // Shown when initial data is still loading
   if (isLoading) {
-    return <CircularProgress />;
+    return <CircularProgress className={classes.loading} />;
   }
 
   // When initial data is loaded, render the application
@@ -83,4 +101,4 @@ const AuthProvider = ({ children }: AuthProviderProps): JSX.Element => {
   );
 };
 
-export default AuthProvider;
+export default connect(null, { initialize: initializeAction })(AuthProvider);
