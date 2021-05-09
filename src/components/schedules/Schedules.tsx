@@ -1,5 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
+import { useHistory } from 'react-router-dom';
 import {
   Card, CardActions, CardContent, CircularProgress, Fade, Grid, Switch, Typography,
 } from '@material-ui/core';
@@ -42,22 +43,29 @@ const Schedules = ({
   schedulingEnabled, setHeatingStatus, setSchedulingEnabled, setNotification, removeNotification,
 }: SchedulesProps) => {
   const classes = useStyles();
+  const history = useHistory();
 
   /**
    * Handler for enabling and disabling schedules.
    * Sends the state to the server and updates the toggle switch accordingly.
    */
   const handleScheduleToggle = async () => {
-    const newStatus = await HeatPumpService.setSchedulingEnabled(!schedulingEnabled);
-    if (newStatus) {
-      setSchedulingEnabled(!schedulingEnabled);
-      setHeatingStatus(newStatus);
-      const message = schedulingEnabled ? 'Scheduling disabled' : 'Scheduling enabled';
-      const type = schedulingEnabled ? NotificationType.Info : NotificationType.Success;
-      setNotification(message, type);
-      setTimeout(() => {
-        removeNotification();
-      }, 5000);
+    try {
+      const newStatus = await HeatPumpService.setSchedulingEnabled(!schedulingEnabled);
+      if (newStatus) {
+        setSchedulingEnabled(!schedulingEnabled);
+        setHeatingStatus(newStatus);
+        const message = schedulingEnabled ? 'Scheduling disabled' : 'Scheduling enabled';
+        const type = schedulingEnabled ? NotificationType.Info : NotificationType.Success;
+        setNotification(message, type);
+        setTimeout(() => {
+          removeNotification();
+        }, 5000);
+      }
+    } catch (error) {
+      if (error.response.status === 401) {
+        history.push('/login');
+      }
     }
   };
 

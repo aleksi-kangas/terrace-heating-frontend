@@ -16,6 +16,7 @@ import {
   Typography,
 } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
+import { useHistory } from 'react-router-dom';
 import heatPumpService from '../../services/heatPump';
 import { setHeatingStatusAction, setSchedulingEnabledAction } from '../../reducers/heatPumpReducer';
 import { removeNotificationAction, setNotificationAction } from '../../reducers/notificationReducer';
@@ -74,6 +75,7 @@ const TogglePanel = ({
   const [dialogQuestion, setDialogQuestion] = useState<string>('');
 
   const classes = useStyles();
+  const history = useHistory();
 
   useEffect(() => {
     // Conditionally determine content for the startup dialog
@@ -151,10 +153,16 @@ const TogglePanel = ({
    * Normal startup means that circuit 3 is started and schedules are enabled straight away.
    */
   const normalStartup = async () => {
-    const newStatus = await heatPumpService.startCircuitThree(false);
-    setHeatingStatus(newStatus);
-    setSchedulingEnabled(true);
-    notify('Heating Enabled', NotificationType.Success);
+    try {
+      const newStatus = await heatPumpService.startCircuitThree(false);
+      setHeatingStatus(newStatus);
+      setSchedulingEnabled(true);
+      notify('Heating Enabled', NotificationType.Success);
+    } catch (error) {
+      if (error.response.status === 401) {
+        history.push('/login');
+      }
+    }
   };
 
   /**
@@ -163,9 +171,15 @@ const TogglePanel = ({
    * and after 12 hours the schedules will be enabled.
    */
   const softStartup = async () => {
-    const newStatus = await heatPumpService.startCircuitThree(true);
-    setHeatingStatus(newStatus);
-    notify('Heating Enabled', NotificationType.Success);
+    try {
+      const newStatus = await heatPumpService.startCircuitThree(true);
+      setHeatingStatus(newStatus);
+      notify('Heating Enabled', NotificationType.Success);
+    } catch (error) {
+      if (error.response.status === 401) {
+        history.push('/login');
+      }
+    }
   };
 
   /**
@@ -173,10 +187,16 @@ const TogglePanel = ({
    * Shutting down means switching off circuit 3 and the schedules.
    */
   const shutdown = async () => {
-    const newStatus = await heatPumpService.stopCircuitThree();
-    setHeatingStatus(newStatus);
-    setSchedulingEnabled(false);
-    notify('Heating Disabled', NotificationType.Info);
+    try {
+      const newStatus = await heatPumpService.stopCircuitThree();
+      setHeatingStatus(newStatus);
+      setSchedulingEnabled(false);
+      notify('Heating Disabled', NotificationType.Info);
+    } catch (error) {
+      if (error.response.status === 401) {
+        history.push('/login');
+      }
+    }
   };
 
   /**

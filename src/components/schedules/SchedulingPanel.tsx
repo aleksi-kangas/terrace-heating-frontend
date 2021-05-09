@@ -18,6 +18,7 @@ import {
   DialogContentText, Box, DialogActions, Dialog,
 } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
+import { useHistory } from 'react-router-dom';
 import HeatPumpService from '../../services/heatPump';
 import { setScheduleAction } from '../../reducers/heatPumpReducer';
 import scheduleDefaults from '../../utils/scheduleDefaults';
@@ -64,6 +65,7 @@ const SchedulingPanel = ({
   // Used to force re-render of form to update field values
   const [key, setKey] = useState(Date.now());
   const classes = useStyles();
+  const history = useHistory();
   const weekDays = WeekDays;
 
   // TODO TextField name and handleSubmit
@@ -106,31 +108,43 @@ const SchedulingPanel = ({
   // TODO
   // @ts-ignore
   const handleSubmit = async (event) => {
-    event.preventDefault();
-    let schedule: VariableHeatingSchedule = {} as VariableHeatingSchedule;
-    Object.values(weekDays).forEach((weekDay: WeekDays) => {
-      schedule = {
-        ...schedule,
-        [weekDay]: {
-          start: Number(event.target[`${weekDay.toLowerCase()}_start`].value),
-          end: Number(event.target[`${weekDay.toLowerCase()}_end`].value),
-          delta: Number(event.target[`${weekDay.toLowerCase()}_delta`].value),
-        },
-      };
-    });
-    await HeatPumpService.setSchedule(variable, schedule);
-    setSchedule(variable, schedule);
+    try {
+      event.preventDefault();
+      let schedule: VariableHeatingSchedule = {} as VariableHeatingSchedule;
+      Object.values(weekDays).forEach((weekDay: WeekDays) => {
+        schedule = {
+          ...schedule,
+          [weekDay]: {
+            start: Number(event.target[`${weekDay.toLowerCase()}_start`].value),
+            end: Number(event.target[`${weekDay.toLowerCase()}_end`].value),
+            delta: Number(event.target[`${weekDay.toLowerCase()}_delta`].value),
+          },
+        };
+      });
+      await HeatPumpService.setSchedule(variable, schedule);
+      setSchedule(variable, schedule);
+    } catch (error) {
+      if (error.response.status === 401) {
+        history.push('/login');
+      }
+    }
   };
 
   /**
    * Handler for resetting the schedule to the default values.
    */
   const handleDefaults = async () => {
-    await HeatPumpService.setSchedule(variable, scheduleDefaults[variable]);
-    setSchedule(variable, scheduleDefaults[variable]);
-    setResetDialogOpen(false);
-    // Force re-render of form
-    setKey(Date.now());
+    try {
+      await HeatPumpService.setSchedule(variable, scheduleDefaults[variable]);
+      setSchedule(variable, scheduleDefaults[variable]);
+      setResetDialogOpen(false);
+      // Force re-render of form
+      setKey(Date.now());
+    } catch (error) {
+      if (error.response.status === 401) {
+        history.push('/login');
+      }
+    }
   };
 
   return (
